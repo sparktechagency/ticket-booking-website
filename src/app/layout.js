@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Krona_One } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Shared/Navbar";
 import ClientToaster from "@/components/libs/ClientToaster";
+import Footer from "@/components/Shared/Footer";
 
 const kronaOne = Krona_One({
   weight: ["400"], // Krona One only has one weight: Regular 400
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
         <ClientToaster />
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
