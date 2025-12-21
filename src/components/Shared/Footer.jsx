@@ -3,11 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { FiMessageCircle } from "react-icons/fi";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { Poppins } from "next/font/google";
+import { Divider } from "@mui/material";
+
+const poppins = Poppins({
+  weight: ["400", "500", "600"],
+  subsets: ["latin"],
+});
 
 export default function Footer() {
   return (
-    <footer className="bg-linear-to-r from-[#04092C] to-[#6D1DB9] px-6 sm:px-10 md:px-16 lg:px-24 py-12 md:py-16">
-      <div className="max-w-7xl mx-auto">
+    <footer className="bg-linear-to-r from-[#04092C] to-[#6D1DB9] px-6 sm:px-10 md:px-16 lg:px-24 ">
+      <div className="max-w-7xl mx-auto pt-4 lg:pt-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Logo and Description */}
           <div className="sm:col-span-2 lg:col-span-1">
@@ -19,7 +26,9 @@ export default function Footer() {
                 height={54}
               />
             </div>
-            <p className="text-xs sm:text-sm text-[#99A1AF] leading-relaxed max-w-xs">
+            <p
+              className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] leading-relaxed max-w-xs`}
+            >
               Your premier destination for concert and sports event tickets.
             </p>
           </div>
@@ -32,25 +41,25 @@ export default function Footer() {
             <div className="flex flex-col gap-3">
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Browse Events
               </Link>
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Membership
               </Link>
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 How It Works
               </Link>
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 FAQ
               </Link>
@@ -65,25 +74,25 @@ export default function Footer() {
             <div className="flex flex-col gap-3">
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Contact Us
               </Link>
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Terms of Service
               </Link>
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Refund Policy
               </Link>
@@ -99,7 +108,7 @@ export default function Footer() {
               <FiMessageCircle className="text-[#99A1AF] sm:text-lg" />
               <Link
                 href="/"
-                className="text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors"
+                className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Join Discord
               </Link>
@@ -127,6 +136,17 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <Divider
+        sx={{
+          my: "30px",
+          bgcolor: "#1E2939",
+        }}
+      />
+      <p
+        className={`${poppins.className} text-xs sm:text-base text-white sm:text-center pb-5`}
+      >
+        © {new Date().getFullYear()} Adrien Tickets. All rights reserved.
+      </p>
     </footer>
   );
 }
