@@ -24,7 +24,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="relative h-screen sm:min-h-175 lg:min-h-200">
+    <div className="relative h-[70vh] sm:h-[85vh] lg:h-[90vh] xl:h-[90vh] 2xl:h-[85vh] w-full overflow-hidden flex items-center justify-center bg-[#04092C]">
       <Image
         src={heroBg}
         alt="Hero Background"
@@ -34,7 +34,7 @@ const HeroSection = () => {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center gap-2 sm:gap-6 lg:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 h-full text-white">
+      <div className="relative z-10 flex flex-col items-center justify-center text-center gap-3 sm:gap-6 px-4 sm:px-6 md:px-8 lg:px-12 h-full text-white">
         {/* Badge */}
         <div
           className={`${poppins.className} flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs uppercase bg-[#FFFFFF0D] border border-[#FFFFFF1A]`}
@@ -44,11 +44,11 @@ const HeroSection = () => {
         </div>
 
         {/* Heading */}
-        <p className="text-lg sm:text-xl md:text-3xl lg:text-5xl xl:text-6xl leading-tight">
+        <p className="text-lg sm:text-xl md:text-3xl lg:text-4xl xl:text-6xl leading-tight">
           Book Your Favourite
         </p>
 
-        <p className="flex flex-col gap-1 sm:gap-2 font-bold bg-linear-to-b from-[#BD85F1] via-white to-[#6D1DB9] bg-clip-text text-transparent text-lg sm:text-xl md:text-3xl lg:text-5xl xl:text-6xl leading-tight">
+        <p className="flex flex-col gap-1 sm:gap-2 font-bold bg-linear-to-b from-[#BD85F1] via-white to-[#6D1DB9] bg-clip-text text-transparent text-lg sm:text-xl md:text-3xl lg:text-4xl xl:text-6xl leading-tight">
           <span>Concerts & Sports</span>
           <span>Tickets</span>
         </p>
