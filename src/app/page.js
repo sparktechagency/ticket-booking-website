@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <div className="">
       <HeroSection />
-      <TopArtist />
+      {/* <TopArtist /> */}
       <TopEvents />
       <FeaturedConcerts />
       <FeaturedSports />

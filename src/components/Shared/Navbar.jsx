@@ -81,7 +81,7 @@ export default function Navbar() {
   ];
 
   return (
-    <div className="sticky top-0 bg-purple-950 z-50 shadow-md h-14 sm:h-20">
+    <div className="sticky top-0 bg-[#03071C] z-50 shadow-md h-14 sm:h-20">
       <div className="flex items-center justify-between px-4 lg:px-18 h-full max-w-full mx-auto">
         {/* Logo */}
         <div>

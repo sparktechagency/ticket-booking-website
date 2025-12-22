@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import { ArtistData } from "../../../public/Data/ArtistData";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -39,7 +42,14 @@ export default function TopArtist() {
       {/* Artist Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 sm:gap-6 mt-8">
         {topArtist?.map((artist) => (
-          <div
+          <motion.div
+            whileHover={{
+              scale: 1.1,
+              // Will be used when gesture starts
+              transition: { duration: 0.1 },
+            }}
+            // Will be used when gesture ends
+            transition={{ duration: 0.5 }}
             key={artist.id}
             className="flex flex-col items-center gap-5 p-4 rounded-lg hover:bg-[#0B1150] transition"
           >
@@ -53,7 +63,7 @@ export default function TopArtist() {
             <p className="text-white text-xs sm:text-base text-center">
               {artist.name}
             </p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
