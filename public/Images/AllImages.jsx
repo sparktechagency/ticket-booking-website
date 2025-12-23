@@ -12,6 +12,10 @@ import JustinBeiber2 from "./concerts/JustinBieber.png";
 import Concert2 from "./concerts/Concert.png";
 import TaylorSwift2 from "./concerts/TaylorSwift.png";
 
+import Sports1 from "./sports/Sports1.png";
+import Sports2 from "./sports/Sports2.png";
+import Sports3 from "./sports/Sports3.png";
+
 export const ArtistsImages = {
   Shakira,
   TravisScott,
@@ -28,4 +32,9 @@ export const ConcertImages = {
   JustinBeiber2,
   TaylorSwift2,
   Concert2,
+};
+export const SportsImages = {
+  Sports1,
+  Sports2,
+  Sports3,
 };
