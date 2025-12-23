@@ -7,7 +7,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
 import { FaQuoteRight } from "react-icons/fa";
 import Slider from "react-slick";
 import { motion } from "framer-motion";
