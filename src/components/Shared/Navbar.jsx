@@ -68,10 +68,8 @@ export default function Navbar() {
   };
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/events", label: "Events" },
-    { href: "/artists", label: "Artists" },
-    { href: "/concert", label: "Concert" },
+    { href: "/concerts", label: "Concerts" },
+    { href: "/sports", label: "Sports" },
   ];
 
   const languages = [
@@ -84,7 +82,7 @@ export default function Navbar() {
     <div className="sticky top-0 bg-[#03071C] z-50 shadow-md h-14 sm:h-20">
       <div className="flex items-center justify-between px-4 lg:px-18 h-full max-w-full mx-auto">
         {/* Logo */}
-        <div>
+        <div className="flex items-center gap-5">
           <Link href="/">
             <Image
               src="/Images/logo.png"
@@ -94,36 +92,35 @@ export default function Navbar() {
               className="w-15 lg:w-24 h-10 lg:h-14"
             />
           </Link>
-        </div>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-3 lg:gap-6 xl:gap-14 text-xs lg:text-sm font-medium">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-white transition-colors ${
-                pathname === link.href
-                  ? "text-white border-b-2 border-white"
-                  : "hover:text-[#c0c0c0]"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-3 lg:gap-6 xl:gap-10 text-xs lg:text-sm font-medium">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-white transition-colors ${
+                  pathname === link.href
+                    ? "text-white border-b-2 border-white"
+                    : "hover:text-[#c0c0c0]"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* Desktop Right Section */}
-        <div className="hidden md:flex items-center gap-2 lg:gap-3">
+        <div className="hidden md:flex items-center gap-2 lg:gap-5">
           <Link className="text-white text-sm" href="/about-us">
             About Us
           </Link>
-          <Link
+          {/* <Link
             href="/"
             className="bg-linear-to-r from-[#04092C] to-[#6D1DB9] text-white text-sm px-2 lg:px-4 py-1 lg:py-2 rounded-full hover:bg-[#0d9488] transition-colors duration-300"
           >
             Join Now
-          </Link>
+          </Link> */}
           {/* {user ? (
           
           ) : (
@@ -231,7 +228,7 @@ export default function Navbar() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>{" "}
+          </div>
           {/* language toggle */}
           <div
             className="relative"
@@ -283,7 +280,7 @@ export default function Navbar() {
 
         {/* Hamburger Menu Button */}
         <div className="md:hidden flex items-center">
-          <button onClick={toggleMobileMenu} className="text-2xl">
+          <button onClick={toggleMobileMenu} className="text-2xl text-white">
             {isMobileMenuOpen ? <HiX /> : <HiMenu />}
           </button>
         </div>
@@ -291,13 +288,13 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white shadow-md">
+        <div className="md:hidden bg-[#580e99] shadow-md">
           <div className="flex flex-col items-center font-medium py-2 space-y-2">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-gray-700 text-sm transition-colors ${
+                className={`text-white text-sm transition-colors ${
                   pathname === link.href
                     ? "text-[#00AEA8] border-b-3 border-[#00AEA8]"
                     : "hover:text-[#00AEA8]"
@@ -307,14 +304,55 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            <LanguageToggle />
-            <Link
-              href="/"
-              className="bg-[#00AEA8] text-white text-sm px-2 sm:px-4 am:py-2 rounded-md hover:bg-[#0d9488] transition-colors"
-              onClick={toggleMobileMenu}
+            <div
+              className="relative"
+              onMouseEnter={handleLanguageDropdownOpen}
+              onMouseLeave={handleLanguageDropdownClose}
             >
-              Become A Host
-            </Link>
+              <div className="text-white cursor-pointer border border-[#404040] rounded-lg px-3 py-1 flex items-center gap-1 hover:border-[#00AEA8] transition-colors">
+                <CiGlobe className="text-lg" />
+                <span className="text-sm">
+                  {
+                    languages.find((lang) => lang.code === selectedLanguage)
+                      ?.short
+                  }
+                </span>
+              </div>
+              <AnimatePresence>
+                {isLanguageDropdownOpen && (
+                  <motion.div
+                    className="absolute right-5 top-5 mt-2 w-32 bg-[#7f30ff] rounded-md shadow-lg py-2 z-50"
+                    variants={dropdownVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                  >
+                    {languages.map((lang) => (
+                      <Button
+                        key={lang.code}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          textTransform: "none",
+                          color: "#fff",
+                          width: "100%",
+                          fontSize: "10px",
+                          height: "25px",
+                          fontWeight: "600",
+                        }}
+                        onClick={() => {
+                          setSelectedLanguage(lang.code);
+                          handleLanguageDropdownClose();
+                        }}
+                      >
+                        {lang.label}
+                      </Button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* {user ? (
            
             ) : (
@@ -327,13 +365,12 @@ export default function Navbar() {
             )} */}
             <div className="relative">
               <FaRegUserCircle
-                className="text-2xl cursor-pointer hover:text-[#00AEA8]"
+                className="text-2xl text-white cursor-pointer"
                 onClick={toggleDropdown}
               />
               {isDropdownOpen && (
-                <div className="absolute top-8 left-0 transform -translate-x-1/2 w-56 bg-white rounded-md shadow-lg py-2 z-50">
+                <div className="absolute top-8 left-3 transform -translate-x-1/2 w-54 bg-[#7f30ff] rounded-md shadow-lg py-2 z-50">
                   {[
-                    { href: "/trips", label: "Trips", icon: <TbRoad /> },
                     {
                       href: "/inbox",
                       label: "Inbox",
@@ -343,7 +380,7 @@ export default function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`flex items-center gap-2 px-4 py-1 text-base text-[#191919] ${
+                      className={`flex items-center gap-2 px-4 py-1 text-xs text-white ${
                         pathname === link.href
                           ? "bg-gray-100"
                           : "hover:bg-gray-200"
@@ -358,7 +395,7 @@ export default function Navbar() {
 
                   <Link
                     href="/profile"
-                    className={`flex items-center gap-2 px-4 py-1 text-base text-[#191919] ${
+                    className={`flex items-center gap-2 px-4 py-1 text-xs text-white ${
                       pathname === "/profile"
                         ? "bg-gray-100"
                         : "hover:bg-gray-200"
@@ -372,19 +409,6 @@ export default function Navbar() {
                       height={21}
                     />
                     <p>Profile</p>
-                  </Link>
-
-                  <Link
-                    href="/account"
-                    className={`flex items-center gap-2 px-4 py-1 text-base text-[#191919] ${
-                      pathname === "/account"
-                        ? "bg-gray-100"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={toggleMobileMenu}
-                  >
-                    <FaRegUserCircle />
-                    <p>Account</p>
                   </Link>
 
                   <Divider variant="middle" className="my-1" />
@@ -404,7 +428,7 @@ export default function Navbar() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`flex items-center gap-2 px-4 py-1 text-base text-[#191919] ${
+                      className={`flex items-center gap-2 px-4 py-1 text-xs text-white ${
                         pathname === link.href
                           ? "bg-gray-100"
                           : "hover:bg-gray-200"
@@ -424,8 +448,8 @@ export default function Navbar() {
                       alignItems: "center",
                       gap: "10px",
                       px: "20px",
-                      color: "#191919",
-                      fontWeight: "500",
+                      color: "#fff",
+                      fontWeight: "600",
                       width: "100%",
                       justifyContent: "flex-start",
                       fontStyle: "normal",
@@ -443,7 +467,7 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-            <RiDashboardHorizontalLine className="text-2xl cursor-pointer hover:text-[#00AEA8]" />
+            <RiDashboardHorizontalLine className="text-2xl text-white cursor-pointer" />
           </div>
         </div>
       )}
