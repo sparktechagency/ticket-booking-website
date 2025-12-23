@@ -50,7 +50,7 @@ export default function TopEvents() {
   };
 
   return (
-    <div className="bg-[#04092C] py-6 sm:py-8 md:py-10 px-4 sm:px-6 md:px-12 lg:px-24 xl:px-56">
+    <div className="bg-[#04092C] py-6 sm:py-8 md:py-10  xl:py-20  px-4 sm:px-6 md:px-12 lg:px-24 xl:px-56">
       <style jsx global>{`
         .slick-track {
           display: flex !important;
@@ -170,39 +170,17 @@ export default function TopEvents() {
                       ${event.pricing.from || "N/A"}
                     </p>
                   </div>
-                  <Link href={`/events/${event.id}`}>
-                    <Button
-                      sx={{
-                        color: "white",
-                        textTransform: "none",
-                        fontWeight: 600,
-                        fontSize: {
-                          xs: "10px",
-                          sm: "12px",
-                          md: "14px",
-                          lg: "16px",
-                        },
-                        px: { xs: 1.5, sm: 2, xl: 3 },
-                        py: { xs: 0.5, sm: 0.75, md: 1 },
-                        minHeight: {
-                          xs: "28px",
-                          sm: "32px",
-                          md: "36px",
-                          lg: "40px",
-                        },
-                        background:
-                          "linear-gradient(180deg, #8F18FB 0%, #5B06A7 100%)",
-                        borderRadius: "8px",
-                        "&:hover": {
-                          background:
-                            "linear-gradient(180deg, #5B06A7 0%, #7A2AD1 100%)",
-                        },
-                      }}
-                    >
-                      <FaTicketAlt className="mr-1 sm:mr-2 text-xs sm:text-sm" />
-                      <span className="hidden sm:block">Get Tickets</span>
-                      <span className="sm:hidden">Tickets</span>
-                    </Button>
+                  <Link
+                    href={`/events/${event.id}`}
+                    className="flex items-center gap-1 sm:gap-2 text-white text-[10px]
+                     sm:text-xs lg:text-sm px-1.5 sm:px-2 xl:px-3 py-0.5 sm:py-1
+                     min-h-7 sm:min-h-8 md:min-h-9 
+                     rounded-lg bg-linear-to-b from-[#8F18FB] to-[#5B06A7]
+                    hover:bg-linear-to-b hover:from-[#5B06A7] hover:to-[#7A2AD1]"
+                  >
+                    <FaTicketAlt className="mr-1 sm:mr-2 text-xs sm:text-sm" />
+                    <span className="hidden sm:block">Get Tickets</span>
+                    <span className="sm:hidden">Tickets</span>
                   </Link>
                 </div>
               </div>
