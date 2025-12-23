@@ -3,17 +3,8 @@
 import React from "react";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
-import {
-  FaArrowRight,
-  FaCalendar,
-  FaMapMarkerAlt,
-  FaTicketAlt,
-} from "react-icons/fa";
-import { GoDotFill } from "react-icons/go";
-import { motion } from "framer-motion";
+import { FaArrowRight } from "react-icons/fa";
 import Slider from "react-slick";
-import Image from "next/image";
-import { Button, Divider } from "@mui/material";
 import { concertData } from "../../../public/Data/ConcertData";
 import EventCard from "../utils/EventCard";
 

@@ -91,25 +91,14 @@ export default function EventCard({ event, variants }) {
           </div>
 
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              sx={{
-                borderRadius: "8px",
-                background: "linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)",
-                color: "white",
-                textTransform: "none",
-                fontSize: "14px",
-                fontWeight: 600,
-                px: 3,
-                py: 1,
-                "&:hover": {
-                  background:
-                    "linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)",
-                  boxShadow: "0 10px 20px -10px rgba(139, 92, 246, 0.5)",
-                },
-              }}
+            <Link
+              href={`event-details/${event.id}`}
+              className="flex items-center px-3 lg:px-6 py-2 text-xs lg:text-sm rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 text-white
+              transition-all duration-300 hover:from-violet-600 hover:to-indigo-600 hover:shadow-[0_10px_20px_-10px_rgba(139,92,246,0.5)]"
             >
-              <FaTicketAlt className="mr-2" /> Get Tickets
-            </Button>
+              <FaTicketAlt className="mr-2" />
+              Get Tickets
+            </Link>
           </motion.div>
         </div>
       </div>

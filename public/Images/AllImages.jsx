@@ -17,6 +17,7 @@ import Sports2 from "./sports/Sports2.png";
 import Sports3 from "./sports/Sports3.png";
 
 import safetyImage from "./safetyImage.png";
+import ticketPlan from "./Container.png";
 
 export const ArtistsImages = {
   Shakira,
@@ -42,3 +43,4 @@ export const SportsImages = {
 };
 
 export const SafetyImage = safetyImage;
+export const TicketPlan = ticketPlan;
