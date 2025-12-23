@@ -24,9 +24,7 @@ const eventsData = [
     },
     tags: ["NBA", "Finals", "Basketball", "Playoffs"],
     availability: "Limited",
-    image: {
-      src: EventsImages.NBA,
-    },
+    image: EventsImages.Concert,
   },
 
   {
@@ -50,9 +48,7 @@ const eventsData = [
     },
     tags: ["Football", "Soccer", "Champions League", "El Clásico"],
     availability: "Available",
-    image: {
-      src: EventsImages.UCL,
-    },
+    image: EventsImages.NBA,
   },
 
   {
@@ -75,9 +71,7 @@ const eventsData = [
     },
     tags: ["Concert", "Live Music", "Pop", "Ed Sheeran"],
     availability: "Selling Fast",
-    image: {
-      src: EventsImages.Concert,
-    },
+    image: EventsImages.UCL,
   },
 
   {
@@ -101,9 +95,7 @@ const eventsData = [
     },
     tags: ["NBA", "Basketball", "Regular Season"],
     availability: "Available",
-    image: {
-      src: EventsImages.NBA,
-    },
+    image: EventsImages.Concert,
   },
 
   {
@@ -126,9 +118,7 @@ const eventsData = [
     },
     tags: ["Concert", "Rock", "World Tour", "Coldplay"],
     availability: "Available",
-    image: {
-      src: EventsImages.Concert,
-    },
+    image: EventsImages.NBA,
   },
 ];
 

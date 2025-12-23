@@ -73,7 +73,7 @@ export default function Footer() {
             </h3>
             <div className="flex flex-col gap-3">
               <Link
-                href="/"
+                href="/contact-us"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Contact Us

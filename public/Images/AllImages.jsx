@@ -8,6 +8,17 @@ import UCL from "./events/UCL.png";
 import NBA from "./events/NBA.png";
 import Concert from "./events/Concert.png";
 
+import JustinBeiber2 from "./concerts/JustinBieber.png";
+import Concert2 from "./concerts/Concert.png";
+import TaylorSwift2 from "./concerts/TaylorSwift.png";
+
+import Sports1 from "./sports/Sports1.png";
+import Sports2 from "./sports/Sports2.png";
+import Sports3 from "./sports/Sports3.png";
+
+import safetyImage from "./safetyImage.png";
+import ticketPlan from "./Container.png";
+
 export const ArtistsImages = {
   Shakira,
   TravisScott,
@@ -20,3 +31,16 @@ export const EventsImages = {
   NBA,
   Concert,
 };
+export const ConcertImages = {
+  JustinBeiber2,
+  TaylorSwift2,
+  Concert2,
+};
+export const SportsImages = {
+  Sports1,
+  Sports2,
+  Sports3,
+};
+
+export const SafetyImage = safetyImage;
+export const TicketPlan = ticketPlan;
