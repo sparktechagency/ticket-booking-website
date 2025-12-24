@@ -40,13 +40,13 @@ export default function Footer() {
             </h3>
             <div className="flex flex-col gap-3">
               <Link
-                href="/"
+                href="/events"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Browse Events
               </Link>
               <Link
-                href="/"
+                href="/membership"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Membership
@@ -58,7 +58,7 @@ export default function Footer() {
                 How It Works
               </Link>
               <Link
-                href="/"
+                href="/frequently-asked-questions"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 FAQ
@@ -79,19 +79,19 @@ export default function Footer() {
                 Contact Us
               </Link>
               <Link
-                href="/"
+                href="/terms-and-conditions"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Terms of Service
               </Link>
               <Link
-                href="/"
+                href="/privacy-policy"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Privacy Policy
               </Link>
               <Link
-                href="/"
+                href="/refund-policy"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Refund Policy

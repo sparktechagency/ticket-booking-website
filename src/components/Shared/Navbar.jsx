@@ -78,7 +78,7 @@ export default function Navbar() {
       key: "concerts",
       hasDropdown: true,
     },
-    { href: "/sports", label: "Sports", key: "sports", hasDropdown: false },
+    { href: "/events", label: "Sports", key: "sports", hasDropdown: false },
   ];
 
   const languages = [
@@ -98,7 +98,7 @@ export default function Navbar() {
               alt="Go Connecte Logo"
               width={82}
               height={57}
-              className="w-15 lg:w-24 h-10 lg:h-14"
+              className="w-15 lg:w-32 h-10 lg:h-12"
             />
           </Link>
           {/* Desktop Navigation */}
@@ -114,16 +114,28 @@ export default function Navbar() {
                   link.hasDropdown && setActiveNavDropdown(null)
                 }
               >
-                <Link
-                  href={link.href}
-                  className={`text-white transition-colors ${
-                    pathname === link.href
-                      ? "text-white border-b-2 border-white"
-                      : "hover:text-[#c0c0c0]"
-                  }`}
-                >
-                  {link.label}
-                </Link>
+                {link.hasDropdown ? (
+                  <span
+                    className={`text-white transition-colors cursor-pointer ${
+                      pathname.startsWith(link.href)
+                        ? "text-white border-b-2 border-white"
+                        : "hover:text-[#c0c0c0]"
+                    }`}
+                  >
+                    {link.label}
+                  </span>
+                ) : (
+                  <Link
+                    href={link.href}
+                    className={`text-white transition-colors ${
+                      pathname === link.href
+                        ? "text-white border-b-2 border-white"
+                        : "hover:text-[#c0c0c0]"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )}
 
                 {link.hasDropdown && (
                   <AnimatePresence>
@@ -138,7 +150,7 @@ export default function Navbar() {
                         {getConcertArtists(link.key).map((artist) => (
                           <Link
                             key={artist.id}
-                            href={`${link.href}/${artist.slug || artist.id}`}
+                            href={`${link.href}/${artist.id}`}
                             className="block px-4 py-2 text-sm text-[#191919] hover:bg-gray-200 transition-colors"
                             onClick={() => setActiveNavDropdown(null)}
                           >
@@ -161,9 +173,9 @@ export default function Navbar() {
 
         {/* Desktop Right Section */}
         <div className="hidden md:flex items-center gap-2 lg:gap-5">
-          <Link className="text-white text-sm" href="/about-us">
+          {/* <Link className="text-white text-sm" href="/about-us">
             About Us
-          </Link>
+          </Link> */}
 
           {/* profile */}
           <div
