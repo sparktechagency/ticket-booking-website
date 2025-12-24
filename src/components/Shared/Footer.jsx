@@ -85,7 +85,7 @@ export default function Footer() {
                 Terms of Service
               </Link>
               <Link
-                href="/"
+                href="/privacy-policy"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Privacy Policy
