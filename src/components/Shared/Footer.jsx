@@ -91,7 +91,7 @@ export default function Footer() {
                 Privacy Policy
               </Link>
               <Link
-                href="/"
+                href="/refund-policy"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Refund Policy
