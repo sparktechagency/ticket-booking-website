@@ -112,7 +112,7 @@ export default function Membership() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full py-5 border border-purple-500/50 rounded-xl text-lg font-medium hover:bg-purple-900/30 transition-all duration-300"
+              className="w-full py-5 border border-purple-500/50 rounded-xl text-lg font-medium hover:bg-purple-900/30 transition-all duration-300 cursor-pointer"
             >
               Join Now
             </motion.button>
@@ -192,7 +192,7 @@ export default function Membership() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full py-5 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] rounded-xl text-lg shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
+                className="w-full py-5 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] rounded-xl text-lg shadow-lg hover:shadow-purple-500/50 transition-all duration-300 cursor-pointer"
               >
                 Become a Premium Member
               </motion.button>
