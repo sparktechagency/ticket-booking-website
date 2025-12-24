@@ -20,14 +20,14 @@ import { PriceLockModal } from "@/components/Modals/PriceLockModal";
 
 export default function EventDetailsPage() {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const [showQuantityModal, setShowQuantityModal] = useState(false);
+  const [showQuantityModal, setShowQuantityModal] = useState(true);
   const [showLockedModal, setShowLockedModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowQuantityModal(false);
-    }, 10000); // 10 seconds
+    }, 5000); // 10 seconds
 
     return () => clearTimeout(timer);
   }, []);

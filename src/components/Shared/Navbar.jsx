@@ -138,7 +138,7 @@ export default function Navbar() {
                         {getConcertArtists(link.key).map((artist) => (
                           <Link
                             key={artist.id}
-                            href={`${link.href}/${artist.slug || artist.id}`}
+                            href={`${link.href}/${artist.id}`}
                             className="block px-4 py-2 text-sm text-[#191919] hover:bg-gray-200 transition-colors"
                             onClick={() => setActiveNavDropdown(null)}
                           >

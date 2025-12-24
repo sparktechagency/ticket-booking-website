@@ -7,6 +7,7 @@ import { RiTimerLine } from "react-icons/ri";
 
 import { Poppins } from "next/font/google";
 import { Button, TextField } from "@mui/material";
+import Link from "next/link";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -88,7 +89,9 @@ export default function Checkout() {
     <div className="min-h-screen bg-[#0a0d27] text-white px-4 sm:px-6 lg:px-8 py-5">
       <main className="max-w-7xl mx-auto pb-12">
         {/* Back Button */}
-        <Button
+        <Link
+          href="/events"
+          className={`${poppins.className} flex items-center gap-2 mb-3 text-[#99A1AF] text-sm uppercase`}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -100,7 +103,7 @@ export default function Checkout() {
         >
           <FaArrowLeft />
           Back to events
-        </Button>
+        </Link>
 
         {/* Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
