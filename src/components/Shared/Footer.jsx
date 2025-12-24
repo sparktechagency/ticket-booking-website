@@ -58,7 +58,7 @@ export default function Footer() {
                 How It Works
               </Link>
               <Link
-                href="/"
+                href="/frequently-asked-questions"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 FAQ
