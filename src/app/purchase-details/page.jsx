@@ -16,13 +16,14 @@ import Image from "next/image";
 import { TicketPlan } from "../../../public/Images/AllImages";
 import { Poppins } from "next/font/google";
 import { Button, MenuItem, Select } from "@mui/material";
+import Link from "next/link";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
   subsets: ["latin"],
 });
 
-export default function CheckoutPage() {
+export default function PurchaseDetails() {
   const [timer, setTimer] = useState(600);
 
   useEffect(() => {
@@ -224,19 +225,12 @@ export default function CheckoutPage() {
                   ))}
                 </Select>
 
-                <Button
-                  fullWidth
-                  sx={{
-                    bgcolor: "white",
-                    color: "#1f2937",
-                    fontWeight: 600,
-                    textTransform: "none",
-                    py: 1.5,
-                    borderRadius: "12px",
-                  }}
+                <Link
+                  href="/checkout"
+                  className={`${poppins.className} flex items-center justify-center gap-2 bg-white text-black rounded-lg w-full text-sm sm:text-base font-medium`}
                 >
                   Confirm Quantity <FaArrowRight />
-                </Button>
+                </Link>
               </div>
             </div>
           </div>
