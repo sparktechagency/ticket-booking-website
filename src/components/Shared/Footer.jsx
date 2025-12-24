@@ -46,7 +46,7 @@ export default function Footer() {
                 Browse Events
               </Link>
               <Link
-                href="/"
+                href="/membership"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Membership
