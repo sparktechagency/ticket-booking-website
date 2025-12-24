@@ -44,7 +44,7 @@ export default function EventDetailsPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-[#060b2c] via-[#070a2a] to-[#050820] text-white px-4 py-6 md:px-10">
+      <div className="min-h-screen bg-linear-to-br from-[#060b2c] via-[#070a2a] to-[#050820] text-white px-4 py-6 md:px-10">
         <div className="max-w-7xl mx-auto">
           {/* Back */}
           <Link
@@ -104,7 +104,7 @@ export default function EventDetailsPage() {
               />
 
               {/* Help Card */}
-              <div className="rounded-xl bg-gradient-to-br from-[#0c123f] to-[#0a0f33] p-5 border border-white/10">
+              <div className="rounded-xl bg-linear-to-br from-[#0c123f] to-[#0a0f33] p-5 border border-white/10">
                 <p className="mb-1">Need help deciding?</p>
                 <p className="text-xs sm:text-sm text-gray-400 mb-4">
                   Our concierge team is online. Chat with us directly for seat

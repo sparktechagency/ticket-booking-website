@@ -20,7 +20,7 @@ export function TicketQuantityModal({ onClose }) {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.35, ease: "easeOut" }}
-        className="relative w-full max-w-md rounded-2xl border border-white/10 bg-gradient-to-br from-[#120033] via-[#1b004b] to-[#0b0020] p-6 shadow-2xl"
+        className="relative w-full max-w-md rounded-2xl border border-white/10 bg-linear-to-br from-[#120033] via-[#1b004b] to-[#0b0020] p-6 shadow-2xl"
       >
         {/* Close */}
         <Button

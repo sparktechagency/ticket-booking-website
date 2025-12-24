@@ -10,7 +10,7 @@ export function PriceLockModal({ onClose }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-      router.push("/checkout");
+      router.push("/purchase-details");
     }, 3000); // 3 seconds
 
     return () => clearTimeout(timer);
@@ -30,7 +30,7 @@ export function PriceLockModal({ onClose }) {
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.92, y: 20 }}
         transition={{ duration: 0.25 }}
-        className="w-[90%] max-w-md rounded-xl bg-gradient-to-br from-[#1b0634] to-[#12072a] p-6 border border-white/10 text-white"
+        className="w-[90%] max-w-md rounded-xl bg-linear-to-br from-[#1b0634] to-[#12072a] p-6 border border-white/10 text-white"
       >
         <div className="flex flex-col items-center text-center">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600">

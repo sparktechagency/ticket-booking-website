@@ -16,7 +16,7 @@ export function TicketCard({ title, price, accent, selectTicket }) {
         className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#0c123f] to-[#0a0f33] p-5 w-full"
       >
         <div
-          className={`absolute left-0 top-0 h-full w-1 bg-gradient-to-b ${accent}`}
+          className={`absolute left-0 top-0 h-full w-1 bg-linear-to-b ${accent}`}
         />
 
         <div className="flex items-center justify-between">
