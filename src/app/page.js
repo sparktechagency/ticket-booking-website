@@ -13,7 +13,7 @@ export default function Home() {
     <div className="">
       <HeroSection />
       {/* <TopArtist /> */}
-      <Marquee />
+      {/* <Marquee /> */}
       <TopEvents />
       <FeaturedConcerts />
       <FeaturedSports />

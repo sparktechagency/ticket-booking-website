@@ -18,11 +18,12 @@ const poppins = Poppins({
 
 export default function ArtistDetails() {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
-  const [showQuantityModal, setShowQuantityModal] = useState(true);
+  const [showQuantityModal, setShowQuantityModal] = useState(false);
   const [showLockedModal, setShowLockedModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
   const tourDates = [
     {
+      id: "11",
       month: "MAR",
       date: 15,
       venue: "Madison Square Garden",
@@ -31,6 +32,7 @@ export default function ArtistDetails() {
       price: "€80",
     },
     {
+      id: "14",
       month: "SEP",
       date: 19,
       venue: "Madison Square Garden",
@@ -39,6 +41,7 @@ export default function ArtistDetails() {
       price: "€80",
     },
     {
+      id: "34r",
       month: "DEC",
       date: 31,
       venue: "Madison Square Garden",
@@ -185,15 +188,15 @@ export default function ArtistDetails() {
                         <div className="flex items-end flex-col gap-2">
                           <p className="text-xs text-[#99A1AF]">From</p>
                           <div className="text-xl text-white">{show.price}</div>
-                          <motion.button
+                          <motion.a
+                            href={`/event-details/${show.id}`} // or your desired URL
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-full bg-linear-to-r from-[#8F18FB] to-[#5B06A7] hover:bg-purple-700 text-white text-sm py-3 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
-                            onClick={() => handleTicketClick(show.month)}
+                            className="w-full bg-gradient-to-r from-[#8F18FB] to-[#5B06A7] hover:bg-purple-700 text-white text-sm py-3 px-4 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
                           >
                             <FaTicket size={14} />
                             Buy Tickets
-                          </motion.button>
+                          </motion.a>
                         </div>
                       </div>
                     </motion.div>

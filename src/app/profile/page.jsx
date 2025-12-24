@@ -27,9 +27,9 @@ export default function Profile() {
         return <MyTickets />;
       case 1:
         return <PersonalInfo />;
+      //   case 2:
+      //     return <Wishlist />;
       case 2:
-        return <Wishlist />;
-      case 3:
         return <Security />;
 
       default:

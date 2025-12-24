@@ -27,7 +27,7 @@ export default function ProfileSidebar({
   const userModeItems = [
     { icon: LuTicket, label: "My Tickets" },
     { icon: FaUser, label: "Personal Info" },
-    { icon: FaRegHeart, label: "Wishlist" },
+    // { icon: FaRegHeart, label: "Wishlist" },
     { icon: IoMdSettings, label: "Security" },
   ];
 
