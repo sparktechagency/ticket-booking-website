@@ -79,7 +79,7 @@ export default function Footer() {
                 Contact Us
               </Link>
               <Link
-                href="/"
+                href="/terms-and-conditions"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 Terms of Service
