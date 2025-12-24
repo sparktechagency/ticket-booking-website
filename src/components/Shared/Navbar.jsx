@@ -96,9 +96,9 @@ export default function Navbar() {
             <Image
               src="/Images/logo.png"
               alt="Go Connecte Logo"
-              width={82}
-              height={57}
-              className="w-15 lg:w-32 h-10 lg:h-12"
+              width={500}
+              height={500}
+              className="w-15 lg:w-32 h-10 lg:h-10"
             />
           </Link>
           {/* Desktop Navigation */}
