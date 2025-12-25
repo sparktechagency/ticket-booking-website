@@ -36,16 +36,16 @@ export default function Security() {
                 transition={{ duration: 0.3 }}
                 className="bg-[#20033B] rounded-xl shadow-xl border border-[#FFFFFF1A] overflow-hidden w-full"
               >
-                <div className="p-8">
+                <div className="p-3 sm:p-8">
                   <div className="flex items-center gap-3 mb-8">
-                    <FiShield className="w-8 h-8 text-purple-400" />
-                    <h2 className="text-2xl text-white">Security</h2>
+                    <FiShield className="size-5 lg:size-8 text-purple-400" />
+                    <h2 className="lg:text-2xl text-white">Security</h2>
                   </div>
 
                   <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-white">Password</p>
+                    <div className="flex flex-col sm:flex-row items-center justify-between">
+                      <div className="mb-3">
+                        <p className="text-white mb-2">Password</p>
                         <p
                           className={`${poppins.className} text-[#99A1AF] text-sm`}
                         >
@@ -56,7 +56,10 @@ export default function Security() {
                         onClick={handleChangePassword}
                         sx={{
                           px: 2,
-                          py: 1.5,
+                          py: {
+                            xs: 0.5,
+                            sm: 1.5,
+                          },
                           background:
                             "linear-gradient(90deg, #8F18FB 0%, #5B06A7 100%)",
                           borderRadius: "14px",
@@ -79,38 +82,41 @@ export default function Security() {
                 transition={{ duration: 0.4, ease: "easeInOut" }}
                 className="bg-[#20033B] rounded-xl shadow-xl border border-[#FFFFFF1A] overflow-hidden"
               >
-                <div className="p-8">
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-3">
+                <div className="p-3 sm:p-8">
+                  <div className="flex flex-col mb-4 sm:mb-8">
+                    <div className="flex items-center justify-between gap-3">
                       <button
                         onClick={handleBack}
-                        className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+                        className="flex items-center text-slate-400 hover:text-white transition-colors cursor-pointer"
                       >
-                        <FiArrowLeft className="w-6 h-6" />
+                        <FiArrowLeft className="size-4 sm:size-6" />
+                        <span className="text-xs sm:text-base">Back</span>
+                      </button>{" "}
+                      <button
+                        onClick={handleBack}
+                        className="text-[#BD85F1] hover:text-slate-200 text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+                      >
+                        Cancel
                       </button>
-                      <FiShield className="w-8 h-8 text-purple-400" />
-                      <h2 className="text-2xl text-white">Security</h2>
                     </div>
-                    <button
-                      onClick={handleBack}
-                      className="text-[#BD85F1] hover:text-slate-200 text-sm font-medium transition-colors cursor-pointer"
-                    >
-                      Cancel
-                    </button>
+                    <div className="flex items-center mt-3 gap-2">
+                      <FiShield className="sm:size-8 text-purple-400" />
+                      <h2 className="sm:text-2xl text-white">Security</h2>
+                    </div>
                   </div>
 
-                  <form className="space-y-6">
+                  <form className="space-y-3 sm:space-y-6">
                     <div>
                       <label
                         htmlFor="current"
-                        className={`${poppins.className} text-[#99A1AF] text-sms`}
+                        className={`${poppins.className} text-[#99A1AF] text-sm`}
                       >
                         Current Password
                       </label>
                       <input
                         id="current"
                         type="password"
-                        className="w-full px-4 py-3 bg-white border border-slate-700 rounded-2xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-2 sm:py-3 bg-white border border-slate-700 rounded-2xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                         placeholder=""
                       />
                     </div>
@@ -118,14 +124,14 @@ export default function Security() {
                     <div>
                       <label
                         htmlFor="new"
-                        className={`${poppins.className} text-[#99A1AF] text-sms`}
+                        className={`${poppins.className} text-[#99A1AF] text-sm`}
                       >
                         New Password
                       </label>
                       <input
                         id="new"
                         type="password"
-                        className="w-full px-4 py-3 bg-white border border-slate-700 rounded-2xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-2 sm:py-3 bg-white border border-slate-700 rounded-2xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                         placeholder=""
                       />
                     </div>
@@ -133,14 +139,14 @@ export default function Security() {
                     <div>
                       <label
                         htmlFor="confirm"
-                        className={`${poppins.className} text-[#99A1AF] text-sms`}
+                        className={`${poppins.className} text-[#99A1AF] text-sm`}
                       >
                         Confirm New Password
                       </label>
                       <input
                         id="confirm"
                         type="password"
-                        className="w-full px-4 py-3 bg-white border border-slate-700 rounded-2xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-2 sm:py-3 bg-white border border-slate-700 rounded-2xl text-black placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                         placeholder=""
                       />
                     </div>
@@ -148,7 +154,7 @@ export default function Security() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="w-full py-4 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] rounded-xl text-white shadow-lg hover:shadow-purple-500/50 transition-all duration-300 cursor-pointer"
+                      className="w-full py-3 sm:py-4 text-xs sm:text-base bg-linear-to-r from-[#8F18FB] to-[#5B06A7] rounded-xl text-white shadow-lg hover:shadow-purple-500/50 transition-all duration-300 cursor-pointer"
                     >
                       Update Password
                     </motion.button>

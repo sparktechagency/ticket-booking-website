@@ -43,7 +43,7 @@ export default function Profile() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="fixed top-14 sm:top-20 left-2 z-50 lg:hidden bg-[#00AEA8] text-white p-2 sm:p-3 rounded shadow-lg"
+          className="fixed top-14 sm:top-20 left-2 z-50 lg:hidden bg-[#6D1DB999] text-white p-2 sm:p-3 rounded shadow-lg"
           aria-label="Open menu"
         >
           <FaBars className="text-sm" />
@@ -61,14 +61,15 @@ export default function Profile() {
               maxWidth: "320px",
               boxSizing: "border-box",
             },
+            bgcolor: "#20033B",
           }}
         >
-          <div className="h-full p-4 overflow-y-auto">
+          <div className="h-full p-4 overflow-y-auto bg-[#31154d]">
             <div className="flex justify-end mb-4">
               <IconButton
                 onClick={() => setMobileMenuOpen(false)}
                 sx={{
-                  color: "#191919",
+                  color: "white",
                 }}
               >
                 <IoClose className="text-2xl" />

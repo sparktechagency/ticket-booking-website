@@ -47,23 +47,23 @@ export default function ProfilePage() {
               <div className="flex items-center justify-between">
                 <button
                   onClick={handleCancel}
-                  className="flex items-center gap-3 text-purple-300 hover:text-white transition-colors"
+                  className="flex items-center gap-1 lg:gap-3 text-purple-300 hover:text-white transition-colors"
                 >
-                  <MdArrowBack className="text-2xl" />
-                  <span className="text-lg font-medium">Back</span>
+                  <MdArrowBack className="sm:text-2xl" />
+                  <span className="lg:text-lg font-medium">Back</span>
                 </button>
 
                 <button
                   onClick={handleCancel}
-                  className="text-purple-300 hover:text-white text-lg font-medium transition-colors"
+                  className="text-purple-300 hover:text-white lg:text-lg font-medium transition-colors"
                 >
                   Cancel
                 </button>
               </div>
 
               {/* Edit Form Card */}
-              <div className="bg-[#20033B] rounded-xl border border-[#FFFFFF1A] shadow-2xl overflow-hidden p-6 sm:p-8 lg:p-10">
-                <h1 className="text-3xl sm:text-4xl font-bold mb-8 bg-linear-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
+              <div className="bg-[#20033B] rounded-xl border border-[#FFFFFF1A] shadow-2xl overflow-hidden p-3 sm:p-5 lg:p-10">
+                <h1 className="text-lg sm:text-2xl font-bold mb-8 bg-linear-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
                   Personal Information
                 </h1>
 
@@ -78,7 +78,7 @@ export default function ProfilePage() {
                       onChange={(e) =>
                         setFormData({ ...formData, fullName: e.target.value })
                       }
-                      className="w-full px-5 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
+                      className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
                     />
                   </div>
 
@@ -92,7 +92,7 @@ export default function ProfilePage() {
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="w-full px-5 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
+                      className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
                     />
                   </div>
 
@@ -106,18 +106,18 @@ export default function ProfilePage() {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-5 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
+                      className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
                     />
                   </div>
                 </div>
 
                 {/* Save Button */}
-                <div className="mt-10">
+                <div className="mt-5 sm:mt-10">
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleSave}
-                    className="w-full py-3 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] rounded-xl shadow-lg hover:shadow-purple-500/40 transition-all duration-300 cursor-pointer"
+                    className="w-full py-2 sm:py-3 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] rounded-xl shadow-lg hover:shadow-purple-500/40 transition-all duration-300 cursor-pointer"
                   >
                     Save Changes
                   </motion.button>
@@ -139,17 +139,15 @@ export default function ProfilePage() {
                 <div className="bg-[#20033B] rounded-2xl border border-[#FFFFFF1A] shadow-2xl overflow-hidden">
                   <div className="p-6 sm:p-8 lg:p-10">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-                      <h1 className="text-3xl sm:text-[30px] text-white">
+                      <h1 className="text-base sm:text-lg lg:text-2xl text-white">
                         Personal Information
                       </h1>
                       <button
                         onClick={() => setIsEditing(true)}
                         className="mt-4 sm:mt-0 flex items-center gap-2 text-purple-300 hover:text-purple-100 transition-colors"
                       >
-                        <MdEdit className="text-xl" />
-                        <span className="text-sm sm:text-base font-medium">
-                          Edit Info
-                        </span>
+                        <MdEdit className="lg:text-xl" />
+                        <span className="text-xs sm:text-base">Edit Info</span>
                       </button>
                     </div>
 
@@ -162,7 +160,7 @@ export default function ProfilePage() {
                           type="text"
                           readOnly
                           value={formData.fullName}
-                          className="w-full px-5 py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
+                          className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
                         />
                       </div>
 
@@ -174,7 +172,7 @@ export default function ProfilePage() {
                           type="tel"
                           readOnly
                           value={formData.phone}
-                          className="w-full px-5 py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
+                          className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
                         />
                       </div>
 
@@ -186,7 +184,7 @@ export default function ProfilePage() {
                           type="email"
                           readOnly
                           value={formData.email}
-                          className="w-full px-5 py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
+                          className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
                         />
                       </div>
                     </div>
@@ -196,23 +194,23 @@ export default function ProfilePage() {
 
               {/* Membership Status Section */}
               <section>
-                <h2 className="text-3xl sm:text-[30px] text-white mb-4">
+                <h2 className="sm:text-lg lg:text-[30px] text-white mb-4">
                   Membership Status
                 </h2>
 
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="bg-[#BD85F11A] rounded-2xl border border-[#BD85F14D] shadow-2xl overflow-hidden p-6 sm:p-8 lg:p-10"
+                  className="bg-[#BD85F11A] rounded-2xl border border-[#BD85F14D] shadow-2xl overflow-hidden p-3 sm:p-8 lg:p-10"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-                    <div className="flex items-center gap-4">
+                  <div className="flex sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-6">
+                    <div className="flex items-center gap-2 sm:gap-4">
                       <div className="p-2 bg-[#BD85F1] rounded-full border border-purple-400/50">
-                        <MdStar className="text-3xl text-white" />
+                        <MdStar className="sm:text-3xl text-white" />
                       </div>
                       <div>
-                        <h3 className="">Premium Member</h3>
-                        <p className="text-xs text-[#E9D5FF] mt-1">
+                        <h3 className="text-xs sm:text-base">Premium Member</h3>
+                        <p className="text-[10px] sm:text-xs text-[#E9D5FF] mt-1">
                           Valid until 2026-01-15
                         </p>
                       </div>

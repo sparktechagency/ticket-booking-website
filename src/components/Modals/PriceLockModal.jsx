@@ -11,7 +11,7 @@ export function PriceLockModal({ onClose }) {
     const timer = setTimeout(() => {
       onClose();
       router.push("/purchase-details");
-    }, 3000); // 3 seconds
+    }, 1000); // 3 seconds
 
     return () => clearTimeout(timer);
   }, [onClose, router]);
@@ -37,7 +37,7 @@ export function PriceLockModal({ onClose }) {
             <FaLock />
           </div>
 
-          <h2 className="text-lg font-semibold mb-2">Your Price Is Locked</h2>
+          <h2 className="text-sm sm:text-lg mb-2">Your Price Is Locked</h2>
         </div>
       </motion.div>
     </motion.div>

@@ -24,11 +24,11 @@ export function PurchaseLockModal({ onClose, onStart }) {
             <FaLock />
           </div>
 
-          <h2 className="text-lg font-semibold mb-2">
+          <h2 className="text-sm sm:text-lg font-semibold mb-2">
             You have 10 minutes to complete your purchase
           </h2>
 
-          <p className="text-sm text-gray-400 mb-5">
+          <p className="text-[9px] sm:text-sm text-gray-400 mb-5">
             The price of your tickets will be locked during this time
           </p>
 

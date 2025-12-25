@@ -95,6 +95,7 @@ export function TicketQuantityModal({ onClose }) {
         </div>
         <Button
           fullWidth
+          onClick={onClose}
           sx={{
             borderRadius: "12px",
             background: "linear-gradient(135deg, #8F18FB 0%, #5B06A7 100%)",
