@@ -113,13 +113,13 @@ export default function BrowseEvents() {
 
         {/* Search and Filters */}
         <motion.div
-          className="flex items-center justify-between gap-3 bg-transparent mb-6"
+          className="flex flex-col lg:flex-row items-center justify-between gap-3 bg-transparent mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           {/* Search */}
-          <div className="w-90 lg:w-130">
+          <div className="w-full md:w-full lg:w-130">
             <TextField
               fullWidth
               placeholder="Search events, artists, or cities..."
@@ -142,7 +142,7 @@ export default function BrowseEvents() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap lg:flex-nowrap items-center gap-2">
             {/* Category Pills */}
             <div className="flex items-center gap-2 bg-white rounded-full px-2 h-10.5">
               {categories.map((category) => (
@@ -179,7 +179,7 @@ export default function BrowseEvents() {
             </div>
 
             {/* City */}
-            <div className="w-35">
+            <div className="w-full sm:w-35">
               <Select
                 fullWidth
                 value={selectedCity}
@@ -204,7 +204,7 @@ export default function BrowseEvents() {
             </div>
 
             {/* Sort */}
-            <div className="w-37.5">
+            <div className="w-full sm:w-37.5">
               <Select
                 fullWidth
                 value={sortBy}
