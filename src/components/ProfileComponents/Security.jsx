@@ -154,7 +154,7 @@ export default function Security() {
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="w-full py-2 sm:py-4 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] rounded-xl text-white shadow-lg hover:shadow-purple-500/50 transition-all duration-300 cursor-pointer"
+                      className="w-full py-3 sm:py-4 text-xs sm:text-base bg-linear-to-r from-[#8F18FB] to-[#5B06A7] rounded-xl text-white shadow-lg hover:shadow-purple-500/50 transition-all duration-300 cursor-pointer"
                     >
                       Update Password
                     </motion.button>

@@ -1,8 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import { TextField, Button, InputAdornment } from "@mui/material";
+import React, { useState, useMemo } from "react";
+import {
+  TextField,
+  Button,
+  InputAdornment,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { IoSearch, IoLocationOutline } from "react-icons/io5";
+import { FaMusic, FaSortAmountDown } from "react-icons/fa";
+import { GoTrophy } from "react-icons/go";
+
 import { motion } from "framer-motion";
 import { Poppins } from "next/font/google";
 import EventCard from "@/components/utils/EventCard";
@@ -16,18 +25,49 @@ const poppins = Poppins({
 export default function BrowseEvents() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCity, setSelectedCity] = useState("All");
+  const [sortBy, setSortBy] = useState("date-asc");
 
   const categories = ["All", "Sports", "Concert"];
 
-  const filteredEvents = eventsData.filter((event) => {
-    console.log(event);
-    const matchesSearch = event.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "All" || event.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // Extract unique cities from events data
+  const cities = useMemo(() => {
+    const uniqueCities = [
+      ...new Set(eventsData.map((event) => event.location || event.venue.city)),
+    ].filter(Boolean);
+    return ["All", ...uniqueCities.sort()];
+  }, []);
+
+  // Filter and sort events
+  const filteredEvents = useMemo(() => {
+    let filtered = eventsData.filter((event) => {
+      const matchesSearch = event.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesCategory =
+        selectedCategory === "All" || event.category === selectedCategory;
+      const matchesCity =
+        selectedCity === "All" ||
+        event.location === selectedCity ||
+        event.venue.city === selectedCity;
+      return matchesSearch && matchesCategory && matchesCity;
+    });
+
+    // Sort events
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+
+      if (sortBy === "date-asc") {
+        return dateA - dateB; // Earliest first
+      } else if (sortBy === "date-desc") {
+        return dateB - dateA; // Latest first
+      }
+      return 0;
+    });
+
+    return filtered;
+  }, [searchQuery, selectedCategory, selectedCity, sortBy]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -73,94 +113,168 @@ export default function BrowseEvents() {
 
         {/* Search and Filters */}
         <motion.div
-          className="mb-8 flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between"
+          className="flex items-center justify-between gap-3 bg-transparent mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {/* Search Bar */}
-          <div className="w-full lg:w-96">
+          {/* Search */}
+          <div className="w-90 lg:w-130">
             <TextField
               fullWidth
-              placeholder="Search events, artist or team..."
+              placeholder="Search events, artists, or cities..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <IoSearch className="text-gray-400 text-xl" />
+                    <IoSearch className="text-gray-400 text-lg" />
                   </InputAdornment>
                 ),
               }}
               sx={{
                 "& .MuiOutlinedInput-root": {
+                  height: 42,
                   backgroundColor: "#FFFFFF",
-                  borderRadius: "12px",
-                  color: "black",
-                  "& fieldset": {
-                    borderColor: "rgba(255, 255, 255, 0.1)",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "rgba(139, 92, 246, 0.5)",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#8b5cf6",
-                  },
-                },
-                "& .MuiInputBase-input": {
-                  color: "black",
-                  "&::placeholder": {
-                    color: "#99A1AF",
-                    opacity: 1,
-                  },
+                  borderRadius: "9999px",
                 },
               }}
             />
           </div>
 
-          {/* Filter Buttons */}
-          <div className="flex flex-wrap gap-2 sm:gap-3 items-center">
-            {categories.map((category) => (
-              <motion.div
-                key={category}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  onClick={() => setSelectedCategory(category)}
-                  sx={{
-                    px: { xs: 1, md: 3 },
-                    py: 1,
-                    borderRadius: "8px",
-                    fontWeight: 600,
-                    fontSize: "14px",
-                    textTransform: "none",
-                    ...(selectedCategory === category
-                      ? {
-                          background:
-                            "linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)",
-                          color: "white",
-                          boxShadow: "0 4px 12px rgba(139, 92, 246, 0.3)",
-                          "&:hover": {
-                            background:
-                              "linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%)",
-                            boxShadow: "0 6px 16px rgba(139, 92, 246, 0.4)",
-                          },
-                        }
-                      : {
-                          backgroundColor: "rgba(255, 255, 255, 0.05)",
-                          color: "#d1d5db",
-                          "&:hover": {
-                            backgroundColor: "rgba(255, 255, 255, 0.1)",
-                          },
-                        }),
-                  }}
+          <div className="flex items-center gap-2">
+            {/* Category Pills */}
+            <div className="flex items-center gap-2 bg-white rounded-full px-2 h-10.5">
+              {categories.map((category) => (
+                <motion.div
+                  key={category}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {category}
-                </Button>
-              </motion.div>
-            ))}
+                  <Button
+                    onClick={() => setSelectedCategory(category)}
+                    sx={{
+                      height: 32,
+                      px: 2,
+                      borderRadius: "9999px",
+                      fontSize: "13px",
+                      textTransform: "none",
+                      ...(selectedCategory === category
+                        ? {
+                            background:
+                              "linear-gradient(135deg, #04092C 0%, #6D1DB9 100%)",
+                            color: "white",
+                          }
+                        : {
+                            color: "#191919",
+                          }),
+                    }}
+                  >
+                    {category === "Sports" && <GoTrophy className="mr-1" />}
+                    {category === "Concert" && <FaMusic className="mr-1" />}
+                    {category}
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* City */}
+            <div className="w-35">
+              <Select
+                fullWidth
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <IoLocationOutline className="text-gray-400" />
+                  </InputAdornment>
+                }
+                sx={{
+                  height: 42,
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "9999px",
+                }}
+              >
+                {cities.map((city) => (
+                  <MenuItem key={city} value={city}>
+                    {city}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+
+            {/* Sort */}
+            <div className="w-37.5">
+              <Select
+                fullWidth
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <FaSortAmountDown className="text-gray-400" />
+                  </InputAdornment>
+                }
+                sx={{
+                  height: 42,
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: "9999px",
+                }}
+              >
+                <MenuItem value="date-asc">Earliest</MenuItem>
+                <MenuItem value="date-desc">Latest</MenuItem>
+              </Select>
+            </div>
           </div>
+        </motion.div>
+
+        {/* Active Filters Display */}
+        {(selectedCategory !== "All" ||
+          selectedCity !== "All" ||
+          searchQuery) && (
+          <motion.div
+            className="flex flex-wrap gap-2 items-center"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <span className="text-gray-400 text-sm">Active filters:</span>
+            {selectedCategory !== "All" && (
+              <span className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">
+                {selectedCategory}
+              </span>
+            )}
+            {selectedCity !== "All" && (
+              <span className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">
+                {selectedCity}
+              </span>
+            )}
+            {searchQuery && (
+              <span className="bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full text-sm">
+                &quot;{searchQuery}&quot;
+              </span>
+            )}
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("All");
+                setSelectedCity("All");
+              }}
+              className="text-purple-400 hover:text-purple-300 text-sm underline"
+            >
+              Clear all
+            </button>
+          </motion.div>
+        )}
+
+        {/* Results Count */}
+        <motion.div
+          className="mb-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <p className="text-gray-400 text-sm">
+            Showing {filteredEvents.length} event
+            {filteredEvents.length !== 1 ? "s" : ""}
+          </p>
         </motion.div>
 
         {/* Events Grid */}
@@ -169,7 +283,7 @@ export default function BrowseEvents() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          key={selectedCategory + searchQuery}
+          key={selectedCategory + searchQuery + selectedCity + sortBy}
         >
           {filteredEvents.map((event) => (
             <EventCard key={event.id} event={event} variants={itemVariants} />
@@ -182,9 +296,19 @@ export default function BrowseEvents() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            <p className="text-gray-400 text-lg">
+            <p className="text-gray-400 text-lg mb-2">
               No events found matching your criteria.
             </p>
+            <button
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategory("All");
+                setSelectedCity("All");
+              }}
+              className="text-purple-400 hover:text-purple-300 underline"
+            >
+              Clear filters to see all events
+            </button>
           </motion.div>
         )}
       </div>
