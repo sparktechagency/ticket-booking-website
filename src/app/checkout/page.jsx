@@ -8,14 +8,10 @@ import { RiTimerLine } from "react-icons/ri";
 import { Poppins } from "next/font/google";
 import { Button, TextField } from "@mui/material";
 import Link from "next/link";
-
-const poppins = Poppins({
-  weight: ["400", "500", "600"],
-  subsets: ["latin"],
-});
+import { poppins } from "@/components/utils/FontPoppins";
+import CountdownTimer from "@/components/utils/CountdownTimer";
 
 export default function Checkout() {
-  const [timer, setTimer] = useState(600);
   const [formFormData, setFormData] = useState({
     email: "demo@example.com",
     fullName: "John Doe",
@@ -67,22 +63,6 @@ export default function Checkout() {
     } else {
       console.log("Validation failed");
     }
-  };
-
-  useEffect(() => {
-    if (timer <= 0) return;
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timer]);
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const secs = (seconds % 60).toString().padStart(2, "0");
-    return `${mins}:${secs}`;
   };
 
   return (
@@ -315,15 +295,7 @@ export default function Checkout() {
           {/* RIGHT COLUMN */}
           <div className="lg:col-span-2 mt-4 lg:mt-0 space-y-6">
             {/* Timer */}
-            <div
-              className={`${poppins.className} flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-center  px-6 py-4 bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-xl text-[#E9D5FF]`}
-            >
-              <RiTimerLine />
-              <p className="text-sm sm:text-base">
-                Tickets reserved for 10 minutes:
-              </p>
-              <span className="font-semibold text-lg">{formatTime(timer)}</span>
-            </div>
+            <CountdownTimer />
 
             {/* Order Summary */}
             <div className="bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-2xl p-6 shadow-xl lg:sticky lg:top-6">

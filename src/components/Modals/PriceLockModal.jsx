@@ -11,7 +11,7 @@ export function PriceLockModal({ onClose }) {
     const timer = setTimeout(() => {
       onClose();
       router.push("/purchase-details");
-    }, 3000); // 3 seconds
+    }, 1000); // 3 seconds
 
     return () => clearTimeout(timer);
   }, [onClose, router]);

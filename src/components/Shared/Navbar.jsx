@@ -173,9 +173,9 @@ export default function Navbar() {
 
         {/* Desktop Right Section */}
         <div className="hidden md:flex items-center gap-2 lg:gap-5">
-          {/* <Link className="text-white text-sm" href="/about-us">
+          <Link className="text-white text-sm" href="/about-us">
             About Us
-          </Link> */}
+          </Link>
 
           {/* profile */}
           <div
@@ -345,7 +345,7 @@ export default function Navbar() {
                         mobileArtistDropdown === link.key ? null : link.key
                       )
                     }
-                    className={`w-full text-center text-white text-sm transition-colors py-2 ${
+                    className={`w-full text-center text-white text-sm transition-colors  ${
                       pathname === link.href
                         ? "text-[#00AEA8] border-b-3 border-[#00AEA8]"
                         : "hover:text-[#00AEA8]"
@@ -534,6 +534,9 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+            <Link className="text-white text-sm" href="/about-us">
+              About Us
+            </Link>
             <RiDashboardHorizontalLine className="text-2xl text-white cursor-pointer" />
           </div>
         </div>

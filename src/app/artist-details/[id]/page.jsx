@@ -24,7 +24,7 @@ export default function ArtistDetails() {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const tourDates = [
     {
-      id: "11",
+      id: "mar-15",
       month: "MAR",
       date: 15,
       venue: "Madison Square Garden",
@@ -33,7 +33,7 @@ export default function ArtistDetails() {
       price: "€80",
     },
     {
-      id: "14",
+      id: "sep-19",
       month: "SEP",
       date: 19,
       venue: "Madison Square Garden",
@@ -42,7 +42,7 @@ export default function ArtistDetails() {
       price: "€80",
     },
     {
-      id: "34r",
+      id: "dec-31",
       month: "DEC",
       date: 31,
       venue: "Madison Square Garden",
