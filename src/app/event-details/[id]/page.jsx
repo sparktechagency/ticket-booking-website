@@ -49,7 +49,7 @@ export default function EventDetailsPage() {
           {/* Back */}
           <Link
             href="/events"
-            className="mb-6 inline-flex items-center text-sm text-gray-400 hover:text-white transition"
+            className="mb-6 inline-flex items-center text-[10px] sm:text-sm text-gray-400 hover:text-white transition"
           >
             <FaArrowLeft className="mr-2" />
             Back to events
@@ -113,9 +113,13 @@ export default function EventDetailsPage() {
 
                 <Link
                   href="/"
-                  className="flex items-center gap-2 px-3 py-1 underline"
+                  className="flex items-center gap-2 text-[10px] sm:text-sm sm:px-3 py-1 underline"
                 >
-                  <FaWhatsapp color="#16a34a" /> Chat with us on WhatsApp
+                  <FaWhatsapp
+                    color="#16a34a"
+                    className="text-sm sm:text-base"
+                  />{" "}
+                  Chat with us on WhatsApp
                 </Link>
               </div>
             </div>

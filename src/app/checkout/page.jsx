@@ -92,14 +92,6 @@ export default function Checkout() {
         <Link
           href="/events"
           className={`${poppins.className} flex items-center gap-2 mb-3 text-[#99A1AF] text-sm uppercase`}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            color: "#99A1AF",
-            fontSize: "14px",
-            mb: 2,
-          }}
         >
           <FaArrowLeft />
           Back to events
@@ -111,7 +103,7 @@ export default function Checkout() {
           <div className="lg:col-span-3 space-y-3 sm:space-y-8">
             <h1 className="text-lg sm:text-3xl md:text-4xl">Checkout</h1>
 
-            <div className="bg-[#2B024E] p-8 rounded-lg">
+            <div className="bg-[#2B024E] p-4 sm:p-8 rounded-lg">
               <p>Contact Information</p>
               <form onSubmit={handleSubmit} className="mt-3">
                 <motion.div
@@ -123,7 +115,7 @@ export default function Checkout() {
                   {/* Card Container */}
 
                   {/* Form Fields */}
-                  <div className="space-y-4">
+                  <div className=" space-y-2 sm:space-y-4">
                     {/* Email */}
                     <div>
                       <label
@@ -158,7 +150,10 @@ export default function Checkout() {
                             },
                           },
                           "& .MuiInputBase-input": {
-                            py: 1.5,
+                            py: {
+                              xs: 1,
+                              sm: 1.5,
+                            },
                             fontSize: "1rem",
                           },
                           "& .MuiFormHelperText-root": {
@@ -202,7 +197,10 @@ export default function Checkout() {
                             },
                           },
                           "& .MuiInputBase-input": {
-                            py: 1.5,
+                            py: {
+                              xs: 1,
+                              sm: 1.5,
+                            },
                             fontSize: "1rem",
                           },
                           "& .MuiFormHelperText-root": {
@@ -256,7 +254,10 @@ export default function Checkout() {
                             },
                           },
                           "& .MuiInputBase-input": {
-                            py: 1.5,
+                            py: {
+                              xs: 1,
+                              sm: 1.5,
+                            },
                             fontSize: "1rem",
                             paddingLeft: "8px",
                           },
@@ -270,7 +271,10 @@ export default function Checkout() {
                   </div>
 
                   {/* Checkout Button */}
-                  <motion.div whileTap={{ scale: 0.98 }} className="mt-8">
+                  <motion.div
+                    whileTap={{ scale: 0.98 }}
+                    className="mt-4 sm:mt-8"
+                  >
                     <Button
                       fullWidth
                       type="submit"
@@ -283,7 +287,10 @@ export default function Checkout() {
                         color: "white",
                         fontWeight: 600,
                         textTransform: "none",
-                        py: 1.5,
+                        py: {
+                          xs: 1,
+                          sm: 1.5,
+                        },
                         borderRadius: "14px",
 
                         "&:hover": {
@@ -306,7 +313,7 @@ export default function Checkout() {
           </div>
 
           {/* RIGHT COLUMN */}
-          <div className="lg:col-span-2 mt-8 lg:mt-0 space-y-6">
+          <div className="lg:col-span-2 mt-4 lg:mt-0 space-y-6">
             {/* Timer */}
             <div
               className={`${poppins.className} flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-center  px-6 py-4 bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-xl text-[#E9D5FF]`}
@@ -320,9 +327,11 @@ export default function Checkout() {
 
             {/* Order Summary */}
             <div className="bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-2xl p-6 shadow-xl lg:sticky lg:top-6">
-              <h2 className="text-xl mb-6">Order Summary</h2>
+              <h2 className="sm:text-xl mb-6">Order Summary</h2>
 
-              <div className={`${poppins.className} space-y-4 mb-6 text-sm}`}>
+              <div
+                className={`${poppins.className} space-y-4 mb-6 text-xs sm:text-sm}`}
+              >
                 <div className="space-y-3">
                   <div className="flex justify-between">
                     <span>Tickets</span>
@@ -340,7 +349,9 @@ export default function Checkout() {
 
                 <div className="border-t border-white/20 pt-4 flex justify-between">
                   <span>Total</span>
-                  <span className="sm:text-2xl font-semibold">€168.00</span>
+                  <span className="text-lg sm:text-2xl font-semibold">
+                    €168.00
+                  </span>
                 </div>
               </div>
             </div>

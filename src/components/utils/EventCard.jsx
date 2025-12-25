@@ -16,7 +16,7 @@ const poppins = Poppins({
 export default function EventCard({ event, variants }) {
   return (
     <motion.div
-      className="bg-gradient-to-br from-[#1e1545] to-[#2a1a5e] rounded-2xl overflow-hidden border border-purple-800/30 cursor-pointer group"
+      className="bg-gradient-to-br from-[#1e1545] to-[#2a1a5e] rounded-2xl overflow-hidden border border-purple-800/30 cursor-pointer group min-h-112"
       variants={variants}
       whileHover={{
         y: -8,
@@ -35,7 +35,7 @@ export default function EventCard({ event, variants }) {
         />
         <div className="absolute top-3 right-3">
           <span
-            className={`${poppins.className} bg-[#9333EA] text-white text-xs px-3 py-1 rounded-full`}
+            className={`${poppins.className} bg-[#9333EA] text-white text-[10px] sm:text-xs px-3 py-1 rounded-full`}
           >
             {event.category}
           </span>
@@ -44,7 +44,7 @@ export default function EventCard({ event, variants }) {
 
       {/* Content */}
       <div className="p-5">
-        <h3 className="text-white text-lg font-semibold mb-3 group-hover:text-purple-400 transition-colors">
+        <h3 className="text-white text-sm sm:text-lg font-semibold mb-3 group-hover:text-purple-400 transition-colors">
           {event.title}
         </h3>
 
@@ -84,8 +84,8 @@ export default function EventCard({ event, variants }) {
         {/* Price and Button */}
         <div className="flex items-center justify-between pt-4 border-t border-white/10">
           <div>
-            <p className="text-gray-400 text-xs mb-1">From</p>
-            <p className="text-white text-2xl font-bold">
+            <p className="text-gray-400 text-[10px] sm:text-xs mb-1">From</p>
+            <p className="text-white sm:text-2xl font-bold">
               ${event.pricing.from}
             </p>
           </div>
@@ -93,7 +93,7 @@ export default function EventCard({ event, variants }) {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
               href={`event-details/${event.id}`}
-              className="flex items-center px-3 lg:px-6 py-2 text-xs lg:text-sm rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 text-white
+              className="flex items-center px-3 lg:px-6 py-2 text-[10px] lg:text-sm rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 text-white
               transition-all duration-300 hover:from-violet-600 hover:to-indigo-600 hover:shadow-[0_10px_20px_-10px_rgba(139,92,246,0.5)]"
             >
               <FaTicketAlt className="mr-2" />
