@@ -168,10 +168,10 @@ export default function PurchaseDetails() {
 
             {/* Order Summary */}
             <div className="bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-2xl p-6 shadow-xl lg:sticky lg:top-6">
-              {/* <h2 className="sm:text-xl mb-6">Order Summary</h2> */}
+              <h2 className="sm:text-xl mb-6">Order Summary</h2>
 
-              {/* <div className="space-y-4 mb-6 text-xs sm:text-sm">
-                <div className={`${poppins.className} space-y-3`}>
+              <div className="space-y-4 mb-6 text-xs sm:text-sm">
+                {/* <div className={`${poppins.className} space-y-3`}>
                   <div className="flex justify-between">
                     <span>Tickets</span>
                     <span>2 × €80.00</span>
@@ -184,13 +184,13 @@ export default function PurchaseDetails() {
                     <span>Service Fee (5%)</span>
                     <span>€8.00</span>
                   </div>
-                </div>
+                </div> */}
 
                 <div className="border-t border-white/20 pt-4 flex justify-between">
                   <span>Total</span>
                   <span className="sm:text-2xl font-semibold">€168.00</span>
                 </div>
-              </div> */}
+              </div>
 
               <div className="flex flex-row gap-3">
                 <Select
@@ -199,6 +199,7 @@ export default function PurchaseDetails() {
                     bgcolor: "#6b46c1",
                     color: "white",
                     borderRadius: "12px",
+                    height: "40px",
                     fontWeight: 600,
                     "& fieldset": { border: "none" },
                   }}
@@ -212,7 +213,7 @@ export default function PurchaseDetails() {
 
                 <Link
                   href="/checkout"
-                  className={`${poppins.className} flex items-center justify-center gap-2 bg-white text-black rounded-lg w-full text-sm sm:text-base font-medium`}
+                  className={`${poppins.className} flex items-center justify-center gap-2 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] text-white rounded-lg w-full text-sm sm:text-base font-medium`}
                 >
                   Confirm Quantity <FaArrowRight />
                 </Link>
