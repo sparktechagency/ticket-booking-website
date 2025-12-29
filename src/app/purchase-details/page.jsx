@@ -11,6 +11,7 @@ import {
 import { FiMapPin } from "react-icons/fi";
 import { RiDeleteBinLine, RiTimerLine } from "react-icons/ri";
 import { MdOutlineShield } from "react-icons/md";
+import { GoInfo } from "react-icons/go";
 
 import Image from "next/image";
 import { TicketPlan } from "../../../public/Images/AllImages";
@@ -60,23 +61,6 @@ export default function PurchaseDetails() {
           {/* LEFT COLUMN */}
           <div className="lg:col-span-3 space-y-3 sm:space-y-8">
             <h1 className="text-lg sm:text-2xl lg:text-4xl">Checkout</h1>
-
-            {/* Stadium Image */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4 }}
-              className="w-full max-w-full sm:max-w-lg lg:max-w-3xl mx-auto"
-            >
-              <Image
-                src={TicketPlan}
-                alt="Seating Map"
-                width={800}
-                height={400}
-                className="w-full h-auto object-contain rounded-xl"
-                priority
-              />
-            </motion.div>
 
             {/* Event Info */}
             <div className="space-y-4">
@@ -159,6 +143,23 @@ export default function PurchaseDetails() {
                 </p>
               </div>
             </div>
+
+            {/* Stadium Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              className="w-full max-w-full sm:max-w-lg lg:max-w-3xl mx-auto"
+            >
+              <Image
+                src={TicketPlan}
+                alt="Seating Map"
+                width={800}
+                height={400}
+                className="w-full h-auto object-contain rounded-xl"
+                priority
+              />
+            </motion.div>
           </div>
 
           {/* RIGHT COLUMN */}
@@ -171,7 +172,9 @@ export default function PurchaseDetails() {
               <h2 className="sm:text-xl mb-6">Order Summary</h2>
 
               <div className="space-y-4 mb-6 text-xs sm:text-sm">
-                {/* <div className={`${poppins.className} space-y-3`}>
+                <div
+                  className={`${poppins.className} space-y-3 text-[#D1D5DC]`}
+                >
                   <div className="flex justify-between">
                     <span>Tickets</span>
                     <span>2 × €80.00</span>
@@ -180,20 +183,27 @@ export default function PurchaseDetails() {
                     <span>Subtotal</span>
                     <span>€160.00</span>
                   </div>
-                  <div className="flex justify-between opacity-80">
+                  {/* <div className="flex justify-between opacity-80">
                     <span>Service Fee (5%)</span>
                     <span>€8.00</span>
-                  </div>
-                </div> */}
+                  </div> */}
+                </div>
 
                 <div className="border-t border-white/20 pt-4 flex justify-between">
                   <span>Total</span>
                   <span className="sm:text-2xl font-semibold">€168.00</span>
                 </div>
+                <div className="flex items-start gap-2 text-[#E9D5FF] border border-[#BD85F133] bg-[#BD85F10D] p-2 sm:p-3 rounded-lg">
+                  <GoInfo className="text-xl" />
+                  <p className={`${poppins.className} text-xs sm:text-sm `}>
+                    Not including fees and taxes. Final price will be shown in
+                    Checkout page.
+                  </p>
+                </div>
               </div>
 
               <div className="flex flex-row gap-3">
-                <Select
+                {/* <Select
                   defaultValue={2}
                   sx={{
                     bgcolor: "#6b46c1",
@@ -209,13 +219,13 @@ export default function PurchaseDetails() {
                       {n}
                     </MenuItem>
                   ))}
-                </Select>
+                </Select> */}
 
                 <Link
                   href="/checkout"
-                  className={`${poppins.className} flex items-center justify-center gap-2 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] text-white rounded-lg w-full text-sm sm:text-base font-medium`}
+                  className={`${poppins.className} flex items-center justify-center gap-2 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] text-white rounded-lg w-full text-sm sm:text-base font-medium py-2 sm:py-3`}
                 >
-                  Confirm Quantity <FaArrowRight />
+                  Continue <FaArrowRight />
                 </Link>
               </div>
             </div>
