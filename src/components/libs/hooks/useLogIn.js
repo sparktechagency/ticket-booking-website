@@ -41,6 +41,7 @@ export default function useLogIn() {
     if (typeof window !== "undefined") {
       sessionStorage.removeItem("demo_user");
       toast.success("Logged Out Successfully");
+      router.push("/sign-in");
       setUser(null);
     }
   };

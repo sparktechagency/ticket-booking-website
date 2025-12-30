@@ -1,6 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Button, Chip, Divider, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  Chip,
+  Divider,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+} from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +22,8 @@ import {
   FaTicketAlt,
   FaWhatsapp,
 } from "react-icons/fa";
+import { LuTicket } from "react-icons/lu";
+
 import { TicketPlan } from "../../../../public/Images/AllImages";
 import { TicketQuantityModal } from "@/components/Modals/TicketQuantityModal";
 import { TicketCard } from "@/components/utils/TicketCard";
@@ -21,6 +33,7 @@ import { PriceLockModal } from "@/components/Modals/PriceLockModal";
 export default function EventDetailsPage() {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showQuantityModal, setShowQuantityModal] = useState(true);
+  const [tickets, setTickets] = useState("");
   const [showLockedModal, setShowLockedModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
 
@@ -31,6 +44,10 @@ export default function EventDetailsPage() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  const handleChange = (event) => {
+    setTickets(event.target.value);
+  };
 
   const handleTicketClick = (ticketType) => {
     setSelectedTicket(ticketType);
@@ -63,20 +80,58 @@ export default function EventDetailsPage() {
 
             <div className="mt-3 flex flex-wrap gap-3">
               <Chip
-                icon={<FaCalendarAlt size={14} />}
+                icon={<FaCalendarAlt size={14} color="#22D3EE" />}
                 label="Saturday, March 15 2025"
-                sx={{ bgcolor: "#0f173f", color: "white" }}
+                sx={{ bgcolor: "#0f173f", color: "white", px: "5px" }}
               />
               <Chip
-                icon={<FaClock size={14} />}
+                icon={<FaClock size={14} color="#22D3EE" />}
                 label="20:00"
-                sx={{ bgcolor: "#0f173f", color: "white" }}
+                sx={{ bgcolor: "#0f173f", color: "white", px: "5px" }}
               />
               <Chip
-                icon={<FaMapMarkerAlt size={14} />}
+                icon={<FaMapMarkerAlt size={14} color="#22D3EE" />}
                 label="Madison Square Garden, New York"
-                sx={{ bgcolor: "#0f173f", color: "white" }}
+                sx={{ bgcolor: "#0f173f", color: "white", px: "5px" }}
               />
+              <FormControl sx={{ minWidth: 140 }}>
+                <Select
+                  value={tickets}
+                  onChange={handleChange}
+                  displayEmpty
+                  input={
+                    <OutlinedInput
+                      sx={{
+                        bgcolor: "#0f173f",
+                        color: "white",
+                        borderRadius: "16px",
+                        height: 32,
+                        px: 1.5,
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          border: "none",
+                        },
+                      }}
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <FaTicketAlt color="#22D3EE" size={14} />
+                          {tickets}
+                        </InputAdornment>
+                      }
+                    />
+                  }
+                  MenuProps={{
+                    PaperProps: {
+                      sx: { bgcolor: "#0f173f", color: "white" },
+                    },
+                  }}
+                >
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <MenuItem key={num} value={num}>
+                      {num} Ticket{num > 1 ? "s" : ""}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </div>
           </div>
 
@@ -84,22 +139,26 @@ export default function EventDetailsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Ticket Options */}
             <div className="flex flex-col  space-y-4">
+              <div className="flex items-center gap-2 text-xl">
+                <LuTicket className="text-[#22D3EE]" />
+                <p className="">Select Tickets</p>
+              </div>
               <TicketCard
                 title="General"
                 price="€80"
-                accent="from-purple-500 to-indigo-500"
+                color="#56BDE7"
                 selectTicket={() => handleTicketClick("General")}
               />
               <TicketCard
                 title="VIP"
                 price="€250"
-                accent="from-yellow-400 to-orange-500"
+                color="#FFD700"
                 selectTicket={() => handleTicketClick("VIP")}
               />
               <TicketCard
                 title="Premium"
                 price="€150"
-                accent="from-pink-500 to-purple-600"
+                color="#C084FC"
                 selectTicket={() => handleTicketClick("Premium")}
               />
 
@@ -123,7 +182,6 @@ export default function EventDetailsPage() {
                 </Link>
               </div>
             </div>
-
             {/* Seat Map */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
