@@ -3,7 +3,7 @@
 import React from "react";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Slider from "react-slick";
 import { concertData } from "../../../public/Data/ConcertData";
 import EventCard from "../utils/EventCard";
@@ -25,16 +25,40 @@ const itemVariants = {
   },
 };
 
+function SamplePrevArrow({ onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className="hidden sm:flex justify-center items-center sm:size-8 lg:size-12 bg-black/50 rounded-full absolute md:-left-3 lg:-left-6 xl:-left-6 top-1/2 -translate-y-1/2 cursor-pointer z-10"
+    >
+      <FaArrowLeft className="text-white lg:text-xl" />
+    </div>
+  );
+}
+
+function SampleNextArrow({ onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className="hidden sm:flex justify-center items-center sm:size-8 lg:size-12 bg-black/50 rounded-full absolute md:-right-3 lg:-right-6 xl:-right-6 top-1/2 -translate-y-1/2 cursor-pointer z-10"
+    >
+      <FaArrowRight className="text-white lg:text-xl" />
+    </div>
+  );
+}
+
 export default function FeaturedConcerts() {
   const settings = {
     dots: true,
     infinite: true,
     slidesToShow: 3,
-    arrows: false,
+    arrows: true,
     slidesToScroll: 1,
-    autoplay: true,
+    // autoplay: true,
     speed: 2500,
     autoplaySpeed: 20,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
     responsive: [
       {
         breakpoint: 1024,
@@ -54,7 +78,7 @@ export default function FeaturedConcerts() {
   };
 
   return (
-    <div className="bg-[#04092C] py-6 sm:py-8 md:py-10 xl:py-20 px-4 sm:px-6 md:px-12 lg:px-24 xl:px-56">
+    <div className="bg-[#04092C] py-6 sm:py-8 md:py-10 xl:py-20 px-4 sm:px-6 md:px-12 lg:px-16 xl:px-56">
       <style jsx global>{`
         .slick-track {
           display: flex !important;
@@ -90,7 +114,7 @@ export default function FeaturedConcerts() {
           </p>
         </div>
         <Link
-          href="/artists"
+          href="/events"
           className="text-[#A1E8FD] text-xs sm:text-sm flex items-center gap-1 sm:gap-2 hover:underline"
         >
           View All <FaArrowRight className="text-xs sm:text-sm" />

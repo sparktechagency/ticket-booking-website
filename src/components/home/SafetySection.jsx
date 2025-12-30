@@ -113,7 +113,7 @@ export default function SafetySection() {
         </motion.div>
 
         {/* Image */}
-        <motion.div variants={fadeInRight}>
+        <motion.div className="overflow-hidden">
           <motion.div
             className="relative aspect-3/2 lg:aspect-5/4 rounded-xl overflow-hidden shadow-xl"
             whileHover={{ scale: 1.03 }}
@@ -124,7 +124,7 @@ export default function SafetySection() {
               alt="Ticket Safety Guarantee"
               fill
               className="object-cover"
-              sizes="(max-width: 640px) 100vw,
+              sizes="(max-width: 640px) 90vw,
                      (max-width: 1024px) 50vw,
                      40vw"
               priority
