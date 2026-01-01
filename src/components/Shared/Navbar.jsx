@@ -98,7 +98,7 @@ export default function Navbar() {
               alt="Go Connecte Logo"
               width={500}
               height={500}
-              className="w-15 lg:w-32 h-4 lg:h-10"
+              className="w-16 lg:w-32 h-4 lg:h-10"
             />
           </Link>
           {/* Desktop Navigation */}
