@@ -89,7 +89,20 @@ export default function PaymentMethodForm({
                 fullWidth
                 name="expiry"
                 value={formData.expiry}
-                onChange={handleChange}
+                onChange={(e) => {
+                  let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+
+                  if (value.length >= 2) {
+                    value = value.slice(0, 2) + "/" + value.slice(2, 4);
+                  }
+
+                  handleChange({
+                    target: {
+                      name: "expiry",
+                      value: value.slice(0, 5), // Limit to MM/YY format
+                    },
+                  });
+                }}
                 placeholder="MM/YY"
                 error={errors.expiry}
                 sx={inputStyles}

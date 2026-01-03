@@ -9,6 +9,7 @@ import PaymentMethodForm from "@/components/CheckoutPageForms/PaymentMethodForm"
 import ReviewAndConfirm from "@/components/CheckoutPageForms/ReviewAndConfirm";
 import CountdownTimer from "@/components/utils/CountdownTimer";
 import { poppins } from "@/components/utils/FontPoppins";
+import { toast } from "sonner";
 
 export default function Checkout() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -109,7 +110,7 @@ export default function Checkout() {
         setCurrentStep(currentStep + 1);
       } else {
         console.log("Payment submitted:", formData);
-        alert("Payment successful! (Demo)");
+        toast.success("Payment successful! (Demo)");
       }
     }
   };

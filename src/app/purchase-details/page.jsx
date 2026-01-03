@@ -118,7 +118,7 @@ export default function PurchaseDetails() {
             >
               {" "}
               <div
-                className="absolute left-0 top-0 h-full w-1"
+                className="absolute left-0 top-0 h-full w-2"
                 style={{ backgroundColor: ticketColor }}
               />
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
@@ -214,11 +214,15 @@ export default function PurchaseDetails() {
                 >
                   <div className="flex justify-between">
                     <span>Tickets</span>
-                    <span>2 × €80.00</span>
+                    <span>
+                      {ticketQuantity} × €{ticketPrice.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>€160.00</span>
+                    <span>
+                      €{(ticketPrice * ticketQuantity).toFixed(2)}
+                    </span>{" "}
                   </div>
                   {/* <div className="flex justify-between opacity-80">
                     <span>Service Fee (5%)</span>
@@ -228,7 +232,13 @@ export default function PurchaseDetails() {
 
                 <div className="border-t border-white/20 pt-4 flex justify-between">
                   <span>Total</span>
-                  <span className="sm:text-2xl font-semibold">€168.00</span>
+                  <span className="sm:text-2xl font-semibold">
+                    €
+                    {(
+                      ticketPrice * ticketQuantity +
+                      ticketPrice * ticketQuantity * 0.05
+                    ).toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex items-start gap-2 text-[#E9D5FF] border border-[#BD85F133] bg-[#BD85F10D] p-2 sm:p-3 rounded-lg">
                   <GoInfo className="text-xl" />

@@ -1,7 +1,7 @@
 import { Button, MenuItem, Select } from "@mui/material";
 import { motion } from "framer-motion";
 import { Poppins } from "next/font/google";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaTicketAlt } from "react-icons/fa";
 import { MdOutlineChair } from "react-icons/md";
 
@@ -14,7 +14,9 @@ export function TicketQuantityModal({ onClose }) {
   const [tickets, setTickets] = useState(2);
 
   const handleSelectedTickets = () => {
-    sessionStorage.setItem("selectedTickets", tickets);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("selectedTickets", tickets);
+    }
     onClose();
   };
 
