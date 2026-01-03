@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 import { useEffect, useState } from "react";
 import {
@@ -34,7 +35,7 @@ import { PriceLockModal } from "@/components/Modals/PriceLockModal";
 export default function EventDetailsPage() {
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showQuantityModal, setShowQuantityModal] = useState(true);
-  const [tickets, setTickets] = useState("");
+  const [tickets, setTickets] = useState(0);
   const [showLockedModal, setShowLockedModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
 
@@ -46,21 +47,25 @@ export default function EventDetailsPage() {
   //   return () => clearTimeout(timer);
   // }, []);
 
-  const ticketQuantity = sessionStorage.getItem("selectedTickets");
-
   useEffect(() => {
-    setTickets(ticketQuantity);
-  }, [ticketQuantity]);
+    if (typeof window !== "undefined") {
+      const storedTickets = sessionStorage.getItem("selectedTickets");
+      const storedTicketType = sessionStorage.getItem("ticketType");
+
+      if (storedTickets) setTickets(Number(storedTickets));
+      if (storedTicketType) setSelectedTicket(storedTicketType);
+    }
+  }, []);
 
   const handleChange = (event) => {
-    setTickets(event.target.value);
-    sessionStorage.setItem("selectedTickets", event.target.value);
+    const value = Number(event.target.value);
+    setTickets(value);
+    sessionStorage.setItem("selectedTickets", value);
   };
 
   const handleTicketClick = (ticketType) => {
     setSelectedTicket(ticketType);
     sessionStorage.setItem("ticketType", ticketType);
-
     setShowPurchaseModal(true);
   };
 
