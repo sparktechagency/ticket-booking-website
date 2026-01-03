@@ -114,7 +114,7 @@ export default function FeaturedConcerts() {
           </p>
         </div>
         <Link
-          href="/events"
+          href="/concerts"
           className="text-[#A1E8FD] text-xs sm:text-sm flex items-center gap-1 sm:gap-2 hover:underline"
         >
           View All <FaArrowRight className="text-xs sm:text-sm" />

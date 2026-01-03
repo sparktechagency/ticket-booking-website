@@ -68,7 +68,7 @@ export default function Membership() {
         </motion.p>
 
         <motion.div variants={itemVariants}>
-          <Link href="/">
+          <Link href="/membership">
             <motion.span
               whileHover={{
                 scale: 1.05,
