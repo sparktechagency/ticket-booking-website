@@ -206,7 +206,7 @@ export default function ArtistDetails() {
                             href={`/event-details/${show.id}`} // or your desired URL
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-full bg-gradient-to-r from-[#8F18FB] to-[#5B06A7] hover:bg-purple-700 text-white text-[10px] sm:text-sm py-1.5 sm:py-3 px-2 sm:px-4 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
+                            className="w-full bg-linear-to-r from-[#8F18FB] to-[#5B06A7] hover:bg-purple-700 text-white text-[10px] sm:text-sm py-1.5 sm:py-3 px-2 sm:px-4 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
                           >
                             <FaTicket size={14} />
                             Buy Tickets

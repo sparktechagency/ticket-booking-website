@@ -78,7 +78,7 @@ export default function Navbar() {
       key: "concerts",
       hasDropdown: true,
     },
-    { href: "/events", label: "Sports", key: "sports", hasDropdown: false },
+    { href: "/sports", label: "Sports", key: "sports", hasDropdown: false },
   ];
 
   const languages = [
