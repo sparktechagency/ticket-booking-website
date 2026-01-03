@@ -17,6 +17,7 @@ import Link from "next/link";
 import {
   FaArrowLeft,
   FaCalendarAlt,
+  FaChevronDown,
   FaClock,
   FaMapMarkerAlt,
   FaTicketAlt,
@@ -37,20 +38,29 @@ export default function EventDetailsPage() {
   const [showLockedModal, setShowLockedModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowQuantityModal(false);
-    }, 5000); // 10 seconds
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setShowQuantityModal(false);
+  //   }, 5000); // 10 seconds
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
+
+  const ticketQuantity = sessionStorage.getItem("selectedTickets");
+
+  useEffect(() => {
+    setTickets(ticketQuantity);
+  }, [ticketQuantity]);
 
   const handleChange = (event) => {
     setTickets(event.target.value);
+    sessionStorage.setItem("selectedTickets", event.target.value);
   };
 
   const handleTicketClick = (ticketType) => {
     setSelectedTicket(ticketType);
+    sessionStorage.setItem("ticketType", ticketType);
+
     setShowPurchaseModal(true);
   };
 
@@ -99,6 +109,9 @@ export default function EventDetailsPage() {
                   value={tickets}
                   onChange={handleChange}
                   displayEmpty
+                  IconComponent={(props) => (
+                    <FaChevronDown {...props} size={14} color="#22D3EE" />
+                  )}
                   input={
                     <OutlinedInput
                       sx={{
@@ -106,6 +119,7 @@ export default function EventDetailsPage() {
                         color: "white",
                         borderRadius: "16px",
                         height: 32,
+                        fontSize: "14px",
                         px: 1.5,
                         "& .MuiOutlinedInput-notchedOutline": {
                           border: "none",
@@ -114,7 +128,7 @@ export default function EventDetailsPage() {
                       startAdornment={
                         <InputAdornment position="start">
                           <FaTicketAlt color="#22D3EE" size={14} />
-                          {tickets}
+                          {/* {tickets} */}
                         </InputAdornment>
                       }
                     />
@@ -125,7 +139,7 @@ export default function EventDetailsPage() {
                     },
                   }}
                 >
-                  {[1, 2, 3, 4, 5].map((num) => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                     <MenuItem key={num} value={num}>
                       {num} Ticket{num > 1 ? "s" : ""}
                     </MenuItem>
