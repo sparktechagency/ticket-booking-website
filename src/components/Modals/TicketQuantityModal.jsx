@@ -13,6 +13,11 @@ const poppins = Poppins({
 export function TicketQuantityModal({ onClose }) {
   const [tickets, setTickets] = useState(2);
 
+  const handleSelectedTickets = () => {
+    sessionStorage.setItem("selectedTickets", tickets);
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <motion.div
@@ -81,7 +86,7 @@ export function TicketQuantityModal({ onClose }) {
             },
           }}
         >
-          {[1, 2, 3, 4, 5, 6].map((n) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
             <MenuItem key={n} value={n}>
               {n} Ticket{n > 1 ? "s" : ""}
             </MenuItem>
@@ -95,7 +100,7 @@ export function TicketQuantityModal({ onClose }) {
         </div>
         <Button
           fullWidth
-          onClick={onClose}
+          onClick={handleSelectedTickets}
           sx={{
             borderRadius: "12px",
             background: "linear-gradient(135deg, #8F18FB 0%, #5B06A7 100%)",

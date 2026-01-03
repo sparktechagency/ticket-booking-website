@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -27,6 +28,34 @@ const poppins = Poppins({
 
 export default function PurchaseDetails() {
   const [timer, setTimer] = useState(600);
+  const [ticketType, setTicketType] = useState(null);
+  const [ticketQuantity, setTicketQuantity] = useState(0);
+  const [ticketColor, setTicketColor] = useState("#22D3EE");
+  const [ticketPrice, setTicketPrice] = useState(0);
+
+  useEffect(() => {
+    // Only runs on client
+    const storedTicketType = sessionStorage.getItem("ticketType");
+    const storedQuantity = sessionStorage.getItem("selectedTickets");
+
+    setTicketType(storedTicketType);
+    setTicketQuantity(Number(storedQuantity) || 0);
+
+    // Map ticket type to price & color
+    const TICKET_CONFIG = {
+      General: { price: 80, color: "#56BDE7" },
+      VIP: { price: 250, color: "#FFD700" },
+      Premium: { price: 150, color: "#C084FC" },
+    };
+
+    const config = TICKET_CONFIG[storedTicketType] ?? {
+      price: 0,
+      color: "#22D3EE",
+    };
+
+    setTicketPrice(config.price);
+    setTicketColor(config.color);
+  }, []);
 
   useEffect(() => {
     if (timer <= 0) return;
@@ -85,14 +114,21 @@ export default function PurchaseDetails() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-linear-to-b from-[#6D1DB9] to-[#1a0238] rounded-2xl p-3 sm:p-6 w-full max-w-2xl"
+              className="relative bg-linear-to-b from-[#6D1DB9] to-[#1a0238] rounded-2xl p-3 sm:p-6 w-full max-w-2xl overflow-hidden"
             >
+              {" "}
+              <div
+                className="absolute left-0 top-0 h-full w-1"
+                style={{ backgroundColor: ticketColor }}
+              />
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
                 {/* Left section - Ticket info */}
-                <div className="flex flex-row sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1">
+                <div className=" flex flex-row sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1">
                   {/* Quantity badge */}
                   <div className="bg-[#FFFFFF0D] p-2 sm:p-4 rounded-lg shrink-0">
-                    <p className={`${poppins.className} sm:text-2xl`}>2x</p>
+                    <p className={`${poppins.className} sm:text-2xl`}>
+                      {ticketQuantity}x
+                    </p>
                   </div>
 
                   {/* Event details */}
@@ -101,17 +137,18 @@ export default function PurchaseDetails() {
                       The Weeknd: After Hours Tour
                     </p>
                     <p
-                      className={`${poppins.className} text-[10px] sm:text-sm text-[#99A1AF]`}
+                      className={`${poppins.className} text-[10px] sm:text-sm`}
+                      style={{ color: ticketColor }}
                     >
-                      General | Colour Pink
+                      {ticketType}
                     </p>
-                    <p className="text-xs sm:text-base">€80 each</p>
+                    <p className="text-xs sm:text-base">€{ticketPrice} each</p>
                   </div>
                 </div>
 
                 {/* Right section - Price and actions */}
                 <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:gap-1 shrink-0">
-                  <p className="xl:text-2xl">€160</p>
+                  <p className="xl:text-2xl">€{ticketQuantity * ticketPrice}</p>
                   <Button
                     sx={{
                       textTransform: "none",
