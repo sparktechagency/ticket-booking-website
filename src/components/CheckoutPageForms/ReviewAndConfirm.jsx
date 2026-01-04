@@ -29,7 +29,7 @@ export default function ReviewAndConfirm({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
       transition={{ duration: 0.3 }}
-      className="grid grid-cols-1 lg:grid-cols-5 gap-5"
+      className="grid grid-cols-1 lg:grid-cols-2 gap-5"
     >
       <div className="space-y-6 sm:col-span-3">
         {/* Contact Info Display */}
@@ -184,62 +184,6 @@ export default function ReviewAndConfirm({
             </Link>
           </motion.div>
         </div>
-      </div>
-      <div className="space-y-4 sm:col-span-2">
-        {/* Order Summary */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="bg-linear-to-br from-[#6D1DB9] to-[#090014] backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30"
-        >
-          <h2 className="text-xl mb-6">Order Summary</h2>
-
-          <div className={`${poppins.className} space-y-3 mb-4 text-sm`}>
-            <div className="flex justify-between text-gray-300">
-              <span>Tickets</span>
-              <span>
-                {orderDetails.tickets.quantity} × €
-                {orderDetails.tickets.price.toFixed(2)}
-              </span>
-            </div>
-            <div className="flex justify-between text-gray-300">
-              <span>Subtotal</span>
-              <span>€{subtotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-gray-400">
-              <span>Service Fee ({orderDetails.serviceFeePercent}%)</span>
-              <span>€{serviceFee.toFixed(2)}</span>
-            </div>
-            <div className="border-t border-white/20 pt-3 flex justify-between text-lg font-semibold">
-              <span>Total</span>
-              <span>€{total.toFixed(2)}</span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Pay Button */}
-        <Button
-          fullWidth
-          onClick={handleNext}
-          variant="contained"
-          startIcon={<FaLock />}
-          sx={{
-            background: "linear-gradient(to right, #8F18FB, #5B06A7)",
-            color: "white",
-            py: 1.5,
-            fontSize: "16px",
-            borderRadius: "12px",
-            textTransform: "none",
-            fontWeight: 500,
-            "&:hover": {
-              background: "linear-gradient(to right, #7c3aed, #6d28d9)",
-              boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
-            },
-          }}
-        >
-          Pay Now €{total.toFixed(2)}
-        </Button>
       </div>
     </motion.div>
   );

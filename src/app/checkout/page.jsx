@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaLock } from "react-icons/fa";
 import InfoForm from "@/components/CheckoutPageForms/InfoForm";
 import AddressForm from "@/components/CheckoutPageForms/AddressForm";
 import PaymentMethodForm from "@/components/CheckoutPageForms/PaymentMethodForm";
@@ -10,6 +10,9 @@ import ReviewAndConfirm from "@/components/CheckoutPageForms/ReviewAndConfirm";
 import CountdownTimer from "@/components/utils/CountdownTimer";
 import { poppins } from "@/components/utils/FontPoppins";
 import { toast } from "sonner";
+import Link from "next/link";
+import { GoInfo } from "react-icons/go";
+import { Button } from "@mui/material";
 
 export default function Checkout() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -141,105 +144,165 @@ export default function Checkout() {
     <div className="min-h-screen bg-linear-to-br from-[#0a0e27] via-[#16112e] to-[#0a0e27] text-white px-4 py-10">
       <div className="flex flex-col gap-5 items-center justify-center">
         <CountdownTimer />
-        <div className="max-w-7xl mx-auto">
-          <AnimatePresence mode="wait">
-            {currentStep > 1 && currentStep < 4 && (
-              <motion.button
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                onClick={handleBack}
-                className="flex items-center gap-2 mb-6 text-gray-400 hover:text-white transition-colors"
-              >
-                <FaArrowLeft />
-                <span className="text-sm uppercase tracking-wider">Back</span>
-              </motion.button>
-            )}
-            <div className="mb-8">
-              <h1 className="sm:text-lg  lg:text-2xl font-semibold mb-2">
-                {currentStep === 1
-                  ? "Your Information"
-                  : currentStep === 2
-                  ? "Address"
-                  : currentStep === 3
-                  ? "Payment Method"
-                  : ""}
-              </h1>
-              {currentStep < 4 && (
-                <p
-                  className={`${poppins.className} text-xs sm:text-sm text-gray-400`}
+        <div className="flex flex-col lg:flex-row gap-5">
+          <div className="max-w-7xl">
+            <AnimatePresence mode="wait">
+              {currentStep > 1 && currentStep < 4 && (
+                <motion.button
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  onClick={handleBack}
+                  className="flex items-center gap-2 mb-6 text-gray-400 hover:text-white transition-colors"
                 >
-                  We&apos;ll use this information to send your tickets and keep
-                  you updated.
-                </p>
+                  <FaArrowLeft />
+                  <span className="text-sm uppercase tracking-wider">Back</span>
+                </motion.button>
               )}
+              <div className="mb-8">
+                <h1 className="sm:text-lg  lg:text-2xl font-semibold mb-2">
+                  {currentStep === 1
+                    ? "Your Information"
+                    : currentStep === 2
+                    ? "Address"
+                    : currentStep === 3
+                    ? "Payment Method"
+                    : ""}
+                </h1>
+                {currentStep < 4 && (
+                  <p
+                    className={`${poppins.className} text-xs sm:text-sm text-gray-400`}
+                  >
+                    We&apos;ll use this information to send your tickets and
+                    keep you updated.
+                  </p>
+                )}
+              </div>
+            </AnimatePresence>
+
+            <AnimatePresence mode="wait">
+              {currentStep === 1 && (
+                <InfoForm
+                  key="info-form"
+                  formData={formData}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleNext={handleNext}
+                  inputStyles={inputStyles}
+                />
+              )}
+
+              {currentStep === 2 && (
+                <AddressForm
+                  key="address-form"
+                  formData={formData}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleNext={handleNext}
+                  inputStyles={inputStyles}
+                />
+              )}
+
+              {currentStep === 3 && (
+                <PaymentMethodForm
+                  key="payment-form"
+                  formData={formData}
+                  errors={errors}
+                  handleChange={handleChange}
+                  handleNext={handleNext}
+                  inputStyles={inputStyles}
+                />
+              )}
+
+              {currentStep === 4 && (
+                <ReviewAndConfirm
+                  key="review-form"
+                  formData={formData}
+                  orderDetails={orderDetails}
+                  subtotal={subtotal}
+                  serviceFee={serviceFee}
+                  total={total}
+                  handleNext={handleNext}
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Progress Indicator */}
+            <div className="flex justify-center gap-2 mt-8">
+              {[1, 2, 3, 4].map((step) => (
+                <motion.div
+                  key={step}
+                  initial={{ width: 8 }}
+                  animate={{
+                    width: step === currentStep ? 32 : 8,
+                    backgroundColor:
+                      step <= currentStep
+                        ? "rgb(168, 85, 247)"
+                        : "rgb(75, 85, 99)",
+                  }}
+                  transition={{ duration: 0.3 }}
+                  className="h-2 rounded-full"
+                />
+              ))}
             </div>
-          </AnimatePresence>
+          </div>
+          <div className="space-y-4 lg:mt-23">
+            {/* Order Summary */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="bg-linear-to-br from-[#6D1DB9] to-[#090014] backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 sm:min-w-md"
+            >
+              <h2 className="sm:text-xl mb-6">Order Summary</h2>
 
-          <AnimatePresence mode="wait">
-            {currentStep === 1 && (
-              <InfoForm
-                key="info-form"
-                formData={formData}
-                errors={errors}
-                handleChange={handleChange}
-                handleNext={handleNext}
-                inputStyles={inputStyles}
-              />
-            )}
+              <div className={`${poppins.className} space-y-3 mb-4 text-sm`}>
+                <div className="flex justify-between text-gray-300">
+                  <span>Tickets</span>
+                  <span>
+                    {orderDetails.tickets.quantity} × €
+                    {orderDetails.tickets.price.toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between text-gray-300">
+                  <span>Subtotal</span>
+                  <span>€{subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Service Fee ({orderDetails.serviceFeePercent}%)</span>
+                  <span>€{serviceFee.toFixed(2)}</span>
+                </div>
+                <div className="border-t border-white/20 pt-3 flex justify-between sm:text-lg font-semibold">
+                  <span>Total</span>
+                  <span>€{total.toFixed(2)}</span>
+                </div>
+              </div>
+            </motion.div>
 
-            {currentStep === 2 && (
-              <AddressForm
-                key="address-form"
-                formData={formData}
-                errors={errors}
-                handleChange={handleChange}
-                handleNext={handleNext}
-                inputStyles={inputStyles}
-              />
-            )}
-
-            {currentStep === 3 && (
-              <PaymentMethodForm
-                key="payment-form"
-                formData={formData}
-                errors={errors}
-                handleChange={handleChange}
-                handleNext={handleNext}
-                inputStyles={inputStyles}
-              />
-            )}
-
-            {currentStep === 4 && (
-              <ReviewAndConfirm
-                key="review-form"
-                formData={formData}
-                orderDetails={orderDetails}
-                subtotal={subtotal}
-                serviceFee={serviceFee}
-                total={total}
-                handleNext={handleNext}
-              />
-            )}
-          </AnimatePresence>
-
-          {/* Progress Indicator */}
-          <div className="flex justify-center gap-2 mt-8">
-            {[1, 2, 3, 4].map((step) => (
-              <motion.div
-                key={step}
-                initial={{ width: 8 }}
-                animate={{
-                  width: step === currentStep ? 32 : 8,
-                  backgroundColor:
-                    step <= currentStep
-                      ? "rgb(168, 85, 247)"
-                      : "rgb(75, 85, 99)",
+            {/* Pay Button */}
+            {currentStep == 4 && (
+              <Button
+                fullWidth
+                onClick={handleNext}
+                variant="contained"
+                startIcon={<FaLock />}
+                sx={{
+                  background: "linear-gradient(to right, #8F18FB, #5B06A7)",
+                  color: "white",
+                  py: 1.5,
+                  fontSize: "16px",
+                  borderRadius: "12px",
+                  textTransform: "none",
+                  fontWeight: 500,
+                  "&:hover": {
+                    background: "linear-gradient(to right, #7c3aed, #6d28d9)",
+                    boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
+                  },
                 }}
-                transition={{ duration: 0.3 }}
-                className="h-2 rounded-full"
-              />
-            ))}
+              >
+                Pay Now €{total.toFixed(2)}
+              </Button>
+            )}
           </div>
         </div>
       </div>
