@@ -52,7 +52,7 @@ export default function Footer() {
                 Membership
               </Link>
               <Link
-                href="/"
+                href="/how-it-works"
                 className={`${poppins.className} text-xs sm:text-sm text-[#99A1AF] hover:text-white transition-colors`}
               >
                 How It Works
