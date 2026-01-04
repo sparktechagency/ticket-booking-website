@@ -14,7 +14,7 @@ export function TicketQuantityModal({ onClose }) {
   const [tickets, setTickets] = useState(2);
 
   const handleSelectedTickets = () => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && tickets) {
       sessionStorage.setItem("selectedTickets", tickets);
     }
     onClose();
