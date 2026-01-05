@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowLeft, FaArrowRight, FaLock } from "react-icons/fa";
+import { FaArrowLeft, FaLock } from "react-icons/fa";
+import { GoDotFill, GoInfo } from "react-icons/go";
 import InfoForm from "@/components/CheckoutPageForms/InfoForm";
 import AddressForm from "@/components/CheckoutPageForms/AddressForm";
 import PaymentMethodForm from "@/components/CheckoutPageForms/PaymentMethodForm";
@@ -10,9 +11,9 @@ import ReviewAndConfirm from "@/components/CheckoutPageForms/ReviewAndConfirm";
 import CountdownTimer from "@/components/utils/CountdownTimer";
 import { poppins } from "@/components/utils/FontPoppins";
 import { toast } from "sonner";
-import Link from "next/link";
-import { GoInfo } from "react-icons/go";
-import { Button } from "@mui/material";
+
+import { Button, Divider, IconButton, Tooltip } from "@mui/material";
+import Image from "next/image";
 
 export default function Checkout() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -37,11 +38,12 @@ export default function Checkout() {
   const orderDetails = {
     tickets: { quantity: 2, price: 80.0 },
     serviceFeePercent: 5,
+    tax: 20,
   };
 
   const subtotal = orderDetails.tickets.quantity * orderDetails.tickets.price;
   const serviceFee = (subtotal * orderDetails.serviceFeePercent) / 100;
-  const total = subtotal + serviceFee;
+  const total = subtotal + serviceFee + orderDetails.tax;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -252,40 +254,104 @@ export default function Checkout() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="bg-linear-to-br from-[#6D1DB9] to-[#090014] backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 sm:min-w-md"
+              className="bg-linear-to-br from-[#6D1DB9] to-[#090014] backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-purple-500/30 w-full max-w-xl mx-auto"
             >
-              <h2 className="sm:text-xl mb-6">Order Summary</h2>
+              <h2 className="text-sm sm:text-lg lg:text-xl mb-4 sm:mb-6 font-semibold">
+                Order Summary
+              </h2>
 
-              <div className={`${poppins.className} space-y-3 mb-4 text-sm`}>
-                <div className="flex justify-between text-gray-300 text-lg">
+              {/* Event Details */}
+              <div
+                className={`${poppins.className} flex items-start sm:items-center justify-between gap-5 mb-4`}
+              >
+                <div className="space-y-1 flex-1 min-w-0">
+                  <p className="text-[#e7fbff] font-semibold text-sm sm:text-base wrap-break-word">
+                    The Weeknd: After Hours Tour
+                  </p>
+                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-[#e2e2e2]">
+                    <p className="whitespace-nowrap">March 15, 2026</p>
+                    <GoDotFill className="" />
+                    <p className="whitespace-nowrap">20:00</p>
+                  </div>
+                  <p className="text-xs sm:text-sm text-[#e2e2e2] wrap-break-word">
+                    Madison Square Garden, New York
+                  </p>
+                </div>
+                <Image
+                  src="/Images/concerts/TaylorSwift.png"
+                  alt="Event"
+                  width={50}
+                  height={50}
+                  className="rounded-lg shrink-0 size-16 sm:size-18"
+                />
+              </div>
+
+              <Divider
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.5)",
+                  my: { xs: 1.5, sm: 2 },
+                }}
+              />
+
+              {/* Ticket Info */}
+              <div
+                className={`${poppins.className} flex flex-wrap items-center gap-2 text-xs sm:text-sm text-[#e2e2e2] mb-3`}
+              >
+                <p>2 Tickets</p>
+                <GoDotFill className="shrink-0" />
+                <p>General</p>
+              </div>
+
+              <Divider
+                sx={{
+                  bgcolor: "rgba(255,255,255,0.5)",
+                  my: { xs: 1.5, sm: 2 },
+                }}
+              />
+
+              {/* Price Breakdown */}
+              <div className={`${poppins.className}  mb-4 text-xs sm:text-sm`}>
+                <div className="flex justify-between text-gray-300 text-sm sm:text-base lg:text-lg">
                   <span>Tickets</span>
-                  <span>
+                  <span className="font-medium">
                     {orderDetails.tickets.quantity} × €
                     {orderDetails.tickets.price.toFixed(2)}
                   </span>
                 </div>
-                {currentStep == 4 && (
-                  <div className="flex justify-between text-gray-300">
-                    <span>Subtotal</span>
-                    <span>€{subtotal.toFixed(2)}</span>
+
+                {currentStep === 4 && (
+                  <div className="flex items-center justify-between text-gray-300">
+                    <div>
+                      <span>Fees</span>
+                      <Tooltip title="Fulfillment and service fees help us bring you a safe, global marketplace where you can get tickets to your favourite event.">
+                        <IconButton>
+                          <GoInfo className="text-lg text-white" />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                    <span className="font-medium">
+                      €{serviceFee.toFixed(2)}
+                    </span>
                   </div>
                 )}
 
                 {currentStep !== 4 && (
                   <p
-                    className={`${poppins.className} text-[10px] sm:text-xs text-gray-300`}
+                    className={`${poppins.className} text-[10px] sm:text-xs text-[#cccccc]`}
                   >
                     Tax, fulfillment fee, and service fee not included.
                   </p>
                 )}
-                {currentStep == 4 && (
+
+                {currentStep === 4 && (
                   <div className="flex justify-between text-gray-400">
-                    <span>Service Fee ({orderDetails.serviceFeePercent}%)</span>
-                    <span>€{serviceFee.toFixed(2)}</span>
+                    <span className="text-xs sm:text-sm">Tax</span>
+                    <span className="font-medium">€{orderDetails.tax}</span>
                   </div>
                 )}
-                {currentStep == 4 && (
-                  <div className="border-t border-white/20 pt-3 flex justify-between sm:text-lg font-semibold">
+
+                {currentStep === 4 && (
+                  <div className="border-t border-white/20 pt-2 sm:pt-3 mt-2 sm:mt-3 flex justify-between text-base sm:text-lg lg:text-xl font-semibold text-white">
                     <span>Total</span>
                     <span>€{total.toFixed(2)}</span>
                   </div>

@@ -131,13 +131,9 @@ export default function PurchaseDetails() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="relative bg-linear-to-b from-[#6D1DB9] to-[#1a0238] rounded-2xl p-3 sm:p-6 w-full max-w-2xl overflow-hidden"
+              className="relative rounded-2xl p-3 sm:p-6 w-full max-w-2xl overflow-hidden"
+              style={{ backgroundColor: `${ticketColor}50` }}
             >
-              {" "}
-              <div
-                className="absolute left-0 top-0 h-full w-2"
-                style={{ backgroundColor: ticketColor }}
-              />
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
                 {/* Left section - Ticket info */}
                 <div className=" flex flex-row sm:flex-row items-start sm:items-center gap-3 sm:gap-4 flex-1">
@@ -174,8 +170,7 @@ export default function PurchaseDetails() {
                     }}
                   >
                     <RiDeleteBinLine className="mr-1 sm:mr-2 text-base sm:text-lg" />
-                    <span className="hidden sm:block">Remove</span>
-                    <span className="block sm:hidden">Delete</span>
+                    <span className="">Remove</span>
                   </Button>
                 </div>
               </div>

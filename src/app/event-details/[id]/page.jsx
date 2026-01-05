@@ -163,18 +163,21 @@ export default function EventDetailsPage() {
                 title="General"
                 price="€80"
                 color="#56BDE7"
+                tickets={tickets}
                 selectTicket={() => handleTicketClick("General")}
               />
               <TicketCard
                 title="VIP"
                 price="€250"
                 color="#FFD700"
+                tickets={tickets}
                 selectTicket={() => handleTicketClick("VIP")}
               />
               <TicketCard
                 title="Premium"
                 price="€150"
                 color="#C084FC"
+                tickets={tickets}
                 selectTicket={() => handleTicketClick("Premium")}
               />
 
