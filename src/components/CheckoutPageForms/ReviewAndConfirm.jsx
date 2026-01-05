@@ -47,7 +47,7 @@ export default function ReviewAndConfirm({
             <p className="text-gray-400">+1 {formData.phone}</p>
           </div>
           {/* Address Display */}
-          <div className="bg-transparent mt-5 pt-5 border-t border-[#FFFFFF1A]">
+          {/* <div className="bg-transparent mt-5 pt-5 border-t border-[#FFFFFF1A]">
             <div className="flex items-center gap-2 mb-2">
               <FaMapMarkerAlt className="text-[#BD85F1]" />
               <h2 className={`${poppins.className} text-sm text-[#99A1AF]`}>
@@ -64,7 +64,7 @@ export default function ReviewAndConfirm({
               </p>
               <p>{formData.country}</p>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Payment Method Display */}

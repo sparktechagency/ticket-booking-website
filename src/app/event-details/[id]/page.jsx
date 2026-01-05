@@ -31,13 +31,14 @@ import { TicketQuantityModal } from "@/components/Modals/TicketQuantityModal";
 import { TicketCard } from "@/components/utils/TicketCard";
 import { PurchaseLockModal } from "@/components/Modals/PurchaseLockModal";
 import { PriceLockModal } from "@/components/Modals/PriceLockModal";
+import { useRouter } from "next/navigation";
 
 export default function EventDetailsPage() {
-  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showQuantityModal, setShowQuantityModal] = useState(true);
   const [tickets, setTickets] = useState(0);
-  const [showLockedModal, setShowLockedModal] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState(null);
+
+  const router = useRouter();
 
   // useEffect(() => {
   //   const timer = setTimeout(() => {
@@ -66,12 +67,8 @@ export default function EventDetailsPage() {
   const handleTicketClick = (ticketType) => {
     setSelectedTicket(ticketType);
     sessionStorage.setItem("ticketType", ticketType);
-    setShowPurchaseModal(true);
-  };
-
-  const handleStartPurchase = () => {
-    setShowPurchaseModal(false);
-    setShowLockedModal(true);
+    router.push("/purchase-details");
+    // setShowPurchaseModal(true);
   };
 
   return (
@@ -166,18 +163,21 @@ export default function EventDetailsPage() {
                 title="General"
                 price="€80"
                 color="#56BDE7"
+                tickets={tickets}
                 selectTicket={() => handleTicketClick("General")}
               />
               <TicketCard
                 title="VIP"
                 price="€250"
                 color="#FFD700"
+                tickets={tickets}
                 selectTicket={() => handleTicketClick("VIP")}
               />
               <TicketCard
                 title="Premium"
                 price="€150"
                 color="#C084FC"
+                tickets={tickets}
                 selectTicket={() => handleTicketClick("Premium")}
               />
 
@@ -223,21 +223,11 @@ export default function EventDetailsPage() {
       </div>{" "}
       {/* Modals */}
       <AnimatePresence>
-        {showPurchaseModal && (
-          <PurchaseLockModal
-            onClose={() => setShowPurchaseModal(false)}
-            onStart={handleStartPurchase}
-          />
-        )}
-
         {showQuantityModal && (
           <TicketQuantityModal
             ticketType={selectedTicket}
             onClose={() => setShowQuantityModal(false)}
           />
-        )}
-        {showLockedModal && (
-          <PriceLockModal onClose={() => setShowLockedModal(false)} />
         )}
       </AnimatePresence>
     </>
