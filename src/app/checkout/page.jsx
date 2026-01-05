@@ -257,25 +257,39 @@ export default function Checkout() {
               <h2 className="sm:text-xl mb-6">Order Summary</h2>
 
               <div className={`${poppins.className} space-y-3 mb-4 text-sm`}>
-                <div className="flex justify-between text-gray-300">
+                <div className="flex justify-between text-gray-300 text-lg">
                   <span>Tickets</span>
                   <span>
                     {orderDetails.tickets.quantity} × €
                     {orderDetails.tickets.price.toFixed(2)}
                   </span>
                 </div>
-                <div className="flex justify-between text-gray-300">
-                  <span>Subtotal</span>
-                  <span>€{subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-gray-400">
-                  <span>Service Fee ({orderDetails.serviceFeePercent}%)</span>
-                  <span>€{serviceFee.toFixed(2)}</span>
-                </div>
-                <div className="border-t border-white/20 pt-3 flex justify-between sm:text-lg font-semibold">
-                  <span>Total</span>
-                  <span>€{total.toFixed(2)}</span>
-                </div>
+                {currentStep == 4 && (
+                  <div className="flex justify-between text-gray-300">
+                    <span>Subtotal</span>
+                    <span>€{subtotal.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {currentStep !== 4 && (
+                  <p
+                    className={`${poppins.className} text-[10px] sm:text-xs text-gray-300`}
+                  >
+                    Tax, fulfillment fee, and service fee not included.
+                  </p>
+                )}
+                {currentStep == 4 && (
+                  <div className="flex justify-between text-gray-400">
+                    <span>Service Fee ({orderDetails.serviceFeePercent}%)</span>
+                    <span>€{serviceFee.toFixed(2)}</span>
+                  </div>
+                )}
+                {currentStep == 4 && (
+                  <div className="border-t border-white/20 pt-3 flex justify-between sm:text-lg font-semibold">
+                    <span>Total</span>
+                    <span>€{total.toFixed(2)}</span>
+                  </div>
+                )}
               </div>
             </motion.div>
 

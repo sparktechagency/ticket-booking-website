@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -20,6 +20,8 @@ import { Poppins } from "next/font/google";
 import { Button, MenuItem, Select } from "@mui/material";
 import Link from "next/link";
 import CountdownTimer from "@/components/utils/CountdownTimer";
+import { PurchaseLockModal } from "@/components/Modals/PurchaseLockModal";
+import { PriceLockModal } from "@/components/Modals/PriceLockModal";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -32,6 +34,17 @@ export default function PurchaseDetails() {
   const [ticketQuantity, setTicketQuantity] = useState(0);
   const [ticketColor, setTicketColor] = useState("#22D3EE");
   const [ticketPrice, setTicketPrice] = useState(0);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [showPurchaseModal, setShowPurchaseModal] = useState(false);
+  const [showLockedModal, setShowLockedModal] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowPurchaseModal(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     // Only runs on client
@@ -65,12 +78,16 @@ export default function PurchaseDetails() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const secs = (seconds % 60).toString().padStart(2, "0");
-    return `${mins}:${secs}`;
+  useEffect(() => {
+    const started = localStorage.getItem("checkout_timer_end");
+    if (started) setTimerStarted(true);
+  }, []);
+
+  const handleStartPurchase = () => {
+    localStorage.removeItem("checkout_timer_end");
+    setTimerStarted(true);
+    setShowPurchaseModal(false);
+    setShowLockedModal(true);
   };
 
   return (
@@ -202,7 +219,7 @@ export default function PurchaseDetails() {
           {/* RIGHT COLUMN */}
           <div className="lg:col-span-2 mt-8 lg:mt-0 space-y-6">
             {/* Timer */}
-            <CountdownTimer />
+            <CountdownTimer started={timerStarted} />
 
             {/* Order Summary */}
             <div className="bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-2xl p-6 shadow-xl lg:sticky lg:top-6">
@@ -278,7 +295,18 @@ export default function PurchaseDetails() {
             </div>
           </div>
         </div>
-      </main>
+      </main>{" "}
+      <AnimatePresence>
+        {showPurchaseModal && (
+          <PurchaseLockModal
+            onClose={() => setShowPurchaseModal(false)}
+            onStart={handleStartPurchase}
+          />
+        )}
+        {showLockedModal && (
+          <PriceLockModal onClose={() => setShowLockedModal(false)} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
