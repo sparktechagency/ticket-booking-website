@@ -1,6 +1,6 @@
 "use client";
 
-import useLogIn from "@/components/libs/hooks/useLogIn";
+import { useSignInMutation } from "@/Redux/slices/authApi";
 import {
   Button,
   Divider,
@@ -8,73 +8,77 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
+import { cookies } from "next/headers";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 import { toast } from "sonner";
 
 export default function SignIn() {
-  const { user, loading, error, logIn } = useLogIn();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formValues, setFormValues] = useState({
+    email: "",
+    password: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleShowNewPassword = () => setShowPassword((prev) => !prev);
+  const [logIn, { isLoading, error }] = useSignInMutation();
 
-  const handleSubmit = async (e) => {
+  const router = useRouter();
+
+  const handleShowPassword = () => setShowPassword((prev) => !prev);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmitLogIn = async (e) => {
     e.preventDefault();
 
-    if (!email) {
-      toast.error("Email is required");
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      toast.error("Please enter a valid email address");
-    }
+    try {
+      //  console.log("Logging in with values:", formValues);
+      const response = await logIn(formValues).unwrap();
+      console.log("res", response);
 
-    if (!password) {
-      toast.error("Password is required");
-    } else if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+      if (response.success) {
+        (await cookies()).set("done", "cookies is set");
+        // sessionStorage.setItem("accessToken", response?.data?.accessToken);
+        // sessionStorage.setItem("refreshToken", response?.data?.refreshToken);
+        toast.success("Login Successful", response);
+      }
+    } catch (error) {
+      if (error?.data?.message === "Password does not match") {
+        toast.error("Incorrect Password.");
+      }
+      if (error?.data?.message === "User not found") {
+        toast.error("Incorrect Email. User not found");
+      } else {
+        console.error("Login failed:", error);
+      }
     }
-
-    await logIn(email, password);
   };
 
   return (
-    <div className="bg-linear-to-b from-[#FBFFFF] to-[#D6F9F8] min-h-[85vh] flex justify-center items-center p-4">
-      <div className="flex flex-col gap-2 sm:gap-4 bg-white shadow-md rounded-lg w-full max-w-md px-3 sm:px-8 py-4 sm:py-12">
-        <p className="text-center text-lg sm:text-3xl font-bold text-[#1A1D25]">
-          Log In
+    <div className="bg-linear-to-br from-[#0a0e27] via-[#16112e] to-[#0a0e27] min-h-[85vh] flex justify-center items-center p-4">
+      <div className="flex flex-col gap-2 sm:gap-4 bg-linear-to-br from-[#1a0b2e] to-[#0c0520] shadow-2xl shadow-purple-900/20 rounded-lg w-full max-w-md px-3 sm:px-8 py-4 sm:py-12 border border-purple-500/20">
+        <p className="text-center text-lg sm:text-3xl font-bold text-white mb-2">
+          Sign In
         </p>
 
-        <Button
-          sx={{
-            textTransform: "none",
-            border: "1px solid #DADCE0",
-            width: "100%",
-            padding: "10px",
-            borderRadius: "8px",
-          }}
-        >
-          <div className="flex items-center gap-2 justify-center">
-            <FcGoogle className="text-lg" />
-            <p className="text-[#454959] font-semibold">Continue with Google</p>
-          </div>
-        </Button>
-
-        <div className="flex items-center w-full">
-          <Divider sx={{ flex: 1 }} />
-          <p className="mx-3 text-[#828A99]">or</p>
-          <Divider sx={{ flex: 1 }} />
-        </div>
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form onSubmit={handleSubmitLogIn} className="flex flex-col gap-3">
           <TextField
             label="Email"
             variant="outlined"
             fullWidth
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formValues.email}
+            onChange={handleChange}
             InputProps={{
               sx: {
                 height: {
@@ -83,10 +87,13 @@ export default function SignIn() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff",
+                backgroundColor: "rgba(139, 92, 246, 0.05)", // Purple tint
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd", // Light purple
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -100,20 +107,25 @@ export default function SignIn() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa", // Purple-400
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)", // Purple border
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)", // Lighter purple on hover
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa", // Purple-400 when focused
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
                 padding: {
@@ -131,8 +143,9 @@ export default function SignIn() {
             variant="outlined"
             type={showPassword ? "text" : "password"}
             fullWidth
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formValues.password}
+            onChange={handleChange}
             InputProps={{
               sx: {
                 height: {
@@ -141,10 +154,13 @@ export default function SignIn() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff", // White text
+                backgroundColor: "rgba(139, 92, 246, 0.05)",
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd",
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -158,28 +174,39 @@ export default function SignIn() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa",
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa",
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
+                color: "#ffffff", // Add this to ensure input text is white
                 padding: {
                   xs: "12px 14px",
                   sm: "14px 14px",
                   md: "16px 14px",
                   lg: "18px 14px",
                 },
+              },
+              // Add input autofill styles
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.1) inset",
+                WebkitTextFillColor: "#ffffff",
               },
             }}
             slotProps={{
@@ -190,14 +217,17 @@ export default function SignIn() {
                       aria-label={
                         showPassword ? "Hide password" : "Show password"
                       }
-                      onClick={handleShowNewPassword}
+                      onClick={handleShowPassword}
                       edge="end"
+                      sx={{
+                        color: "#c4b5fd",
+                        "&:hover": {
+                          color: "#a78bfa",
+                          backgroundColor: "rgba(168, 85, 247, 0.1)",
+                        },
+                      }}
                     >
-                      {showPassword ? (
-                        <IoIosEyeOff className="text-[#00AEA8]" />
-                      ) : (
-                        <IoMdEye className="text-[#00AEA8]" />
-                      )}
+                      {showPassword ? <IoIosEyeOff /> : <IoMdEye />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -207,7 +237,7 @@ export default function SignIn() {
 
           <Link
             href="reset-password"
-            className="flex justify-end text-xs sm:text-sm text-[#00AEA8] hover:font-medium mt-1"
+            className="flex justify-end text-xs sm:text-sm text-[#a78bfa] hover:text-[#c4b5fd] hover:font-medium mt-1 transition-colors"
           >
             Reset password
           </Link>
@@ -215,7 +245,7 @@ export default function SignIn() {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#00AEA8",
+              background: "linear-gradient(to right, #8b5cf6, #7c3aed)", // Purple gradient
               textTransform: "none",
               fontWeight: "600",
               color: "#FFFFFF",
@@ -237,21 +267,33 @@ export default function SignIn() {
                 md: "52px",
               },
               "&:hover": {
-                backgroundColor: "#007D74",
+                background: "linear-gradient(to right, #7c3aed, #6d28d9)", // Darker purple on hover
+                boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
+              },
+              "&:disabled": {
+                background: "rgba(139, 92, 246, 0.3)",
+                color: "rgba(255, 255, 255, 0.5)",
               },
             }}
             type="submit"
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? "Logging in..." : "Log in"}
+            {isLoading ? "Logging in..." : "Log in"}
           </Button>
         </form>
 
-        {error && <p className="text-center text-red-500 mt-2">{error}</p>}
+        {error && (
+          <p className="text-center text-red-300 bg-red-500/10 border border-red-400/30 rounded-lg py-2 px-3 text-sm">
+            {error}
+          </p>
+        )}
 
         <div className="flex items-center gap-1 justify-center text-sm">
-          <p className=" text-[#828A99]">No account? </p>
-          <Link href="sign-up" className="text-[#00AEA8] font-semibold">
+          <p className="text-[#aeb1b6]">No account?</p>
+          <Link
+            href="sign-up"
+            className="text-[#a78bfa] hover:text-[#c4b5fd] font-semibold transition-colors"
+          >
             Create one
           </Link>
         </div>

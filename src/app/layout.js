@@ -8,6 +8,7 @@ import ClientToaster from "@/components/libs/ClientToaster";
 import Footer from "@/components/Shared/Footer";
 import { CursorProvider } from "@/components/libs/Context/CursorContext";
 import AnimatedCursor from "@/components/libs/AnimatedCursor";
+import Providers from "@/utils/Providers";
 
 const kronaOne = Krona_One({
   weight: ["400"], // Krona One only has one weight: Regular 400
@@ -25,13 +26,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${kronaOne.className}`}>
       <body>
-        <CursorProvider>
-          <ClientToaster />
-          <AnimatedCursor borderColor="white" />
-          <Navbar />
-          {children}
-          <Footer />
-        </CursorProvider>
+        <Providers>
+          <CursorProvider>
+            <ClientToaster />
+            <AnimatedCursor borderColor="white" />
+            <Navbar />
+            {children}
+            <Footer />
+          </CursorProvider>
+        </Providers>
       </body>
     </html>
   );
