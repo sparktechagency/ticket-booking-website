@@ -22,6 +22,7 @@ import Link from "next/link";
 import CountdownTimer from "@/components/utils/CountdownTimer";
 import { PurchaseLockModal } from "@/components/Modals/PurchaseLockModal";
 import { PriceLockModal } from "@/components/Modals/PriceLockModal";
+import BuyerGuarantee from "@/components/utils/BuyerGuarantee";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -176,23 +177,6 @@ export default function PurchaseDetails() {
               </div>
             </motion.div>
 
-            {/* Buyer Guarantee */}
-            <div className="bg-[#FFFFFF0D] border border-[#FFFFFF1A] rounded-2xl p-3 sm:p-6 flex gap-2 sm:gap-4 max-w-2xl">
-              <MdOutlineShield className="text-3xl lg:text-2xl text-[#22D3EE]" />
-              <div>
-                <h3 className="text-[10px] sm:text-lg mb-1">
-                  Buyer Guarantee Protected
-                </h3>
-                <p
-                  className={`${poppins.className} text-[9px] sm:text-sm text-[#99A1AF]`}
-                >
-                  If your event gets cancelled, we&apos;re committed to making
-                  it right. Full refunds are processed within 5-7 business days
-                  for any cancelled events.
-                </p>
-              </div>
-            </div>
-
             {/* Stadium Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -215,7 +199,6 @@ export default function PurchaseDetails() {
           <div className="lg:col-span-2 mt-8 lg:mt-0 space-y-6">
             {/* Timer */}
             <CountdownTimer started={timerStarted} />
-
             {/* Order Summary */}
             <div className="bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-2xl p-6 shadow-xl lg:sticky lg:top-6">
               <h2 className="sm:text-xl mb-6">Order Summary</h2>
@@ -242,7 +225,7 @@ export default function PurchaseDetails() {
                   </div> */}
                 </div>
 
-                <div className="border-t border-white/20 pt-4 flex justify-between">
+                {/* <div className="border-t border-white/20 pt-4 flex justify-between">
                   <span>Total</span>
                   <span className="sm:text-2xl font-semibold">
                     €
@@ -251,7 +234,7 @@ export default function PurchaseDetails() {
                       ticketPrice * ticketQuantity * 0.05
                     ).toFixed(2)}
                   </span>
-                </div>
+                </div> */}
                 <div className="flex items-start gap-2 text-[#E9D5FF] border border-[#BD85F133] bg-[#BD85F10D] p-2 sm:p-3 rounded-lg">
                   <GoInfo className="text-xl" />
                   <p className={`${poppins.className} text-xs sm:text-sm `}>
@@ -287,7 +270,9 @@ export default function PurchaseDetails() {
                   Continue <FaArrowRight />
                 </Link>
               </div>
-            </div>
+            </div>{" "}
+            {/* Buyer Guarantee */}
+            <BuyerGuarantee />
           </div>
         </div>
       </main>{" "}

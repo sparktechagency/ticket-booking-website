@@ -50,13 +50,13 @@ export default function InfoForm({
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
       transition={{ duration: 0.3 }}
-      className="max-w-lg"
+      className="max-w-xl w-full lg:min-w-lg"
     >
       <div className="bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-2xl p-3 sm:p-6 border border-purple-500/30">
-        <h2 className="text-lg mb-6">Contact Information</h2>
+        <h2 className="text-lg mb-3">Contact Information</h2>
 
         <div className="space-y-4">
-          <div>
+          <div className="w-full">
             <label
               className={`${poppins.className} block text-sm text-gray-400 mb-2`}
             >
@@ -80,7 +80,7 @@ export default function InfoForm({
             />
           </div>
 
-          <div>
+          <div className="w-full">
             <label
               className={`${poppins.className} block text-sm text-gray-400 mb-2`}
             >
@@ -105,7 +105,7 @@ export default function InfoForm({
             />
           </div>
 
-          <div>
+          <div className="w-full">
             <label
               className={`${poppins.className} block text-sm text-gray-400 mb-2`}
             >
@@ -188,29 +188,30 @@ export default function InfoForm({
             />
           </div>
         </div>
-
-        <Button
-          fullWidth
-          onClick={handleNext}
-          variant="contained"
-          endIcon={<FaArrowRight />}
-          sx={{
-            mt: 4,
-            background: "linear-gradient(to right, #8F18FB, #5B06A7)",
-            color: "white",
-            py: { xs: 1, sm: 1.5 },
-            fontSize: "14px",
-            borderRadius: "12px",
-            textTransform: "none",
-            fontWeight: 600,
-            "&:hover": {
-              background: "linear-gradient(to right, #7c3aed, #6d28d9)",
-              boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
-            },
-          }}
-        >
-          Continue
-        </Button>
+        <div className="w-full">
+          <Button
+            fullWidth
+            onClick={handleNext}
+            variant="contained"
+            endIcon={<FaArrowRight />}
+            sx={{
+              mt: 4,
+              background: "linear-gradient(to right, #8F18FB, #5B06A7)",
+              color: "white",
+              py: { xs: 1, sm: 1.5 },
+              fontSize: "14px",
+              borderRadius: "12px",
+              textTransform: "none",
+              fontWeight: 600,
+              "&:hover": {
+                background: "linear-gradient(to right, #7c3aed, #6d28d9)",
+                boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
+              },
+            }}
+          >
+            Continue
+          </Button>
+        </div>
       </div>
     </motion.div>
   );

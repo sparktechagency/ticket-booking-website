@@ -45,11 +45,11 @@ export default function CountdownTimer({ started }) {
 
   return (
     <div
-      className={`${poppins.className} flex items-center justify-between gap-4 px-6 py-4 bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-xl text-[#E9D5FF]`}
+      className={`${poppins.className} flex items-center justify-between gap-4 px-2 sm:px-6 py-4 text-xs sm:text-sm bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-xl text-[#E9D5FF]`}
     >
       <RiTimerLine />
       <p>Tickets reserved for 10 minutes:</p>
-      <span className="font-semibold text-lg">{formatTime(timer)}</span>
+      <span className="font-semibold sm:text-lg">{formatTime(timer)}</span>
     </div>
   );
 }
