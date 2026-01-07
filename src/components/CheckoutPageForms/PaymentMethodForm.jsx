@@ -9,17 +9,29 @@ import {
   IconButton,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { FaArrowRight, FaCreditCard, FaLock, FaTimes } from "react-icons/fa";
+import {
+  FaArrowRight,
+  FaCreditCard,
+  FaEnvelope,
+  FaLock,
+  FaTimes,
+} from "react-icons/fa";
 import { RiVisaLine } from "react-icons/ri";
 import { SiAmericanexpress, SiMastercard } from "react-icons/si";
 import { useState } from "react";
+import { poppins } from "../utils/FontPoppins";
+import Link from "next/link";
+import { PiStarFourBold } from "react-icons/pi";
 
 export default function PaymentMethodForm({
   formData,
   errors,
   handleChange,
-  handleNext,
   inputStyles,
+  orderDetails,
+  subtotal,
+  serviceFee,
+  total,
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [promoCode, setPromoCode] = useState("");
@@ -67,7 +79,41 @@ export default function PaymentMethodForm({
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -50 }}
         transition={{ duration: 0.3 }}
+        className="space-y-10"
       >
+        <div className="bg-[#FFFFFF0D] rounded-2xl p-6 border border-[#FFFFFF1A]">
+          <p className="sm:text-xl mb-2">Your Information</p>
+          <div className="flex items-center gap-2 mb-2">
+            <FaEnvelope className="text-[#BD85F1]" />
+            <h2 className={`${poppins.className} text-sm text-[#99A1AF]`}>
+              Contact
+            </h2>
+          </div>
+          <div className={`${poppins.className} space-y-1 text-sm`}>
+            <p className="text-gray-300">{formData.fullName}</p>
+            <p className="text-gray-400">{formData.email}</p>
+            <p className="text-gray-400">+1 {formData.phone}</p>
+          </div>
+          {/* Address Display */}
+          {/* <div className="bg-transparent mt-5 pt-5 border-t border-[#FFFFFF1A]">
+                     <div className="flex items-center gap-2 mb-2">
+                       <FaMapMarkerAlt className="text-[#BD85F1]" />
+                       <h2 className={`${poppins.className} text-sm text-[#99A1AF]`}>
+                         Delivery Address
+                       </h2>
+                     </div>
+                     <div
+                       className={`${poppins.className} flex flex-wrap items-center text-sm text-white`}
+                     >
+                       <p>{formData.addressLine1},</p>
+                       {formData.addressLine2 && <p>{formData.addressLine2},</p>}
+                       <p>
+                         {formData.city}, {formData.zipCode},
+                       </p>
+                       <p>{formData.country}</p>
+                     </div>
+                   </div> */}
+        </div>{" "}
         <div className="bg-linear-to-b from-[#6D1DB9] to-[#090014] rounded-2xl p-2 sm:p-6 border border-purple-500/30">
           <div className="bg-[#BD85F11A] border border-[#BD85F1] rounded-xl p-4 mb-6">
             <div className="flex items-center gap-3">
@@ -78,7 +124,6 @@ export default function PaymentMethodForm({
               </div>
             </div>
           </div>
-
           <div className="space-y-4">
             <div>
               <label className="font-sans block text-sm text-gray-400 mb-2">
@@ -174,14 +219,13 @@ export default function PaymentMethodForm({
               </div>
             </div>
           </div>
-
           {appliedPromo && (
             <div className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-lg flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-400">
+                <p className="text-[10px] sm:text-sm font-medium text-green-400">
                   Promo Applied: {appliedPromo.code}
                 </p>
-                <p className="text-xs text-gray-400">
+                <p className="text-[10px] sm:text-xs text-gray-400">
                   {appliedPromo.discount} discount
                 </p>
               </div>
@@ -193,53 +237,29 @@ export default function PaymentMethodForm({
               </button>
             </div>
           )}
-
           <div className="flex items-center gap-2 text-xs text-gray-400 mt-4">
             <FaLock className="text-sm" />
             <span className="font-sans block text-xs sm:text-sm text-gray-400">
               Your payment information is secure and encrypted
             </span>
           </div>
-
-          <Button
-            fullWidth
-            onClick={handleNext}
-            variant="contained"
-            endIcon={<FaArrowRight />}
-            sx={{
-              mt: 4,
-              background: "linear-gradient(to right, #8F18FB, #5B06A7)",
-              color: "white",
-              py: 1.5,
-              fontSize: "14px",
-              borderRadius: "12px",
-              textTransform: "none",
-              fontWeight: 600,
-              "&:hover": {
-                background: "linear-gradient(to right, #7c3aed, #6d28d9)",
-                boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
-              },
-            }}
-          >
-            Continue
-          </Button>
-        </div>
-        <div className="flex items-center justify-between p-2 bg-white rounded-lg mt-2">
-          <p className="text-black text-sm">Gift Card / Promo Code</p>
-          <Button
-            onClick={handleOpenGiftCard}
-            sx={{
-              textTransform: "none",
-              bgcolor: "#efefef",
-              fontWeight: "600",
-              "&:hover": {
-                bgcolor: "#e0e0e0",
-              },
-            }}
-          >
-            {appliedPromo ? "Change" : "Add"}
-          </Button>
-        </div>
+          <div className="flex items-center justify-between px-3 py-1 bg-white rounded-lg mt-2">
+            <p className="text-black text-[10px]">Gift Card / Promo Code</p>
+            <Button
+              onClick={handleOpenGiftCard}
+              sx={{
+                textTransform: "none",
+                bgcolor: "#efefef",
+                fontWeight: "600",
+                "&:hover": {
+                  bgcolor: "#e0e0e0",
+                },
+              }}
+            >
+              {appliedPromo ? "Change" : "Add"}
+            </Button>
+          </div>
+        </div>{" "}
       </motion.div>
 
       {/* Promo Code Modal */}
@@ -265,7 +285,9 @@ export default function PaymentMethodForm({
             pb: 1,
           }}
         >
-          <span className="font-sans font-semibold">Add Promo Code</span>
+          <span className="font-sans text-sm font-semibold">
+            Add Promo Code
+          </span>
           <IconButton onClick={handleCloseModal} sx={{ color: "gray" }}>
             <FaTimes />
           </IconButton>
@@ -289,7 +311,7 @@ export default function PaymentMethodForm({
               },
             }}
           />
-          <p className="text-xs text-gray-400 mt-3">
+          <p className="text-[10px] sm:text-xs text-gray-400 mt-3">
             Enter your gift card or promotional code to receive a discount
           </p>
         </DialogContent>

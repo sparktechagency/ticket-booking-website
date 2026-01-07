@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowLeft, FaLock } from "react-icons/fa";
 import { GoDotFill, GoInfo } from "react-icons/go";
@@ -14,9 +14,17 @@ import { toast } from "sonner";
 
 import { Button, Divider, IconButton, Tooltip } from "@mui/material";
 import Image from "next/image";
+import { CiLock } from "react-icons/ci";
+import { MdOutlineShield } from "react-icons/md";
+import BuyerGuarantee from "@/components/utils/BuyerGuarantee";
+import SecurePaymentNotice from "@/components/utils/SecurePaymentNotice";
+import Link from "next/link";
+import { PiStarFourBold } from "react-icons/pi";
 
 export default function Checkout() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [timerStarted, setTimerStarted] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -32,7 +40,14 @@ export default function Checkout() {
     cvc: "",
   });
 
-  const [errors, setErrors] = useState({});
+  useEffect(() => {
+    const started = localStorage.getItem("checkout_timer_end");
+    if (started) {
+      setTimeout(() => {
+        setTimerStarted(true);
+      }, 0);
+    }
+  }, []);
 
   // Order details
   const orderDetails = {
@@ -111,7 +126,7 @@ export default function Checkout() {
 
   const handleNext = () => {
     if (validateStep(currentStep)) {
-      if (currentStep < 4) {
+      if (currentStep < 3) {
         setCurrentStep(currentStep + 1);
       } else {
         console.log("Payment submitted:", formData);
@@ -144,34 +159,34 @@ export default function Checkout() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-[#0a0e27] via-[#16112e] to-[#0a0e27] text-white px-4 py-10">
-      <div className="flex flex-col gap-5 items-center justify-center">
-        <CountdownTimer />
+      <div className="flex flex-col gap-5 justify-center max-w-5xl mx-auto">
+        {/* Header Section - Back Button, Title, and Timer */}
         <div className="flex flex-col lg:flex-row gap-5">
-          <div className="max-w-7xl">
+          <div className="">
             <AnimatePresence mode="wait">
-              {currentStep > 1 && currentStep < 4 && (
+              {currentStep > 1 && currentStep <= 3 && (
                 <motion.button
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   onClick={handleBack}
-                  className="flex items-center gap-2 mb-6 text-gray-400 hover:text-white transition-colors"
+                  className="flex items-center gap-2  text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   <FaArrowLeft />
-                  <span className="text-sm uppercase tracking-wider">Back</span>
+                  <span className="uppercase tracking-wider">Back</span>
                 </motion.button>
               )}
-              <div className="mb-8">
-                <h1 className="sm:text-lg  lg:text-2xl font-semibold mb-2">
+              <div>
+                <h1 className="text-sm sm:text-lg lg:text-xl font-semibold mb-2">
                   {currentStep === 1
                     ? "Your Information"
                     : currentStep === 2
                     ? "Address"
                     : currentStep === 3
-                    ? "Payment Method"
+                    ? "Payment Confirmation"
                     : ""}
                 </h1>
-                {currentStep < 4 && (
+                {currentStep < 3 && (
                   <p
                     className={`${poppins.className} text-xs sm:text-sm text-gray-400`}
                   >
@@ -181,7 +196,15 @@ export default function Checkout() {
                 )}
               </div>
             </AnimatePresence>
+          </div>
 
+          <div className="">
+            <CountdownTimer started={timerStarted} />
+          </div>
+        </div>
+        {/* form section */}
+        <div className="flex flex-col lg:flex-row gap-5">
+          <div className="">
             <AnimatePresence mode="wait">
               {currentStep === 1 && (
                 <InfoForm
@@ -213,25 +236,16 @@ export default function Checkout() {
                   handleChange={handleChange}
                   handleNext={handleNext}
                   inputStyles={inputStyles}
-                />
-              )}
-
-              {currentStep === 4 && (
-                <ReviewAndConfirm
-                  key="review-form"
-                  formData={formData}
                   orderDetails={orderDetails}
                   subtotal={subtotal}
                   serviceFee={serviceFee}
-                  total={total}
-                  handleNext={handleNext}
                 />
               )}
             </AnimatePresence>
 
             {/* Progress Indicator */}
-            <div className="flex justify-center gap-2 mt-8">
-              {[1, 2, 3, 4].map((step) => (
+            <div className="flex justify-center gap-2 mt-6">
+              {[1, 2, 3].map((step) => (
                 <motion.div
                   key={step}
                   initial={{ width: 8 }}
@@ -248,143 +262,235 @@ export default function Checkout() {
               ))}
             </div>
           </div>
-          <div className="space-y-4 lg:mt-23">
-            {/* Order Summary */}
+          {/* Order Summary */}
+          <div className="max-w-lg lg:min-w-md mx-auto space-y-3">
+            <div className="space-y-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="bg-linear-to-br from-[#6D1DB9] to-[#090014] backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-purple-500/30 w-full "
+              >
+                <h2 className="text-sm sm:text-lg lg:text-xl mb-4 sm:mb-6 font-semibold">
+                  Order Summary
+                </h2>
+
+                {/* Event Details */}
+                <div
+                  className={`${poppins.className} flex items-start sm:items-center justify-between gap-5 mb-4`}
+                >
+                  <div className="space-y-1 flex-1 min-w-0">
+                    <p className="text-[#e7fbff] font-semibold text-sm sm:text-base wrap-break-word">
+                      The Weeknd: After Hours Tour
+                    </p>
+                    <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-[#e2e2e2]">
+                      <p className="whitespace-nowrap">March 15, 2026</p>
+                      <GoDotFill className="" />
+                      <p className="whitespace-nowrap">20:00</p>
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#e2e2e2] wrap-break-word">
+                      Madison Square Garden, New York
+                    </p>
+                  </div>
+                  <Image
+                    src="/Images/concerts/TaylorSwift.png"
+                    alt="Event"
+                    width={50}
+                    height={50}
+                    className="rounded-lg shrink-0 size-16 sm:size-18"
+                  />
+                </div>
+
+                <Divider
+                  sx={{
+                    bgcolor: "rgba(255,255,255,0.5)",
+                    my: { xs: 1.5, sm: 2 },
+                  }}
+                />
+
+                {/* Ticket Info */}
+                <div
+                  className={`${poppins.className} flex flex-wrap items-center gap-2 text-xs sm:text-sm text-[#e2e2e2] mb-3`}
+                >
+                  <p>2 Tickets</p>
+                  <GoDotFill className="shrink-0" />
+                  <p>General</p>
+                </div>
+
+                <Divider
+                  sx={{
+                    bgcolor: "rgba(255,255,255,0.5)",
+                    my: { xs: 1.5, sm: 2 },
+                  }}
+                />
+
+                {/* Price Breakdown */}
+                <div className={`${poppins.className} mb- text-xs sm:text-sm`}>
+                  <div className="flex justify-between text-gray-300 text-sm sm:text-base lg:text-lg">
+                    <span>Tickets</span>
+                    <span className="font-medium">
+                      {orderDetails.tickets.quantity} × €
+                      {orderDetails.tickets.price.toFixed(2)}
+                    </span>
+                  </div>
+
+                  {currentStep === 3 && (
+                    <div className="flex items-center justify-between text-gray-300">
+                      <div>
+                        <span>Fees</span>
+                        <Tooltip title="Fulfillment and service fees help us bring you a safe, global marketplace where you can get tickets to your favourite event.">
+                          <IconButton>
+                            <GoInfo className="text-lg text-white" />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                      <span className="font-medium">
+                        €{serviceFee.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+
+                  {currentStep !== 3 && (
+                    <p
+                      className={`${poppins.className} text-[10px] sm:text-xs text-[#cccccc]`}
+                    >
+                      Tax, fulfillment fee, and service fee not included.
+                    </p>
+                  )}
+
+                  {currentStep === 3 && (
+                    <div className="flex justify-between text-gray-400">
+                      <span className="text-xs sm:text-sm">Tax</span>
+                      <span className="font-medium">€{orderDetails.tax}</span>
+                    </div>
+                  )}
+
+                  {currentStep === 3 && (
+                    <div className="border-t border-white/20 pt-2 sm:pt-3 mt-2 sm:mt-3 flex justify-between text-base sm:text-lg lg:text-xl font-semibold text-white">
+                      <span>Total</span>
+                      <span>€{total.toFixed(2)}</span>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* Pay Button */}
+              {currentStep == 3 && (
+                <Button
+                  fullWidth
+                  onClick={handleNext}
+                  variant="contained"
+                  startIcon={<FaLock />}
+                  sx={{
+                    background: "linear-gradient(to right, #8F18FB, #5B06A7)",
+                    color: "white",
+                    py: 1,
+                    fontSize: "14px",
+                    borderRadius: "12px",
+                    textTransform: "none",
+                    fontWeight: 500,
+                    "&:hover": {
+                      background: "linear-gradient(to right, #7c3aed, #6d28d9)",
+                      boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
+                    },
+                  }}
+                >
+                  Pay Now €{total.toFixed(2)}
+                </Button>
+              )}
+            </div>
+            {/* Secure Payment Notice */}
+            {currentStep === 3 && <SecurePaymentNotice />}
+            {/* Buyer Guarantee */}
+            {currentStep === 3 && <BuyerGuarantee />}
+          </div>
+        </div>{" "}
+        {currentStep === 3 && (
+          <div className="lg:min-w-3xl">
+            {/* Zero Service Fees Banner */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="bg-linear-to-br from-[#6D1DB9] to-[#090014] backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-purple-500/30 w-full max-w-xl mx-auto"
+              transition={{ delay: 0.6 }}
+              className="bg-[#2B024E] rounded-t-2xl p-3 sm:p-6 border border-purple-500/30"
             >
-              <h2 className="text-sm sm:text-lg lg:text-xl mb-4 sm:mb-6 font-semibold">
-                Order Summary
-              </h2>
-
-              {/* Event Details */}
-              <div
-                className={`${poppins.className} flex items-start sm:items-center justify-between gap-5 mb-4`}
-              >
-                <div className="space-y-1 flex-1 min-w-0">
-                  <p className="text-[#e7fbff] font-semibold text-sm sm:text-base wrap-break-word">
-                    The Weeknd: After Hours Tour
-                  </p>
-                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-[#e2e2e2]">
-                    <p className="whitespace-nowrap">March 15, 2026</p>
-                    <GoDotFill className="" />
-                    <p className="whitespace-nowrap">20:00</p>
-                  </div>
-                  <p className="text-xs sm:text-sm text-[#e2e2e2] wrap-break-word">
-                    Madison Square Garden, New York
+              <div className="flex items-start gap-4">
+                <div className="bg-[#BD85F133] p-3 rounded-xl">
+                  <PiStarFourBold className="text-[#BD85F1] sm:text-xl" />
+                </div>
+                <div>
+                  <h3 className="text-xs sm:text-lg font-medium mb-1">
+                    Zero Service Fees - All Year
+                  </h3>
+                  <p className={`${poppins.className} text-xs text-gray-400`}>
+                    Save €{serviceFee.toFixed(2)} on this order and on every
+                    future purchase
                   </p>
                 </div>
-                <Image
-                  src="/Images/concerts/TaylorSwift.png"
-                  alt="Event"
-                  width={50}
-                  height={50}
-                  className="rounded-lg shrink-0 size-16 sm:size-18"
-                />
-              </div>
-
-              <Divider
-                sx={{
-                  bgcolor: "rgba(255,255,255,0.5)",
-                  my: { xs: 1.5, sm: 2 },
-                }}
-              />
-
-              {/* Ticket Info */}
-              <div
-                className={`${poppins.className} flex flex-wrap items-center gap-2 text-xs sm:text-sm text-[#e2e2e2] mb-3`}
-              >
-                <p>2 Tickets</p>
-                <GoDotFill className="shrink-0" />
-                <p>General</p>
-              </div>
-
-              <Divider
-                sx={{
-                  bgcolor: "rgba(255,255,255,0.5)",
-                  my: { xs: 1.5, sm: 2 },
-                }}
-              />
-
-              {/* Price Breakdown */}
-              <div className={`${poppins.className}  mb-4 text-xs sm:text-sm`}>
-                <div className="flex justify-between text-gray-300 text-sm sm:text-base lg:text-lg">
-                  <span>Tickets</span>
-                  <span className="font-medium">
-                    {orderDetails.tickets.quantity} × €
-                    {orderDetails.tickets.price.toFixed(2)}
-                  </span>
-                </div>
-
-                {currentStep === 4 && (
-                  <div className="flex items-center justify-between text-gray-300">
-                    <div>
-                      <span>Fees</span>
-                      <Tooltip title="Fulfillment and service fees help us bring you a safe, global marketplace where you can get tickets to your favourite event.">
-                        <IconButton>
-                          <GoInfo className="text-lg text-white" />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                    <span className="font-medium">
-                      €{serviceFee.toFixed(2)}
-                    </span>
-                  </div>
-                )}
-
-                {currentStep !== 4 && (
-                  <p
-                    className={`${poppins.className} text-[10px] sm:text-xs text-[#cccccc]`}
-                  >
-                    Tax, fulfillment fee, and service fee not included.
-                  </p>
-                )}
-
-                {currentStep === 4 && (
-                  <div className="flex justify-between text-gray-400">
-                    <span className="text-xs sm:text-sm">Tax</span>
-                    <span className="font-medium">€{orderDetails.tax}</span>
-                  </div>
-                )}
-
-                {currentStep === 4 && (
-                  <div className="border-t border-white/20 pt-2 sm:pt-3 mt-2 sm:mt-3 flex justify-between text-base sm:text-lg lg:text-xl font-semibold text-white">
-                    <span>Total</span>
-                    <span>€{total.toFixed(2)}</span>
-                  </div>
-                )}
               </div>
             </motion.div>
 
-            {/* Pay Button */}
-            {currentStep == 4 && (
-              <Button
-                fullWidth
-                onClick={handleNext}
-                variant="contained"
-                startIcon={<FaLock />}
-                sx={{
-                  background: "linear-gradient(to right, #8F18FB, #5B06A7)",
-                  color: "white",
-                  py: 1.5,
-                  fontSize: "16px",
-                  borderRadius: "12px",
-                  textTransform: "none",
-                  fontWeight: 500,
-                  "&:hover": {
-                    background: "linear-gradient(to right, #7c3aed, #6d28d9)",
-                    boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
-                  },
-                }}
+            {/* Unlock Premium Membership */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="bg-[#0f041e] rounded-b-2xl p-6 border-b border-r border-l border-gray-700/50"
+            >
+              <h2 className="text-xs sm:text-lg font-medium mb-2">
+                Unlock Premium Membership
+              </h2>
+              <p className={`${poppins.className} text-xs text-gray-400 mb-4`}>
+                Join today and never pay service fees again
+              </p>
+
+              <ul
+                className={`${poppins.className} space-y-2 mb-4 text-xs sm:text-sm`}
               >
-                Pay Now €{total.toFixed(2)}
-              </Button>
-            )}
+                <li className="flex items-center gap-2">
+                  <span className="text-[#BD85F1]">•</span>
+                  <span className="text-gray-300">
+                    Priority access to exclusive events
+                  </span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-[#BD85F1]">•</span>
+                  <span className="text-gray-300">
+                    Early bird ticket releases
+                  </span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-[#BD85F1]">•</span>
+                  <span className="text-gray-300">VIP customer support</span>
+                </li>
+              </ul>
+
+              <div
+                className={`${poppins.className} bg-[#030A1D] rounded-lg p-4 border border-white/10 mb-4 space-y-2 text-xs sm:text-sm`}
+              >
+                <div className="flex justify-between">
+                  <span className="text-[#99A1AF]">Membership (Annual)</span>
+                  <span className="text-[#E9D5FF]">€49.99</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[#99A1AF]">Est. yearly savings</span>
+                  <span className="text-[#E9D5FF]">€1200.00</span>
+                </div>
+                <div className="flex justify-between pt-2 border-t border-gray-700 sm:text-base">
+                  <span className="text-green-400">✓ Net Benefit</span>
+                  <span className="text-white font-semibold">€1150.01</span>
+                </div>
+              </div>
+
+              <Link
+                href="/membership"
+                className="bg-linear-to-r from-[#8b5cf6] to-[#7c3aed] p-1.5 sm:p-3 w-full rounded-lg text-xs sm:text-sm font-medium hover:from-[#7c3aed] hover:to-[#6d28d9] hover:shadow-lg transition-all duration-300 text-center block"
+              >
+                ✨ Upgrade to Premium
+              </Link>
+            </motion.div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
