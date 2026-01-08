@@ -7,6 +7,8 @@ import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Slider from "react-slick";
 import { concertData } from "../../../public/Data/ConcertData";
 import EventCard from "../utils/EventCard";
+import { useGetAllEventsQuery } from "@/Redux/slices/eventsApi";
+import { CircularProgress } from "@mui/material";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -48,6 +50,13 @@ function SampleNextArrow({ onClick }) {
 }
 
 export default function FeaturedConcerts() {
+  const { data: allEventsData, isLoading, isError } = useGetAllEventsQuery();
+  const eventsData = allEventsData?.data?.data;
+  const concertData = eventsData?.filter(
+    (event) => event.category === "Concert"
+  );
+  console.log("concertData", concertData);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -76,6 +85,14 @@ export default function FeaturedConcerts() {
       },
     ],
   };
+
+  if (isLoading || !eventsData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#04092C] py-6 sm:py-8 md:py-10 xl:py-20 px-4 sm:px-6 md:px-12 lg:px-16 xl:px-56">

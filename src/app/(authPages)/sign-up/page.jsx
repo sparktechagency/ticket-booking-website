@@ -61,13 +61,13 @@ export default function SignUp() {
   };
 
   return (
-    <div className="bg-linear-to-b from-[#FBFFFF] to-[#D6F9F8] min-h-[85vh] flex justify-center items-center p-4">
-      <div className="flex flex-col gap-2 sm:gap-4 bg-white shadow-md rounded-lg w-full max-w-md px-3 sm:px-8 py-4 sm:py-12">
-        <p className="text-center text-lg sm:text-3xl font-bold text-[#1A1D25]">
+    <div className="bg-linear-to-br from-[#0a0e27] via-[#16112e] to-[#0a0e27] min-h-[85vh] flex justify-center items-center p-4">
+      <div className="flex flex-col gap-2 sm:gap-4 bg-linear-to-br from-[#1a0b2e] to-[#0c0520] shadow-2xl rounded-lg w-full max-w-md px-3 sm:px-8 py-4 sm:py-12  border border-purple-500/20">
+        <p className="text-center text-lg sm:text-3xl font-bold text-white">
           Sign Up
         </p>
 
-        <Button
+        {/* <Button
           sx={{
             textTransform: "none",
             border: "1px solid #DADCE0",
@@ -86,7 +86,7 @@ export default function SignUp() {
           <Divider sx={{ flex: 1 }} />
           <p className="mx-3 text-[#828A99]">or</p>
           <Divider sx={{ flex: 1 }} />
-        </div>
+        </div> */}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <TextField
@@ -103,10 +103,13 @@ export default function SignUp() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff",
+                backgroundColor: "rgba(139, 92, 246, 0.05)",
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd",
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -120,22 +123,28 @@ export default function SignUp() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa",
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa",
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
+                color: "#ffffff",
                 padding: {
                   xs: "12px 14px",
                   sm: "14px 14px",
@@ -143,8 +152,13 @@ export default function SignUp() {
                   lg: "18px 14px",
                 },
               },
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
+                WebkitTextFillColor: "inherit",
+              },
             }}
           />
+
           <TextField
             label="Email"
             variant="outlined"
@@ -159,10 +173,13 @@ export default function SignUp() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff",
+                backgroundColor: "rgba(139, 92, 246, 0.05)",
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd",
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -176,28 +193,38 @@ export default function SignUp() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa",
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa",
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
+                color: "#ffffff",
                 padding: {
                   xs: "12px 14px",
                   sm: "14px 14px",
                   md: "16px 14px",
                   lg: "18px 14px",
                 },
+              },
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
+                WebkitTextFillColor: "inherit",
               },
             }}
           />
@@ -216,10 +243,13 @@ export default function SignUp() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff",
+                backgroundColor: "rgba(139, 92, 246, 0.05)",
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd",
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -233,22 +263,28 @@ export default function SignUp() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa",
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa",
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
+                color: "#ffffff",
                 padding: {
                   xs: "12px 14px",
                   sm: "14px 14px",
@@ -256,8 +292,13 @@ export default function SignUp() {
                   lg: "18px 14px",
                 },
               },
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
+                WebkitTextFillColor: "inherit",
+              },
             }}
           />
+
           <TextField
             label="Password"
             variant="outlined"
@@ -273,10 +314,13 @@ export default function SignUp() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff",
+                backgroundColor: "rgba(139, 92, 246, 0.05)",
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd",
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -290,28 +334,38 @@ export default function SignUp() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa",
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa",
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
+                color: "#ffffff",
                 padding: {
                   xs: "12px 14px",
                   sm: "14px 14px",
                   md: "16px 14px",
                   lg: "18px 14px",
                 },
+              },
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
+                WebkitTextFillColor: "inherit",
               },
             }}
             slotProps={{
@@ -324,18 +378,22 @@ export default function SignUp() {
                       }
                       onClick={handleShowNewPassword}
                       edge="end"
+                      sx={{
+                        color: "#c4b5fd",
+                        "&:hover": {
+                          color: "#a78bfa",
+                          backgroundColor: "rgba(168, 85, 247, 0.1)",
+                        },
+                      }}
                     >
-                      {showPassword ? (
-                        <IoIosEyeOff className="text-[#00AEA8]" />
-                      ) : (
-                        <IoMdEye className="text-[#00AEA8]" />
-                      )}
+                      {showPassword ? <IoIosEyeOff /> : <IoMdEye />}
                     </IconButton>
                   </InputAdornment>
                 ),
               },
             }}
           />
+
           <TextField
             label="Confirm Password"
             variant="outlined"
@@ -351,10 +409,13 @@ export default function SignUp() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff",
+                backgroundColor: "rgba(139, 92, 246, 0.05)",
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd",
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -368,28 +429,38 @@ export default function SignUp() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa",
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa",
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
+                color: "#ffffff",
                 padding: {
                   xs: "12px 14px",
                   sm: "14px 14px",
                   md: "16px 14px",
                   lg: "18px 14px",
                 },
+              },
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
+                WebkitTextFillColor: "inherit",
               },
             }}
             slotProps={{
@@ -402,12 +473,15 @@ export default function SignUp() {
                       }
                       onClick={handleShowConfirmPassword}
                       edge="end"
+                      sx={{
+                        color: "#c4b5fd",
+                        "&:hover": {
+                          color: "#a78bfa",
+                          backgroundColor: "rgba(168, 85, 247, 0.1)",
+                        },
+                      }}
                     >
-                      {showConfirmPassword ? (
-                        <IoIosEyeOff className="text-[#00AEA8]" />
-                      ) : (
-                        <IoMdEye className="text-[#00AEA8]" />
-                      )}
+                      {showConfirmPassword ? <IoIosEyeOff /> : <IoMdEye />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -418,7 +492,7 @@ export default function SignUp() {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#00AEA8",
+              background: "linear-gradient(to right, #8b5cf6, #7c3aed)",
               textTransform: "none",
               fontWeight: "600",
               color: "#FFFFFF",
@@ -440,7 +514,12 @@ export default function SignUp() {
                 md: "52px",
               },
               "&:hover": {
-                backgroundColor: "#007D74",
+                background: "linear-gradient(to right, #7c3aed, #6d28d9)",
+                boxShadow: "0 8px 24px rgba(139, 92, 246, 0.4)",
+              },
+              "&:disabled": {
+                background: "rgba(139, 92, 246, 0.3)",
+                color: "rgba(255, 255, 255, 0.5)",
               },
             }}
             type="submit"
@@ -450,8 +529,11 @@ export default function SignUp() {
         </form>
 
         <div className="flex items-center gap-1 justify-center text-xs sm:text-sm">
-          <p className=" text-[#828A99]">Already have an account? </p>
-          <Link href="sign-in" className="text-[#00AEA8] font-semibold">
+          <p className="text-[#aeb1b6]">Already have an account? </p>
+          <Link
+            href="sign-in"
+            className="text-[#a78bfa] hover:text-[#c4b5fd] font-semibold transition-colors"
+          >
             Log In
           </Link>
         </div>

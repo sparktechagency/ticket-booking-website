@@ -3,20 +3,11 @@
 import React from "react";
 import { Poppins } from "next/font/google";
 import Link from "next/link";
-import {
-  FaArrowLeft,
-  FaArrowRight,
-  FaCalendar,
-  FaMapMarkerAlt,
-  FaTicketAlt,
-} from "react-icons/fa";
-import { GoDotFill } from "react-icons/go";
-import { motion } from "framer-motion";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Slider from "react-slick";
-import Image from "next/image";
-import { Button, Divider } from "@mui/material";
-import SportsData from "../../../public/Data/SportsData";
+import { CircularProgress } from "@mui/material";
 import EventCard from "../utils/EventCard";
+import { useGetAllEventsQuery } from "@/Redux/slices/eventsApi";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -58,6 +49,11 @@ function SampleNextArrow({ onClick }) {
 }
 
 export default function FeaturedSports() {
+  const { data: allEventsData, isLoading, isError } = useGetAllEventsQuery();
+  const eventsData = allEventsData?.data?.data;
+  const sportsData = eventsData?.filter((event) => event.category === "Sports");
+  console.log("sportsData", sportsData);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -86,6 +82,14 @@ export default function FeaturedSports() {
       },
     ],
   };
+
+  if (isLoading || !eventsData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#04092C] py-6 sm:py-8 md:py-10 xl:py-20 px-4 sm:px-6 md:px-12 lg:px-16 xl:px-56">
@@ -133,7 +137,7 @@ export default function FeaturedSports() {
 
       {/* Slider */}
       <Slider {...settings}>
-        {SportsData.map((sport) => (
+        {sportsData.map((sport) => (
           <div key={sport.id} className="px-2 sm:px-3">
             <EventCard event={sport} variant={itemVariants} />
           </div>

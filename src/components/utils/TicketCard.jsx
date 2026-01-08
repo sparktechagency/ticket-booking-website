@@ -4,7 +4,15 @@ import { useState } from "react";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import { poppins } from "./FontPoppins";
 
-export function TicketCard({ title, price, color, tickets, selectTicket }) {
+export function TicketCard({
+  title,
+  price,
+  color,
+  tickets,
+  selectTicket,
+  totalQuantity,
+  eventData,
+}) {
   const [showConsent, setShowConsent] = useState(false);
 
   const handleTicketClick = () => {
@@ -43,7 +51,9 @@ export function TicketCard({ title, price, color, tickets, selectTicket }) {
             <div>
               <p className="text-base sm:text-lg">{title}</p>
               <p className="text-xs sm:text-sm text-[#05DF72] mt-1">
-                Available
+                {totalQuantity > 0
+                  ? `Available (${totalQuantity})`
+                  : "Sold Out"}
               </p>
             </div>
 
@@ -97,6 +107,7 @@ export function TicketCard({ title, price, color, tickets, selectTicket }) {
 
                 <Button
                   onClick={handleYes}
+                  disabled={totalQuantity <= 0}
                   sx={{
                     textTransform: "none",
                     bgcolor: "#22D3EE",
@@ -115,7 +126,7 @@ export function TicketCard({ title, price, color, tickets, selectTicket }) {
                   }}
                   startIcon={<FaCheck />}
                 >
-                  Yes, Continue
+                  {totalQuantity <= 0 ? "Sold Out" : "Yes, Continue"}
                 </Button>
               </div>
             </div>

@@ -53,15 +53,15 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="bg-linear-to-b from-[#FBFFFF] to-[#D6F9F8] min-h-[85vh] flex justify-center items-center p-4">
-      <div className="flex flex-col gap-2 sm:gap-4 bg-white shadow-md rounded-lg w-full max-w-md px-3 sm:px-8 py-4 sm:py-12">
-        <p className="text-center text-lg sm:text-3xl font-bold text-[#1A1D25]">
+    <div className="bg-linear-to-br from-[#0a0e27] via-[#16112e] to-[#0a0e27] min-h-[85vh] flex justify-center items-center p-4">
+      <div className="flex flex-col gap-2 sm:gap-5 bg-linear-to-br from-[#1a0b2e] to-[#0c0520] shadow-md rounded-lg w-full max-w-md px-3 sm:px-8 py-4 sm:py-12">
+        <p className="text-center text-lg sm:text-3xl font-bold text-white">
           Set New Password
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <TextField
-            label="Enter New Password"
+            label="Password"
             variant="outlined"
             type={showPassword ? "text" : "password"}
             fullWidth
@@ -75,10 +75,13 @@ export default function ResetPassword() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff",
+                backgroundColor: "rgba(139, 92, 246, 0.05)",
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd",
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -92,28 +95,38 @@ export default function ResetPassword() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa",
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa",
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
+                color: "#ffffff",
                 padding: {
                   xs: "12px 14px",
                   sm: "14px 14px",
                   md: "16px 14px",
                   lg: "18px 14px",
                 },
+              },
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
+                WebkitTextFillColor: "inherit",
               },
             }}
             slotProps={{
@@ -126,20 +139,24 @@ export default function ResetPassword() {
                       }
                       onClick={handleShowNewPassword}
                       edge="end"
+                      sx={{
+                        color: "#c4b5fd",
+                        "&:hover": {
+                          color: "#a78bfa",
+                          backgroundColor: "rgba(168, 85, 247, 0.1)",
+                        },
+                      }}
                     >
-                      {showPassword ? (
-                        <IoIosEyeOff className="text-[#00AEA8]" />
-                      ) : (
-                        <IoMdEye className="text-[#00AEA8]" />
-                      )}
+                      {newPassword ? <IoIosEyeOff /> : <IoMdEye />}
                     </IconButton>
                   </InputAdornment>
                 ),
               },
             }}
           />
+
           <TextField
-            label="Confirm New Password"
+            label="Confirm Password"
             variant="outlined"
             type={showConfirmPassword ? "text" : "password"}
             fullWidth
@@ -153,10 +170,13 @@ export default function ResetPassword() {
                   md: "52px",
                   lg: "56px",
                 },
+                color: "#ffffff",
+                backgroundColor: "rgba(139, 92, 246, 0.05)",
               },
             }}
             InputLabelProps={{
               sx: {
+                color: "#c4b5fd",
                 fontSize: {
                   xs: "0.875rem",
                   sm: "0.9375rem",
@@ -170,28 +190,38 @@ export default function ResetPassword() {
                 },
                 "&.MuiInputLabel-shrink": {
                   transform: "translate(14px, -9px) scale(0.75)",
+                  color: "#a78bfa",
                 },
               },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "rgba(168, 85, 247, 0.3)",
+                },
                 "&:hover fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "rgba(168, 85, 247, 0.5)",
                 },
                 "&.Mui-focused fieldset": {
-                  borderColor: "#00AEA8",
+                  borderColor: "#a78bfa",
+                  borderWidth: "2px",
                 },
               },
               "& .MuiInputLabel-root.Mui-focused": {
-                color: "#00AEA8",
+                color: "#a78bfa",
               },
               "& .MuiOutlinedInput-input": {
+                color: "#ffffff",
                 padding: {
                   xs: "12px 14px",
                   sm: "14px 14px",
                   md: "16px 14px",
                   lg: "18px 14px",
                 },
+              },
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
+                WebkitTextFillColor: "inherit",
               },
             }}
             slotProps={{
@@ -204,12 +234,15 @@ export default function ResetPassword() {
                       }
                       onClick={handleShowConfirmPassword}
                       edge="end"
+                      sx={{
+                        color: "#c4b5fd",
+                        "&:hover": {
+                          color: "#a78bfa",
+                          backgroundColor: "rgba(168, 85, 247, 0.1)",
+                        },
+                      }}
                     >
-                      {showConfirmPassword ? (
-                        <IoIosEyeOff className="text-[#00AEA8]" />
-                      ) : (
-                        <IoMdEye className="text-[#00AEA8]" />
-                      )}
+                      {showConfirmPassword ? <IoIosEyeOff /> : <IoMdEye />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -220,7 +253,7 @@ export default function ResetPassword() {
           <Button
             variant="contained"
             sx={{
-              backgroundColor: "#00AEA8",
+              backgroundColor: "#a78bfa",
               textTransform: "none",
               fontWeight: "600",
               color: "#FFFFFF",
@@ -242,7 +275,7 @@ export default function ResetPassword() {
                 md: "52px",
               },
               "&:hover": {
-                backgroundColor: "#007D74",
+                backgroundColor: "#a78bfa",
               },
             }}
             type="submit"

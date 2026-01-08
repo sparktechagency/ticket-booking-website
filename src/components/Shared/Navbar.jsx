@@ -13,17 +13,17 @@ import { CgNotes } from "react-icons/cg";
 import { CiGlobe } from "react-icons/ci";
 import { usePathname } from "next/navigation";
 import { Button, Divider } from "@mui/material";
-import useLogIn from "../libs/hooks/useLogIn";
 import { ArtistData } from "../../../public/Data/ArtistData";
+import { useAuth } from "../libs/AuthProvider";
 
 export default function Navbar() {
-  const { user, logOut, loading } = useLogIn();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [activeNavDropdown, setActiveNavDropdown] = useState(null);
   const [mobileArtistDropdown, setMobileArtistDropdown] = useState(null);
+  const { isLoggedIn, logout } = useAuth();
 
   const pathname = usePathname();
 
@@ -178,102 +178,111 @@ export default function Navbar() {
           </Link>
 
           {/* profile */}
-          <div
-            className="relative"
-            onMouseEnter={handleDropdownOpen}
-            onMouseLeave={handleDropdownClose}
-          >
-            <FaRegUserCircle className="text-white text-2xl cursor-pointer hover:text-[#00AEA8]" />
-            <AnimatePresence>
-              {isDropdownOpen && (
-                <motion.div
-                  className="absolute right-0 top-10 mt-2 w-56 bg-gray-50 rounded-md shadow-lg py-2 z-50"
-                  variants={dropdownVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  <Link
-                    href="/inbox"
-                    className={`flex items-center gap-2 px-4 py-1.5 text-xs text-[#191919] ${
-                      pathname === "/inbox"
-                        ? "bg-gray-100"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={handleDropdownClose}
+          {isLoggedIn ? (
+            <div
+              className="relative"
+              onMouseEnter={handleDropdownOpen}
+              onMouseLeave={handleDropdownClose}
+            >
+              <FaRegUserCircle className="text-white text-2xl cursor-pointer hover:text-[#00AEA8]" />
+              <AnimatePresence>
+                {isDropdownOpen && (
+                  <motion.div
+                    className="absolute right-0 top-10 mt-2 w-56 bg-gray-50 rounded-md shadow-lg py-2 z-50"
+                    variants={dropdownVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
                   >
-                    <FaRegMessage /> <span>Inbox</span>
-                  </Link>
-                  <Divider variant="middle" />
-                  <Link
-                    href="/profile"
-                    className={`flex items-center gap-2 px-4 py-1.5 text-xs text-[#191919] ${
-                      pathname === "/profile"
-                        ? "bg-gray-100"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={handleDropdownClose}
-                  >
-                    <Image
-                      src="/images/profile-image.png"
-                      alt="Profile Image"
-                      width={21}
-                      height={21}
-                    />
-                    <p>Profile</p>
-                  </Link>
-
-                  <Divider variant="middle" />
-                  {[
-                    {
-                      href: "/contact-us",
-                      label: "Contact Support",
-                      icon: <FaHeadphones />,
-                    },
-                    {
-                      href: "/terms-and-conditions",
-                      label: "Terms & Conditions",
-                      icon: <CgNotes />,
-                    },
-                  ].map((link) => (
                     <Link
-                      key={link.href}
-                      href={link.href}
+                      href="/inbox"
                       className={`flex items-center gap-2 px-4 py-1.5 text-xs text-[#191919] ${
-                        pathname === link.href
+                        pathname === "/inbox"
                           ? "bg-gray-100"
                           : "hover:bg-gray-200"
                       }`}
                       onClick={handleDropdownClose}
                     >
-                      {link.icon} {link.label}
+                      <FaRegMessage /> <span>Inbox</span>
                     </Link>
-                  ))}
-                  <Divider variant="middle" />
-                  <Button
-                    sx={{
-                      textTransform: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      px: "20px",
-                      color: "#191919",
-                      fontWeight: "500",
-                      width: "100%",
-                      justifyContent: "flex-start",
-                      fontStyle: "normal",
-                      fontSize: "15px",
-                      "&:hover": { backgroundColor: "#e5e7eb" },
-                    }}
-                    onClick={logOut}
-                  >
-                    <FiLogOut />
-                    Log Out
-                  </Button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                    <Divider variant="middle" />
+                    <Link
+                      href="/profile"
+                      className={`flex items-center gap-2 px-4 py-1.5 text-xs text-[#191919] ${
+                        pathname === "/profile"
+                          ? "bg-gray-100"
+                          : "hover:bg-gray-200"
+                      }`}
+                      onClick={handleDropdownClose}
+                    >
+                      <Image
+                        src="/images/profile-image.png"
+                        alt="Profile Image"
+                        width={21}
+                        height={21}
+                      />
+                      <p>Profile</p>
+                    </Link>
+
+                    <Divider variant="middle" />
+                    {[
+                      {
+                        href: "/contact-us",
+                        label: "Contact Support",
+                        icon: <FaHeadphones />,
+                      },
+                      {
+                        href: "/terms-and-conditions",
+                        label: "Terms & Conditions",
+                        icon: <CgNotes />,
+                      },
+                    ].map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={`flex items-center gap-2 px-4 py-1.5 text-xs text-[#191919] ${
+                          pathname === link.href
+                            ? "bg-gray-100"
+                            : "hover:bg-gray-200"
+                        }`}
+                        onClick={handleDropdownClose}
+                      >
+                        {link.icon} {link.label}
+                      </Link>
+                    ))}
+                    <Divider variant="middle" />
+                    <Button
+                      sx={{
+                        textTransform: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        px: "20px",
+                        color: "#191919",
+                        fontWeight: "500",
+                        width: "100%",
+                        justifyContent: "flex-start",
+                        fontStyle: "normal",
+                        fontSize: "15px",
+                        "&:hover": { backgroundColor: "#e5e7eb" },
+                      }}
+                      onClick={logout}
+                    >
+                      <FiLogOut />
+                      Log Out
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <Link
+              href="/sign-in"
+              className="text-white border border-white/50 rounded-lg p-2 text-xs"
+            >
+              Sign In
+            </Link>
+          )}
 
           {/* language toggle */}
           <div
@@ -439,101 +448,110 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
-            <div className="relative">
-              <FaRegUserCircle
-                className="text-2xl text-white cursor-pointer"
-                onClick={toggleDropdown}
-              />
-              {isDropdownOpen && (
-                <div className="absolute top-8 left-3 transform -translate-x-1/2 w-54 bg-[#7f30ff] rounded-md shadow-lg py-2 z-50">
-                  <Link
-                    href="/inbox"
-                    className={`flex items-center gap-2 px-4 py-1 text-xs text-white ${
-                      pathname === "/inbox"
-                        ? "bg-gray-100"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={toggleMobileMenu}
-                  >
-                    <FaRegMessage /> Inbox
-                  </Link>
-
-                  <Divider variant="middle" className="my-1" />
-
-                  <Link
-                    href="/profile"
-                    className={`flex items-center gap-2 px-4 py-1 text-xs text-white ${
-                      pathname === "/profile"
-                        ? "bg-gray-100"
-                        : "hover:bg-gray-200"
-                    }`}
-                    onClick={toggleMobileMenu}
-                  >
-                    <Image
-                      src="/images/profile-image.png"
-                      alt="Profile Image"
-                      width={21}
-                      height={21}
-                    />
-                    <p>Profile</p>
-                  </Link>
-
-                  <Divider variant="middle" className="my-1" />
-
-                  {[
-                    {
-                      href: "/contact-support",
-                      label: "Contact Support",
-                      icon: <FaHeadphones />,
-                    },
-                    {
-                      href: "/terms-and-conditions",
-                      label: "Terms & Conditions",
-                      icon: <CgNotes />,
-                    },
-                  ].map((link) => (
+            {isLoggedIn ? (
+              <div className="relative">
+                <FaRegUserCircle
+                  className="text-2xl text-white cursor-pointer"
+                  onClick={toggleDropdown}
+                />
+                {isDropdownOpen && (
+                  <div className="absolute top-8 left-3 transform -translate-x-1/2 w-54 bg-[#7f30ff] rounded-md shadow-lg py-2 z-50">
                     <Link
-                      key={link.href}
-                      href={link.href}
+                      href="/inbox"
                       className={`flex items-center gap-2 px-4 py-1 text-xs text-white ${
-                        pathname === link.href
+                        pathname === "/inbox"
                           ? "bg-gray-100"
                           : "hover:bg-gray-200"
                       }`}
                       onClick={toggleMobileMenu}
                     >
-                      {link.icon} {link.label}
+                      <FaRegMessage /> Inbox
                     </Link>
-                  ))}
 
-                  <Divider variant="middle" className="my-1" />
+                    <Divider variant="middle" className="my-1" />
 
-                  <Button
-                    sx={{
-                      textTransform: "none",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      px: "20px",
-                      color: "#fff",
-                      fontWeight: "600",
-                      width: "100%",
-                      justifyContent: "flex-start",
-                      fontStyle: "normal",
-                      fontSize: "15px",
-                      "&:hover": { backgroundColor: "#e5e7eb" },
-                    }}
-                    onClick={() => {
-                      logOut();
-                      toggleMobileMenu();
-                    }}
-                  >
-                    <FiLogOut />
-                    Log Out
-                  </Button>
-                </div>
-              )}
-            </div>
+                    <Link
+                      href="/profile"
+                      className={`flex items-center gap-2 px-4 py-1 text-xs text-white ${
+                        pathname === "/profile"
+                          ? "bg-gray-100"
+                          : "hover:bg-gray-200"
+                      }`}
+                      onClick={toggleMobileMenu}
+                    >
+                      <Image
+                        src="/images/profile-image.png"
+                        alt="Profile Image"
+                        width={21}
+                        height={21}
+                      />
+                      <p>Profile</p>
+                    </Link>
+
+                    <Divider variant="middle" className="my-1" />
+
+                    {[
+                      {
+                        href: "/contact-support",
+                        label: "Contact Support",
+                        icon: <FaHeadphones />,
+                      },
+                      {
+                        href: "/terms-and-conditions",
+                        label: "Terms & Conditions",
+                        icon: <CgNotes />,
+                      },
+                    ].map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className={`flex items-center gap-2 px-4 py-1 text-xs text-white ${
+                          pathname === link.href
+                            ? "bg-gray-100"
+                            : "hover:bg-gray-200"
+                        }`}
+                        onClick={toggleMobileMenu}
+                      >
+                        {link.icon} {link.label}
+                      </Link>
+                    ))}
+
+                    <Divider variant="middle" className="my-1" />
+
+                    <Button
+                      sx={{
+                        textTransform: "none",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        px: "20px",
+                        color: "#fff",
+                        fontWeight: "600",
+                        width: "100%",
+                        justifyContent: "flex-start",
+                        fontStyle: "normal",
+                        fontSize: "15px",
+                        "&:hover": { backgroundColor: "#e5e7eb" },
+                      }}
+                      onClick={() => {
+                        logOut();
+                        toggleMobileMenu();
+                      }}
+                    >
+                      <FiLogOut />
+                      Log Out
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/sign-in"
+                className="text-white border border-white/50 rounded-lg p-2 text-xs"
+              >
+                Sign In
+              </Link>
+            )}
             <Link className="text-white text-sm" href="/about-us">
               About Us
             </Link>
