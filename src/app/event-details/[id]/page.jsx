@@ -29,11 +29,12 @@ import { LuTicket } from "react-icons/lu";
 import { TicketPlan } from "../../../../public/Images/AllImages";
 import { TicketQuantityModal } from "@/components/Modals/TicketQuantityModal";
 import { TicketCard } from "@/components/utils/TicketCard";
-import { PurchaseLockModal } from "@/components/Modals/PurchaseLockModal";
-import { PriceLockModal } from "@/components/Modals/PriceLockModal";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function EventDetailsPage() {
+  const params = useParams();
+  const id = params.id;
+  console.log(id);
   const [showQuantityModal, setShowQuantityModal] = useState(true);
   const [tickets, setTickets] = useState(0);
   const [selectedTicket, setSelectedTicket] = useState(null);

@@ -7,16 +7,26 @@ import { Button, Divider } from "@mui/material";
 import Link from "next/link";
 import { Poppins } from "next/font/google";
 import { IoLocationOutline } from "react-icons/io5";
+import { getImageUrl } from "@/utils/baseUrl";
+import dayjs from "dayjs";
 
+const imageUrl = getImageUrl();
 const poppins = Poppins({
   weight: ["400", "500", "600"],
   subsets: ["latin"],
 });
 
 export default function EventCard({ event, variants }) {
+  console.log(event);
+
+  const lowestPrice = Math.min(
+    ...event.ticketCategories.map((ticket) => ticket.pricePerTicket)
+  );
+  console.log(lowestPrice);
+
   return (
     <motion.div
-      className="bg-gradient-to-br from-[#1e1545] to-[#2a1a5e] rounded-2xl overflow-hidden border border-purple-800/30 cursor-pointer group min-h-112"
+      className="bg-linear-to-br from-[#1e1545] to-[#2a1a5e] rounded-2xl overflow-hidden border border-purple-800/30 cursor-pointer group min-h-112"
       variants={variants}
       whileHover={{
         y: -8,
@@ -25,11 +35,14 @@ export default function EventCard({ event, variants }) {
       }}
     >
       {/* Image */}
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative h-64 overflow-hidden">
         <motion.img
-          src={event.image.src || event.image}
+          src={
+            `${imageUrl}${event?.thumbnail}` ||
+            `${imageUrl}${event?.image?.src}`
+          }
           alt={event.title}
-          className="w-full h-full object-fit"
+          className="w-full h-full object-cover"
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.4 }}
         />
@@ -51,13 +64,11 @@ export default function EventCard({ event, variants }) {
         <p
           className={`${poppins.className} text-[#99A1AF] text-xs sm:text-sm mb-4`}
         >
-          {event.matchup
-            ? event.matchup
-            : event.artist
-            ? event.artist
-            : event.teams
-            ? `${event.teams[0]} vs ${event.teams[1]}`
-            : "N/A"}
+          {event.matchup ||
+            event.artist ||
+            (event.teams && event.teams.length >= 2
+              ? `${event.teams[0]} vs ${event.teams[1]}`
+              : "N/A")}
         </p>
 
         <div className="flex items-start gap-2 mb-2">
@@ -65,9 +76,9 @@ export default function EventCard({ event, variants }) {
           <div
             className={`${poppins.className} text-[#99A1AF] text-xs sm:text-sm flex items-center gap-2`}
           >
-            <span>{event.date}</span>
+            <span>{dayjs(event.eventDate).format("MMM DD, YYYY")}</span>
             <GoDotFill />
-            <span>{event.time}</span>
+            <span>{dayjs(event.eventDate).format("h:mm A")}</span>
           </div>
         </div>
         <div className="flex items-start gap-2 mb-4">
@@ -75,9 +86,9 @@ export default function EventCard({ event, variants }) {
           <div
             className={`${poppins.className} text-[#99A1AF] text-xs sm:text-sm`}
           >
-            <span>{event.venue.name},</span>
-            <span>{event.venue.city},</span>
-            <span>{event.venue.country}</span>
+            <span>{event?.venue?.name || event?.venueName},</span>
+            <span>{event?.venue?.city || event?.city},</span>
+            <span>{event?.venue?.country || " "}</span>
           </div>
         </div>
 
@@ -86,13 +97,13 @@ export default function EventCard({ event, variants }) {
           <div>
             <p className="text-gray-400 text-[10px] sm:text-xs mb-1">From</p>
             <p className="text-white xl:text-2xl font-bold">
-              ${event.pricing.from}
+              {/* ${event.pricing.from} */}${lowestPrice}
             </p>
           </div>
 
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Link
-              href={`event-details/${event.id}`}
+              href={`event-details/${event._id}`}
               className="flex items-center px-3 lg:px-4 py-2 text-[10px] xl:text-sm rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 text-white
               transition-all duration-300 hover:from-violet-600 hover:to-indigo-600 hover:shadow-[0_10px_20px_-10px_rgba(139,92,246,0.5)]"
             >
