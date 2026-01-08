@@ -9,6 +9,7 @@ import Footer from "@/components/Shared/Footer";
 import { CursorProvider } from "@/components/libs/Context/CursorContext";
 import AnimatedCursor from "@/components/libs/AnimatedCursor";
 import Providers from "@/utils/Providers";
+import { AuthProvider } from "@/components/libs/AuthProvider";
 
 const kronaOne = Krona_One({
   weight: ["400"], // Krona One only has one weight: Regular 400
@@ -27,13 +28,15 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${kronaOne.className}`}>
       <body>
         <Providers>
-          <CursorProvider>
-            <ClientToaster />
-            <AnimatedCursor borderColor="white" />
-            <Navbar />
-            {children}
-            <Footer />
-          </CursorProvider>
+          <AuthProvider>
+            <CursorProvider>
+              <ClientToaster />
+              <AnimatedCursor borderColor="white" />
+              <Navbar />
+              {children}
+              <Footer />
+            </CursorProvider>
+          </AuthProvider>
         </Providers>
       </body>
     </html>

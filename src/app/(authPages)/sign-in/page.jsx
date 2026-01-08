@@ -8,11 +8,9 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 import { toast } from "sonner";
 
@@ -47,10 +45,9 @@ export default function SignIn() {
       console.log("res", response);
 
       if (response.success) {
-        (await cookies()).set("done", "cookies is set");
-        // sessionStorage.setItem("accessToken", response?.data?.accessToken);
-        // sessionStorage.setItem("refreshToken", response?.data?.refreshToken);
+        sessionStorage.setItem("accessToken", response?.data?.token);
         toast.success("Login Successful", response);
+        router.push("/");
       }
     } catch (error) {
       if (error?.data?.message === "Password does not match") {

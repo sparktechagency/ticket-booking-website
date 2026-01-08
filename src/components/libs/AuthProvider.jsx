@@ -1,41 +1,36 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { CircularProgress } from "@mui/material";
+import React, { createContext, useContext, useState } from "react";
 
-export default function AuthProvider({ children }) {
-  const [loading, setLoading] = useState(true);
-  const [redirectToLogin, setRedirectToLogin] = useState(false);
-  const pathname = usePathname();
-  const linkRef = useRef(null);
+const AuthContext = createContext(null);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <CircularProgress color="success" size={80} />
-      </div>
-    );
+export function AuthProvider({ children }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return Boolean(sessionStorage.getItem("accessToken"));
+  });
+
+  const login = (token) => {
+    sessionStorage.setItem("accessToken", token);
+    setIsLoggedIn(true);
+  };
+
+  const logout = () => {
+    sessionStorage.removeItem("accessToken");
+    setIsLoggedIn(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export function useAuth() {
+  const ctx = useContext(AuthContext);
+  if (!ctx) {
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-
-  if (redirectToLogin) {
-    return (
-      <div className="flex flex-col items-center gap-4 py-20">
-        <p>You need to be logged in to access this page.</p>
-        <Link
-          href={{
-            pathname: "/login",
-            query: { message: "login-required", redirect: pathname },
-          }}
-          className="text-black font-semibold  bg-[#ECA30C] px-5 py-3 rounded-xl"
-          ref={linkRef}
-        >
-          Go to Login
-        </Link>
-      </div>
-    );
-  }
-
-  return <>{children}</>;
+  return ctx;
 }
