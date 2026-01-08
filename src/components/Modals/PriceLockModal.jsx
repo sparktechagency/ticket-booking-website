@@ -10,7 +10,7 @@ export function PriceLockModal({ onClose }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-      router.push("/purchase-details");
+      // router.push("/purchase-details");
     }, 1000); // 3 seconds
 
     return () => clearTimeout(timer);

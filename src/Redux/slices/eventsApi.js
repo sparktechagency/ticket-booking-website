@@ -18,7 +18,23 @@ const eventsApi = baseApi.injectEndpoints({
       },
       providesTags: ["events"],
     }),
+    getSingleEvent: builder.query({
+      query: (eventID) => {
+        const accessToken = sessionStorage.getItem("accessToken");
+        console.log({ accessToken });
+
+        return {
+          url: `/events/${eventID}`,
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+      },
+      providesTags: ["events"],
+    }),
   }),
 });
 
-export const { useGetAllEventsQuery } = eventsApi;
+export const { useGetAllEventsQuery, useGetSingleEventQuery } = eventsApi;

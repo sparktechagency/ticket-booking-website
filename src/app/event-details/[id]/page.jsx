@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 import { useEffect, useState } from "react";
 import {
   Button,
   Chip,
+  CircularProgress,
   Divider,
   FormControl,
   InputAdornment,
@@ -26,18 +28,30 @@ import {
 } from "react-icons/fa";
 import { LuTicket } from "react-icons/lu";
 
-import { TicketPlan } from "../../../../public/Images/AllImages";
 import { TicketQuantityModal } from "@/components/Modals/TicketQuantityModal";
 import { TicketCard } from "@/components/utils/TicketCard";
 import { useParams, useRouter } from "next/navigation";
+import { useGetSingleEventQuery } from "@/Redux/slices/eventsApi";
+import dayjs from "dayjs";
+import { getImageUrl } from "@/utils/baseUrl";
 
 export default function EventDetailsPage() {
   const params = useParams();
-  const id = params.id;
-  console.log(id);
+  const eventId = params.id;
+  console.log(eventId);
   const [showQuantityModal, setShowQuantityModal] = useState(true);
   const [tickets, setTickets] = useState(0);
   const [selectedTicket, setSelectedTicket] = useState(null);
+
+  const imageUrl = getImageUrl();
+
+  const {
+    data: singleEventData,
+    isLoading,
+    isError,
+  } = useGetSingleEventQuery(eventId);
+  const eventData = singleEventData?.data;
+  console.log("singleEventData", eventData);
 
   const router = useRouter();
 
@@ -65,12 +79,26 @@ export default function EventDetailsPage() {
     sessionStorage.setItem("selectedTickets", value);
   };
 
-  const handleTicketClick = (ticketType) => {
+  const handleQuantityConfirm = (selectedTickets) => {
+    setTickets(selectedTickets);
+    sessionStorage.setItem("selectedTickets", selectedTickets);
+    setShowQuantityModal(false);
+  };
+
+  const handleTicketClick = ({ ticketType, eventId }) => {
     setSelectedTicket(ticketType);
     sessionStorage.setItem("ticketType", ticketType);
-    router.push("/purchase-details");
+    router.push(`/purchase-details/${eventId}`);
     // setShowPurchaseModal(true);
   };
+
+  if (isLoading || !eventData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -88,23 +116,23 @@ export default function EventDetailsPage() {
           {/* Header */}
           <div className="mb-6">
             <h1 className="text-sm sm:text-lg lg:text-3xl font-bold">
-              The Weeknd: After Hours Tour
+              {eventData.title}
             </h1>
 
             <div className="mt-3 flex flex-wrap gap-3">
               <Chip
                 icon={<FaCalendarAlt size={14} color="#22D3EE" />}
-                label="Saturday, March 15 2025"
+                label={`${dayjs(eventData.eventDate).format("MMM DD, YYYY")} `}
                 sx={{ bgcolor: "#0f173f", color: "white", px: "5px" }}
               />
               <Chip
                 icon={<FaClock size={14} color="#22D3EE" />}
-                label="20:00"
+                label={`${dayjs(eventData.eventDate).format("h:mm A")} `}
                 sx={{ bgcolor: "#0f173f", color: "white", px: "5px" }}
               />
               <Chip
                 icon={<FaMapMarkerAlt size={14} color="#22D3EE" />}
-                label="Madison Square Garden, New York"
+                label={`${eventData?.venueName}, ${eventData?.city}`}
                 sx={{ bgcolor: "#0f173f", color: "white", px: "5px" }}
               />
               <FormControl sx={{ minWidth: 140 }}>
@@ -160,27 +188,22 @@ export default function EventDetailsPage() {
                 <LuTicket className="text-[#22D3EE]" />
                 <p className="">Select Tickets</p>
               </div>
-              <TicketCard
-                title="General"
-                price="€80"
-                color="#56BDE7"
-                tickets={tickets}
-                selectTicket={() => handleTicketClick("General")}
-              />
-              <TicketCard
-                title="VIP"
-                price="€250"
-                color="#FFD700"
-                tickets={tickets}
-                selectTicket={() => handleTicketClick("VIP")}
-              />
-              <TicketCard
-                title="Premium"
-                price="€150"
-                color="#C084FC"
-                tickets={tickets}
-                selectTicket={() => handleTicketClick("Premium")}
-              />
+              {eventData.ticketCategories.map((category, index) => (
+                <TicketCard
+                  key={category._id || index}
+                  title={category.ticketName}
+                  price={`€${category.pricePerTicket}`}
+                  color={category.sectionColor}
+                  totalQuantity={category.totalQuantity}
+                  tickets={tickets}
+                  selectTicket={() =>
+                    handleTicketClick({
+                      ticketType: category.ticketName,
+                      eventId: eventData._id,
+                    })
+                  }
+                />
+              ))}
 
               {/* Help Card */}
               <div className="rounded-xl bg-linear-to-br from-[#0c123f] to-[#0a0f33] p-5 border border-white/10">
@@ -210,8 +233,8 @@ export default function EventDetailsPage() {
               className="flex justify-center items-center rounded-xl
           bg-[#0c123f] border border-white/10 p-4 max-w-88 sm:max-w-95 md:max-w-105 lg:max-w-115"
             >
-              <Image
-                src={TicketPlan}
+              <img
+                src={`${imageUrl}${eventData?.seatingView}`}
                 alt="Seating Map"
                 width={500}
                 height={500}
@@ -226,7 +249,8 @@ export default function EventDetailsPage() {
       <AnimatePresence>
         {showQuantityModal && (
           <TicketQuantityModal
-            ticketType={selectedTicket}
+            initialTickets={tickets || 1}
+            onConfirm={handleQuantityConfirm}
             onClose={() => setShowQuantityModal(false)}
           />
         )}

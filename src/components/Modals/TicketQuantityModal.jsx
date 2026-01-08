@@ -10,14 +10,15 @@ const poppins = Poppins({
   subsets: ["latin"],
 });
 
-export function TicketQuantityModal({ onClose }) {
-  const [tickets, setTickets] = useState(2);
+export function TicketQuantityModal({
+  initialTickets = 1,
+  onConfirm,
+  onClose,
+}) {
+  const [tickets, setTickets] = useState(initialTickets);
 
   const handleSelectedTickets = () => {
-    if (typeof window !== "undefined" && tickets) {
-      sessionStorage.setItem("selectedTickets", tickets);
-    }
-    onClose();
+    onConfirm(tickets);
   };
 
   return (
@@ -31,7 +32,7 @@ export function TicketQuantityModal({ onClose }) {
       >
         {/* Close */}
         <Button
-          onClick={onClose}
+          onClick={handleSelectedTickets}
           sx={{
             position: "absolute",
             right: 4,

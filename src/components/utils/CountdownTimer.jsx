@@ -1,47 +1,59 @@
-import React, { useEffect, useState } from "react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { RiTimerLine } from "react-icons/ri";
 import { poppins } from "./FontPoppins";
 
-const TIMER_DURATION = 10 * 60;
+const TIMER_DURATION = 10 * 60; // 10 minutes
 const END_KEY = "checkout_timer_end";
 
 export default function CountdownTimer({ started }) {
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState(null);
+  const intervalRef = useRef(null);
+  const endTimeRef = useRef(null);
 
-  // Start countdown ONLY after started
   useEffect(() => {
-    if (!started) return;
+    if (!started || intervalRef.current) return;
 
-    let endTime = localStorage.getItem(END_KEY);
+    let storedEnd = localStorage.getItem(END_KEY);
 
-    if (!endTime) {
-      endTime = Date.now() + TIMER_DURATION * 1000;
-      localStorage.setItem(END_KEY, endTime);
+    if (!storedEnd) {
+      storedEnd = Date.now() + TIMER_DURATION * 1000;
+      localStorage.setItem(END_KEY, storedEnd);
     }
 
-    const interval = setInterval(() => {
-      const remaining = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+    endTimeRef.current = Number(storedEnd);
+
+    // Set initial value immediately (no flicker)
+    setTimer(Math.max(0, Math.floor((endTimeRef.current - Date.now()) / 1000)));
+
+    intervalRef.current = setInterval(() => {
+      const remaining = Math.max(
+        0,
+        Math.floor((endTimeRef.current - Date.now()) / 1000)
+      );
 
       setTimer(remaining);
 
       if (remaining <= 0) {
-        clearInterval(interval);
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
         localStorage.removeItem(END_KEY);
       }
     }, 1000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
   }, [started]);
 
-  if (!started || timer <= 0) return null;
+  if (!started || timer === null || timer <= 0) return null;
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const secs = (seconds % 60).toString().padStart(2, "0");
-    return `${mins}:${secs}`;
-  };
+  const mins = Math.floor(timer / 60)
+    .toString()
+    .padStart(2, "0");
+  const secs = (timer % 60).toString().padStart(2, "0");
 
   return (
     <div
@@ -49,7 +61,9 @@ export default function CountdownTimer({ started }) {
     >
       <RiTimerLine />
       <p>Tickets reserved for 10 minutes:</p>
-      <span className="font-semibold sm:text-lg">{formatTime(timer)}</span>
+      <span className="font-semibold sm:text-lg">
+        {mins}:{secs}
+      </span>
     </div>
   );
 }

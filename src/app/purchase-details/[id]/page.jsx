@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
@@ -10,19 +11,22 @@ import {
   FaRegClock,
 } from "react-icons/fa";
 import { FiMapPin } from "react-icons/fi";
-import { RiDeleteBinLine, RiTimerLine } from "react-icons/ri";
-import { MdOutlineShield } from "react-icons/md";
+import { RiDeleteBinLine } from "react-icons/ri";
 import { GoInfo } from "react-icons/go";
 
 import Image from "next/image";
-import { TicketPlan } from "../../../public/Images/AllImages";
+import { TicketPlan } from "../../../../public/Images/AllImages";
 import { Poppins } from "next/font/google";
-import { Button, MenuItem, Select } from "@mui/material";
+import { Button } from "@mui/material";
 import Link from "next/link";
 import CountdownTimer from "@/components/utils/CountdownTimer";
 import { PurchaseLockModal } from "@/components/Modals/PurchaseLockModal";
 import { PriceLockModal } from "@/components/Modals/PriceLockModal";
 import BuyerGuarantee from "@/components/utils/BuyerGuarantee";
+import { useParams } from "next/navigation";
+import { useGetSingleEventQuery } from "@/Redux/slices/eventsApi";
+import dayjs from "dayjs";
+import { getImageUrl } from "@/utils/baseUrl";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -30,7 +34,6 @@ const poppins = Poppins({
 });
 
 export default function PurchaseDetails() {
-  const [timer, setTimer] = useState(600);
   const [ticketType, setTicketType] = useState(null);
   const [ticketQuantity, setTicketQuantity] = useState(0);
   const [ticketColor, setTicketColor] = useState("#22D3EE");
@@ -38,6 +41,20 @@ export default function PurchaseDetails() {
   const [timerStarted, setTimerStarted] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showLockedModal, setShowLockedModal] = useState(false);
+
+  const params = useParams();
+  const eventId = params.id;
+  console.log(eventId);
+
+  const {
+    data: singleEventData,
+    isLoading,
+    isError,
+  } = useGetSingleEventQuery(eventId);
+  const eventData = singleEventData?.data;
+  console.log("singleEventData", eventData);
+
+  const imageUrl = getImageUrl();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -48,40 +65,30 @@ export default function PurchaseDetails() {
   }, []);
 
   useEffect(() => {
-    // Only runs on client
+    if (!eventData?.ticketCategories) return;
+
     const storedTicketType = sessionStorage.getItem("ticketType");
-    const storedQuantity = sessionStorage.getItem("selectedTickets");
+    const storedQuantity =
+      Number(sessionStorage.getItem("selectedTickets")) || 0;
+
+    if (!storedTicketType) return;
+
+    const selectedCategory = eventData.ticketCategories.find(
+      (category) => category.ticketName === storedTicketType
+    );
+
+    if (!selectedCategory) return;
 
     setTicketType(storedTicketType);
-    setTicketQuantity(Number(storedQuantity) || 0);
-
-    // Map ticket type to price & color
-    const TICKET_CONFIG = {
-      General: { price: 80, color: "#56BDE7" },
-      VIP: { price: 250, color: "#FFD700" },
-      Premium: { price: 150, color: "#C084FC" },
-    };
-
-    const config = TICKET_CONFIG[storedTicketType] ?? {
-      price: 0,
-      color: "#22D3EE",
-    };
-
-    setTicketPrice(config.price);
-    setTicketColor(config.color);
-  }, []);
+    setTicketQuantity(storedQuantity);
+    setTicketPrice(selectedCategory.pricePerTicket);
+    setTicketColor(selectedCategory.sectionColor);
+  }, [eventData]);
 
   useEffect(() => {
-    if (timer <= 0) return;
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timer]);
-
-  useEffect(() => {
-    const started = localStorage.getItem("checkout_timer_end");
-    if (started) setTimerStarted(true);
+    if (localStorage.getItem("checkout_timer_end")) {
+      setTimerStarted(true);
+    }
   }, []);
 
   const handleStartPurchase = () => {
@@ -90,6 +97,20 @@ export default function PurchaseDetails() {
     setShowPurchaseModal(false);
     setShowLockedModal(true);
   };
+
+  function hexToRgb(color) {
+    // If already rgb/rgba → return as-is
+    if (color.startsWith("rgb")) return color;
+
+    // Convert named colors to RGB
+    const ctx = document.createElement("canvas").getContext("2d");
+    ctx.fillStyle = color;
+    const computed = ctx.fillStyle;
+
+    // Extract rgb numbers
+    const match = computed.match(/\d+/g);
+    return match ? match.slice(0, 3).join(",") : "0,0,0";
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0d27] text-white px-4 sm:px-6 lg:px-8 py-5">
@@ -111,19 +132,22 @@ export default function PurchaseDetails() {
 
             {/* Event Info */}
             <div className="space-y-4">
-              <h2 className="text-sm sm:text-lg">
-                The Weeknd: After Hours Tour
-              </h2>
+              <h2 className="text-sm sm:text-xl">{eventData?.title}</h2>
 
               <div className="flex flex-wrap gap-3">
                 <InfoChip
                   icon={<FaRegCalendar />}
-                  text="Saturday, March 8, 2025"
+                  text={`${dayjs(eventData?.eventDate).format(
+                    "MMM DD, YYYY"
+                  )} `}
                 />
-                <InfoChip icon={<FaRegClock />} text="20:00" />
+                <InfoChip
+                  icon={<FaRegClock />}
+                  text={`${dayjs(eventData?.eventDate).format("h:mm A")} `}
+                />
                 <InfoChip
                   icon={<FiMapPin />}
-                  text="Madison Square Garden, New York"
+                  text={`${eventData?.venueName}, ${eventData?.city}`}
                 />
               </div>
             </div>
@@ -133,7 +157,9 @@ export default function PurchaseDetails() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="relative rounded-2xl p-3 sm:p-6 w-full max-w-2xl overflow-hidden"
-              style={{ backgroundColor: `${ticketColor}50` }}
+              style={{
+                backgroundColor: `rgba(${hexToRgb(ticketColor)}, 0.8)`,
+              }}
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
                 {/* Left section - Ticket info */}
@@ -148,7 +174,7 @@ export default function PurchaseDetails() {
                   {/* Event details */}
                   <div className="flex flex-col gap-1 min-w-0">
                     <p className="text-[10px] sm:text-base xl:text-xl truncate">
-                      The Weeknd: After Hours Tour
+                      {eventData?.title}
                     </p>
                     <p
                       className={`${poppins.className} text-[10px] sm:text-sm`}
@@ -184,12 +210,12 @@ export default function PurchaseDetails() {
               transition={{ duration: 0.4 }}
               className="w-full max-w-full sm:max-w-lg lg:max-w-3xl mx-auto"
             >
-              <Image
-                src={TicketPlan}
+              <img
+                src={`${imageUrl}${eventData?.seatingView}`}
                 alt="Seating Map"
-                width={800}
-                height={400}
-                className="w-full h-auto object-contain rounded-xl"
+                width={500}
+                height={500}
+                className="w-full h-auto object-contain"
                 priority
               />
             </motion.div>
