@@ -88,6 +88,7 @@ export default function EventDetailsPage() {
   const handleTicketClick = ({ ticketType, eventId }) => {
     setSelectedTicket(ticketType);
     sessionStorage.setItem("ticketType", ticketType);
+    sessionStorage.setItem("eventId", eventId);
     router.push(`/purchase-details/${eventId}`);
     // setShowPurchaseModal(true);
   };

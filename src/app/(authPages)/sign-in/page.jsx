@@ -46,15 +46,19 @@ export default function SignIn() {
 
       if (response.success) {
         sessionStorage.setItem("accessToken", response?.data?.token);
-        toast.success("Login Successful", response);
+        toast.success("Login Successful!");
         router.push("/");
       }
     } catch (error) {
-      if (error?.data?.message === "Password does not match") {
-        toast.error("Incorrect Password.");
-      }
-      if (error?.data?.message === "User not found") {
-        toast.error("Incorrect Email. User not found");
+      const message =
+        error?.data?.message ||
+        error?.response?.data?.message ||
+        "Login failed";
+      console.log(error);
+      if (message === "Password is incorrect!") {
+        toast.error(String(message));
+      } else if (message === "User doesn't exist!") {
+        toast.error(String(message));
       } else {
         console.error("Login failed:", error);
       }
@@ -279,11 +283,11 @@ export default function SignIn() {
           </Button>
         </form>
 
-        {error && (
+        {/* {error && (
           <p className="text-center text-red-300 bg-red-500/10 border border-red-400/30 rounded-lg py-2 px-3 text-sm">
             {error}
           </p>
-        )}
+        )} */}
 
         <div className="flex items-center gap-1 justify-center text-sm">
           <p className="text-[#aeb1b6]">No account?</p>
