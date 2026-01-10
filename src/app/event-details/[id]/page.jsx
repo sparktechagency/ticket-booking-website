@@ -123,12 +123,12 @@ export default function EventDetailsPage() {
             <div className="mt-3 flex flex-wrap gap-3">
               <Chip
                 icon={<FaCalendarAlt size={14} color="#22D3EE" />}
-                label={`${dayjs(eventData.eventDate).format("MMM DD, YYYY")} `}
+                label={`${dayjs(eventData?.eventDate).format("MMM DD, YYYY")} `}
                 sx={{ bgcolor: "#0f173f", color: "white", px: "5px" }}
               />
               <Chip
                 icon={<FaClock size={14} color="#22D3EE" />}
-                label={`${dayjs(eventData.eventDate).format("h:mm A")} `}
+                label={`${dayjs(eventData?.eventDate).format("h:mm A")} `}
                 sx={{ bgcolor: "#0f173f", color: "white", px: "5px" }}
               />
               <Chip

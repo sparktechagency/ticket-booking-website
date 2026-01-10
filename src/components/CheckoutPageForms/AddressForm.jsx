@@ -10,9 +10,10 @@ export default function AddressForm({
   handleNext,
   inputStyles,
 }) {
+  console.log(formData);
   return (
     <motion.div
-      key="address-form"
+      // key="address-form"
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}

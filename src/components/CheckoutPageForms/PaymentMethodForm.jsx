@@ -9,29 +9,18 @@ import {
   IconButton,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import {
-  FaArrowRight,
-  FaCreditCard,
-  FaEnvelope,
-  FaLock,
-  FaTimes,
-} from "react-icons/fa";
+import { FaCreditCard, FaEnvelope, FaLock, FaTimes } from "react-icons/fa";
 import { RiVisaLine } from "react-icons/ri";
 import { SiAmericanexpress, SiMastercard } from "react-icons/si";
 import { useState } from "react";
 import { poppins } from "../utils/FontPoppins";
-import Link from "next/link";
-import { PiStarFourBold } from "react-icons/pi";
 
 export default function PaymentMethodForm({
   formData,
   errors,
   handleChange,
   inputStyles,
-  orderDetails,
-  subtotal,
-  serviceFee,
-  total,
+  setErrors,
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [promoCode, setPromoCode] = useState("");
@@ -71,15 +60,58 @@ export default function PaymentMethodForm({
     setAppliedPromo(null);
   };
 
+  const formatExpiry = (value) => {
+    const digits = value.replace(/\D/g, "").slice(0, 6);
+
+    if (digits.length === 0) return "";
+
+    let month = digits.slice(0, 2);
+
+    if (digits.length === 1 && parseInt(digits) > 1) {
+      month = "0" + digits;
+    } else if (digits.length >= 2) {
+      const m = parseInt(month);
+      if (m === 0) month = "01";
+      if (m > 12) month = "12";
+    }
+
+    if (digits.length <= 2) return month;
+
+    return `${month}/${digits.slice(2)}`;
+  };
+
+  // ONLY checks if input is complete
+  const isCompleteExpiry = (value) =>
+    /^(0[1-9]|1[0-2])\/(\d{2}|\d{4})$/.test(value);
+
+  // ONLY checks validity AFTER completion
+  const isValidExpiry = (value) => {
+    if (!isCompleteExpiry(value)) return true; // 🚨 KEY LINE
+
+    const [monthStr, yearStr] = value.split("/");
+    const month = parseInt(monthStr);
+    let year = parseInt(yearStr);
+
+    if (yearStr.length === 2) year += 2000;
+
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+
+    return (
+      year > currentYear || (year === currentYear && month >= currentMonth)
+    );
+  };
+
   return (
     <>
       <motion.div
-        key="payment-form"
+        // key="payment-form"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -50 }}
         transition={{ duration: 0.3 }}
-        className="space-y-10"
+        className="space-y-6"
       >
         <div className="bg-[#FFFFFF0D] rounded-2xl p-6 border border-[#FFFFFF1A]">
           <p className="sm:text-xl mb-2">Your Information</p>
@@ -90,7 +122,9 @@ export default function PaymentMethodForm({
             </h2>
           </div>
           <div className={`${poppins.className} space-y-1 text-sm`}>
-            <p className="text-gray-300">{formData.fullName}</p>
+            <p className="text-gray-300">
+              {formData.fullName || "Not provided"}
+            </p>
             <p className="text-gray-400">{formData.email}</p>
             <p className="text-gray-400">+1 {formData.phone}</p>
           </div>
@@ -176,22 +210,38 @@ export default function PaymentMethodForm({
                   name="expiry"
                   value={formData.expiry}
                   onChange={(e) => {
-                    let value = e.target.value.replace(/\D/g, "");
-
-                    if (value.length >= 2) {
-                      value = value.slice(0, 2) + "/" + value.slice(2, 4);
-                    }
+                    const formatted = formatExpiry(e.target.value);
 
                     handleChange({
                       target: {
                         name: "expiry",
-                        value: value.slice(0, 5),
+                        value: formatted,
                       },
                     });
+
+                    // 🚨 CLEAR ERROR WHILE TYPING
+                    setErrors((prev) => ({ ...prev, expiry: false }));
                   }}
-                  placeholder="MM/YY"
-                  inputProps={{ maxLength: 5 }}
+                  onBlur={() => {
+                    const value = formData.expiry;
+
+                    // 🚨 EMPTY OR INCOMPLETE → NO ERROR
+                    if (!isCompleteExpiry(value)) {
+                      setErrors((prev) => ({ ...prev, expiry: false }));
+                      return;
+                    }
+
+                    // COMPLETE → VALIDATE
+                    const valid = isValidExpiry(value);
+                    setErrors((prev) => ({ ...prev, expiry: !valid }));
+                  }}
+                  placeholder="MM/YY or MM/YYYY"
                   error={errors.expiry}
+                  helperText={errors.expiry ? "Enter a valid expiry date" : ""}
+                  inputProps={{
+                    inputMode: "numeric",
+                    maxLength: 7, // MM/YYYY
+                  }}
                   sx={inputStyles}
                 />
               </div>
