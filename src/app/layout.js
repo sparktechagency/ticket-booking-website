@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
           <AuthProvider>
             <CursorProvider>
               <ClientToaster />
-              <AnimatedCursor borderColor="white" />
+              {/* <AnimatedCursor borderColor="white" /> */}
               <Navbar />
               {children}
               <Footer />

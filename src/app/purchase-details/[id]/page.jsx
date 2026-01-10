@@ -17,16 +17,17 @@ import { GoInfo } from "react-icons/go";
 import Image from "next/image";
 import { TicketPlan } from "../../../../public/Images/AllImages";
 import { Poppins } from "next/font/google";
-import { Button } from "@mui/material";
+import { alpha, Button } from "@mui/material";
 import Link from "next/link";
 import CountdownTimer from "@/components/utils/CountdownTimer";
 import { PurchaseLockModal } from "@/components/Modals/PurchaseLockModal";
 import { PriceLockModal } from "@/components/Modals/PriceLockModal";
 import BuyerGuarantee from "@/components/utils/BuyerGuarantee";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useGetSingleEventQuery } from "@/Redux/slices/eventsApi";
 import dayjs from "dayjs";
 import { getImageUrl } from "@/utils/baseUrl";
+import { colorToHex } from "@/components/utils/ColorConverter";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -36,15 +37,18 @@ const poppins = Poppins({
 export default function PurchaseDetails() {
   const [ticketType, setTicketType] = useState(null);
   const [ticketQuantity, setTicketQuantity] = useState(0);
-  const [ticketColor, setTicketColor] = useState("#22D3EE");
+  const [ticketColor, setTicketColor] = useState("#fff");
   const [ticketPrice, setTicketPrice] = useState(0);
   const [timerStarted, setTimerStarted] = useState(false);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [showLockedModal, setShowLockedModal] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const params = useParams();
   const eventId = params.id;
   console.log(eventId);
+
+  const router = useRouter();
 
   const {
     data: singleEventData,
@@ -98,19 +102,14 @@ export default function PurchaseDetails() {
     setShowLockedModal(true);
   };
 
-  function hexToRgb(color) {
-    // If already rgb/rgba → return as-is
-    if (color.startsWith("rgb")) return color;
+  const handleRemoveTicket = () => {
+    setIsRemoving(true);
+    sessionStorage.removeItem("ticketType");
 
-    // Convert named colors to RGB
-    const ctx = document.createElement("canvas").getContext("2d");
-    ctx.fillStyle = color;
-    const computed = ctx.fillStyle;
-
-    // Extract rgb numbers
-    const match = computed.match(/\d+/g);
-    return match ? match.slice(0, 3).join(",") : "0,0,0";
-  }
+    setTimeout(() => {
+      router.back(); // go back after 2 seconds
+    }, 2000);
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0d27] text-white px-4 sm:px-6 lg:px-8 py-5">
@@ -158,7 +157,7 @@ export default function PurchaseDetails() {
               animate={{ opacity: 1, y: 0 }}
               className="relative rounded-2xl p-3 sm:p-6 w-full max-w-2xl overflow-hidden"
               style={{
-                backgroundColor: `rgba(${hexToRgb(ticketColor)}, 0.8)`,
+                backgroundColor: alpha(colorToHex(ticketColor), 0.25),
               }}
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
@@ -190,14 +189,18 @@ export default function PurchaseDetails() {
                 <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:gap-1 shrink-0">
                   <p className="xl:text-2xl">€{ticketQuantity * ticketPrice}</p>
                   <Button
+                    onClick={handleRemoveTicket}
+                    disabled={isRemoving}
                     sx={{
                       textTransform: "none",
-                      color: "#99A1AF",
+                      color: "#fff",
                       fontSize: { xs: "12px", sm: "14px" },
+                      bgcolor: ticketColor,
+                      borderRadius: "10px",
                     }}
                   >
                     <RiDeleteBinLine className="mr-1 sm:mr-2 text-base sm:text-lg" />
-                    <span className="">Remove</span>
+                    <span>{isRemoving ? "Removing..." : "Remove"}</span>
                   </Button>
                 </div>
               </div>
