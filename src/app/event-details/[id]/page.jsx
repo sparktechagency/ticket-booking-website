@@ -240,7 +240,7 @@ export default function EventDetailsPage() {
                 width={500}
                 height={500}
                 className="w-full h-auto object-contain"
-                priority
+                // priority
               />
             </motion.div>
           </div>
