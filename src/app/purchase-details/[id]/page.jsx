@@ -293,7 +293,7 @@ export default function PurchaseDetails() {
                 </Select> */}
 
                 <Link
-                  href="/checkout"
+                  href={`/checkout/${eventId}?ticketType=${ticketType}&ticketQuantity=${ticketQuantity}`}
                   className={`${poppins.className} flex items-center justify-center gap-2 bg-linear-to-r from-[#8F18FB] to-[#5B06A7] text-white rounded-lg w-full text-sm sm:text-base font-medium py-2 sm:py-3`}
                 >
                   Continue <FaArrowRight />

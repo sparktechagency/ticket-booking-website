@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -7,19 +8,26 @@ import { GoDotFill, GoInfo } from "react-icons/go";
 import InfoForm from "@/components/CheckoutPageForms/InfoForm";
 import AddressForm from "@/components/CheckoutPageForms/AddressForm";
 import PaymentMethodForm from "@/components/CheckoutPageForms/PaymentMethodForm";
-import ReviewAndConfirm from "@/components/CheckoutPageForms/ReviewAndConfirm";
 import CountdownTimer from "@/components/utils/CountdownTimer";
 import { poppins } from "@/components/utils/FontPoppins";
 import { toast } from "sonner";
 
-import { Button, Divider, IconButton, Tooltip } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import Image from "next/image";
-import { CiLock } from "react-icons/ci";
-import { MdOutlineShield } from "react-icons/md";
 import BuyerGuarantee from "@/components/utils/BuyerGuarantee";
 import SecurePaymentNotice from "@/components/utils/SecurePaymentNotice";
 import Link from "next/link";
 import { PiStarFourBold } from "react-icons/pi";
+import { useGetSingleEventQuery } from "@/Redux/slices/eventsApi";
+import dayjs from "dayjs";
+import { getImageUrl } from "@/utils/baseUrl";
+import { useParams, useSearchParams } from "next/navigation";
 
 export default function Checkout() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -39,6 +47,25 @@ export default function Checkout() {
     expiry: "",
     cvc: "",
   });
+  const imageUrl = getImageUrl();
+
+  const params = useParams();
+  const searchParams = useSearchParams();
+
+  const eventId = params.id;
+  const ticketType = searchParams.get("ticketType");
+  const ticketQuantity = Number(searchParams.get("ticketQuantity"));
+  console.log(eventId);
+  console.log(ticketType);
+  console.log(ticketQuantity);
+
+  const {
+    data: singleEventData,
+    isLoading,
+    isError,
+  } = useGetSingleEventQuery(eventId);
+  const eventData = singleEventData?.data;
+  console.log("singleEventData", eventData);
 
   useEffect(() => {
     const started = localStorage.getItem("checkout_timer_end");
@@ -48,17 +75,6 @@ export default function Checkout() {
       }, 0);
     }
   }, []);
-
-  // Order details
-  const orderDetails = {
-    tickets: { quantity: 2, price: 80.0 },
-    serviceFeePercent: 5,
-    tax: 20,
-  };
-
-  const subtotal = orderDetails.tickets.quantity * orderDetails.tickets.price;
-  const serviceFee = (subtotal * orderDetails.serviceFeePercent) / 100;
-  const total = subtotal + serviceFee + orderDetails.tax;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,13 +88,13 @@ export default function Checkout() {
       if (formattedValue.length > 19) return;
     }
 
-    if (name === "expiry") {
-      formattedValue = value
-        .replace(/\s/g, "")
-        .replace(/(\d{2})(\d{0,2})/, "$1/$2")
-        .trim();
-      if (formattedValue.length > 5) return;
-    }
+    // if (name === "expiry") {
+    //   formattedValue = value
+    //     .replace(/\s/g, "")
+    //     .replace(/(\d{2})(\d{0,2})/, "$1/$2")
+    //     .trim();
+    //   if (formattedValue.length > 5) return;
+    // }
 
     if (name === "cvc" && value.length > 3) return;
 
@@ -115,8 +131,36 @@ export default function Checkout() {
       )
         newErrors.cardNumber = true;
       if (!formData.cardHolder.trim()) newErrors.cardHolder = true;
-      if (!formData.expiry || formData.expiry.length < 5)
+
+      // Enhanced expiry validation
+      if (!formData.expiry || !formData.expiry.includes("/")) {
         newErrors.expiry = true;
+      } else {
+        const [month, year] = formData.expiry.split("/");
+        // Check if we have valid month and year (either YY or YYYY)
+        if (!month || !year || (year.length !== 2 && year.length !== 4)) {
+          newErrors.expiry = true;
+        } else {
+          const currentYear = new Date().getFullYear();
+          const currentMonth = new Date().getMonth() + 1;
+
+          let fullYear;
+          if (year.length === 2) {
+            fullYear = 2000 + parseInt(year);
+          } else {
+            fullYear = parseInt(year);
+          }
+
+          // Check if expired
+          if (
+            fullYear < currentYear ||
+            (fullYear === currentYear && parseInt(month) < currentMonth)
+          ) {
+            newErrors.expiry = true;
+          }
+        }
+      }
+
       if (!formData.cvc || formData.cvc.length < 3) newErrors.cvc = true;
     }
 
@@ -157,20 +201,28 @@ export default function Checkout() {
     },
   };
 
+  if (isLoading || !eventData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-linear-to-br from-[#0a0e27] via-[#16112e] to-[#0a0e27] text-white px-4 py-10">
       <div className="flex flex-col gap-5 justify-center max-w-5xl mx-auto">
         {/* Header Section - Back Button, Title, and Timer */}
         <div className="flex flex-col lg:flex-row gap-5">
           <div className="">
-            <AnimatePresence mode="wait">
+            <div>
               {currentStep > 1 && currentStep <= 3 && (
                 <motion.button
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   onClick={handleBack}
-                  className="flex items-center gap-2  text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
+                  className="flex items-center gap-2  text-xs sm:text-sm text-gray-400 hover:text-white transition-colors cursor-pointer"
                 >
                   <FaArrowLeft />
                   <span className="uppercase tracking-wider">Back</span>
@@ -195,7 +247,7 @@ export default function Checkout() {
                   </p>
                 )}
               </div>
-            </AnimatePresence>
+            </div>
           </div>
 
           <div className="">
@@ -233,12 +285,10 @@ export default function Checkout() {
                   key="payment-form"
                   formData={formData}
                   errors={errors}
+                  setErrors={setErrors}
                   handleChange={handleChange}
                   handleNext={handleNext}
                   inputStyles={inputStyles}
-                  orderDetails={orderDetails}
-                  subtotal={subtotal}
-                  serviceFee={serviceFee}
                 />
               )}
             </AnimatePresence>
@@ -281,19 +331,23 @@ export default function Checkout() {
                 >
                   <div className="space-y-1 flex-1 min-w-0">
                     <p className="text-[#e7fbff] font-semibold text-sm sm:text-base wrap-break-word">
-                      The Weeknd: After Hours Tour
+                      {eventData?.title}
                     </p>
                     <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs sm:text-sm text-[#e2e2e2]">
-                      <p className="whitespace-nowrap">March 15, 2026</p>
+                      <p className="whitespace-nowrap">{`${dayjs(
+                        eventData?.eventDate
+                      ).format("MMM DD, YYYY")} `}</p>
                       <GoDotFill className="" />
-                      <p className="whitespace-nowrap">20:00</p>
+                      <p className="whitespace-nowrap">{`${dayjs(
+                        eventData?.eventDate
+                      ).format("h:mm A")} `}</p>
                     </div>
                     <p className="text-xs sm:text-sm text-[#e2e2e2] wrap-break-word">
-                      Madison Square Garden, New York
+                      {`${eventData?.venueName}, ${eventData?.city}`}
                     </p>
                   </div>
-                  <Image
-                    src="/Images/concerts/TaylorSwift.png"
+                  <img
+                    src={`${imageUrl}${eventData?.thumbnail}`}
                     alt="Event"
                     width={50}
                     height={50}
@@ -312,9 +366,9 @@ export default function Checkout() {
                 <div
                   className={`${poppins.className} flex flex-wrap items-center gap-2 text-xs sm:text-sm text-[#e2e2e2] mb-3`}
                 >
-                  <p>2 Tickets</p>
+                  <p>{ticketQuantity} Tickets</p>
                   <GoDotFill className="shrink-0" />
-                  <p>General</p>
+                  <p>{ticketType}</p>
                 </div>
 
                 <Divider
@@ -327,10 +381,12 @@ export default function Checkout() {
                 {/* Price Breakdown */}
                 <div className={`${poppins.className} mb- text-xs sm:text-sm`}>
                   <div className="flex justify-between text-gray-300 text-sm sm:text-base lg:text-lg">
-                    <span>Tickets</span>
+                    <span>Price</span>
                     <span className="font-medium">
-                      {orderDetails.tickets.quantity} × €
-                      {orderDetails.tickets.price.toFixed(2)}
+                      {ticketQuantity} × €
+                      {eventData?.ticketCategories.find(
+                        (category) => category.ticketName === ticketType
+                      )?.pricePerTicket ?? 0}
                     </span>
                   </div>
 
@@ -345,7 +401,7 @@ export default function Checkout() {
                         </Tooltip>
                       </div>
                       <span className="font-medium">
-                        €{serviceFee.toFixed(2)}
+                        {/* €{serviceFee.toFixed(2)} */}
                       </span>
                     </div>
                   )}
@@ -361,14 +417,14 @@ export default function Checkout() {
                   {currentStep === 3 && (
                     <div className="flex justify-between text-gray-400">
                       <span className="text-xs sm:text-sm">Tax</span>
-                      <span className="font-medium">€{orderDetails.tax}</span>
+                      {/* <span className="font-medium">€{orderDetails.tax}</span> */}
                     </div>
                   )}
 
                   {currentStep === 3 && (
                     <div className="border-t border-white/20 pt-2 sm:pt-3 mt-2 sm:mt-3 flex justify-between text-base sm:text-lg lg:text-xl font-semibold text-white">
                       <span>Total</span>
-                      <span>€{total.toFixed(2)}</span>
+                      {/* <span>€{total.toFixed(2)}</span> */}
                     </div>
                   )}
                 </div>
@@ -395,7 +451,8 @@ export default function Checkout() {
                     },
                   }}
                 >
-                  Pay Now €{total.toFixed(2)}
+                  {/* Pay Now €{total.toFixed(2)} */}
+                  Pay Now
                 </Button>
               )}
             </div>
@@ -423,8 +480,9 @@ export default function Checkout() {
                     Zero Service Fees - All Year
                   </h3>
                   <p className={`${poppins.className} text-xs text-gray-400`}>
-                    Save €{serviceFee.toFixed(2)} on this order and on every
-                    future purchase
+                    {/* Save €{serviceFee.toFixed(2)} on this order and on every
+                    future purchase */}
+                    Save money on this order and on every future purchase
                   </p>
                 </div>
               </div>

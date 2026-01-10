@@ -10,10 +10,10 @@ const eventsApi = baseApi.injectEndpoints({
         return {
           url: "/events",
           method: "get",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
+          // headers: {
+          //   "content-type": "application/json",
+          //   Authorization: `Bearer ${accessToken}`,
+          // },
         };
       },
       providesTags: ["events"],
