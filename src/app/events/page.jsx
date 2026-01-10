@@ -7,6 +7,7 @@ import {
   InputAdornment,
   MenuItem,
   Select,
+  CircularProgress,
 } from "@mui/material";
 import { IoSearch, IoLocationOutline } from "react-icons/io5";
 import { FaMusic, FaSortAmountDown } from "react-icons/fa";
@@ -15,7 +16,7 @@ import { GoTrophy } from "react-icons/go";
 import { motion } from "framer-motion";
 import { Poppins } from "next/font/google";
 import EventCard from "@/components/utils/EventCard";
-import eventsData from "../../../public/Data/EventsData";
+import { useGetAllEventsQuery } from "@/Redux/slices/eventsApi";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -28,46 +29,48 @@ export default function BrowseEvents() {
   const [selectedCity, setSelectedCity] = useState("All");
   const [sortBy, setSortBy] = useState("date-asc");
 
+  const { data: allEventsData, isLoading, isError } = useGetAllEventsQuery();
+  const eventsData = allEventsData?.data?.data;
+  console.log("eventsData", eventsData);
+
   const categories = ["All", "Sports", "Concert"];
 
   // Extract unique cities from events data
   const cities = useMemo(() => {
     const uniqueCities = [
-      ...new Set(eventsData.map((event) => event.location || event.venue.city)),
-    ].filter(Boolean);
+      ...new Set(
+        eventsData.map((event) => event.location || event?.city).filter(Boolean)
+      ),
+    ];
+
     return ["All", ...uniqueCities.sort()];
-  }, []);
+  }, [eventsData]);
 
   // Filter and sort events
   const filteredEvents = useMemo(() => {
-    let filtered = eventsData.filter((event) => {
-      const matchesSearch = event.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "All" || event.category === selectedCategory;
-      const matchesCity =
-        selectedCity === "All" ||
-        event.location === selectedCity ||
-        event.venue.city === selectedCity;
-      return matchesSearch && matchesCategory && matchesCity;
-    });
+    return eventsData
+      .filter((event) => {
+        const matchesSearch = event.title
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase());
 
-    // Sort events
-    filtered.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+        const matchesCategory =
+          selectedCategory === "All" || event.category === selectedCategory;
 
-      if (sortBy === "date-asc") {
-        return dateA - dateB; // Earliest first
-      } else if (sortBy === "date-desc") {
-        return dateB - dateA; // Latest first
-      }
-      return 0;
-    });
+        const matchesCity =
+          selectedCity === "All" ||
+          event.location === selectedCity ||
+          event?.city === selectedCity;
 
-    return filtered;
-  }, [searchQuery, selectedCategory, selectedCity, sortBy]);
+        return matchesSearch && matchesCategory && matchesCity;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+
+        return sortBy === "date-asc" ? dateA - dateB : dateB - dateA;
+      });
+  }, [eventsData, searchQuery, selectedCategory, selectedCity, sortBy]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -91,8 +94,16 @@ export default function BrowseEvents() {
     },
   };
 
+  if (isLoading || !eventsData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#1a1338] to-[#0a0e27] py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-linear-to-br from-[#0a0e27] via-[#1a1338] to-[#0a0e27] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
@@ -145,37 +156,38 @@ export default function BrowseEvents() {
           <div className="flex flex-wrap lg:flex-nowrap items-center gap-2">
             {/* Category Pills */}
             <div className="flex items-center gap-2 bg-white rounded-full px-2 h-10.5">
-              {categories.map((category) => (
-                <motion.div
-                  key={category}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    onClick={() => setSelectedCategory(category)}
-                    sx={{
-                      height: 32,
-                      px: 2,
-                      borderRadius: "9999px",
-                      fontSize: "13px",
-                      textTransform: "none",
-                      ...(selectedCategory === category
-                        ? {
-                            background:
-                              "linear-gradient(135deg, #04092C 0%, #6D1DB9 100%)",
-                            color: "white",
-                          }
-                        : {
-                            color: "#191919",
-                          }),
-                    }}
+              {categories &&
+                categories.map((category) => (
+                  <motion.div
+                    key={category}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    {category === "Sports" && <GoTrophy className="mr-1" />}
-                    {category === "Concert" && <FaMusic className="mr-1" />}
-                    {category}
-                  </Button>
-                </motion.div>
-              ))}
+                    <Button
+                      onClick={() => setSelectedCategory(category)}
+                      sx={{
+                        height: 32,
+                        px: 2,
+                        borderRadius: "9999px",
+                        fontSize: "13px",
+                        textTransform: "none",
+                        ...(selectedCategory === category
+                          ? {
+                              background:
+                                "linear-gradient(135deg, #04092C 0%, #6D1DB9 100%)",
+                              color: "white",
+                            }
+                          : {
+                              color: "#191919",
+                            }),
+                      }}
+                    >
+                      {category === "Sports" && <GoTrophy className="mr-1" />}
+                      {category === "Concert" && <FaMusic className="mr-1" />}
+                      {category}
+                    </Button>
+                  </motion.div>
+                ))}
             </div>
 
             {/* City */}
@@ -195,11 +207,12 @@ export default function BrowseEvents() {
                   borderRadius: "9999px",
                 }}
               >
-                {cities.map((city) => (
-                  <MenuItem key={city} value={city}>
-                    {city}
-                  </MenuItem>
-                ))}
+                {cities &&
+                  cities.map((city) => (
+                    <MenuItem key={city} value={city}>
+                      {city}
+                    </MenuItem>
+                  ))}
               </Select>
             </div>
 

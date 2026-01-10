@@ -17,7 +17,7 @@ import { GoInfo } from "react-icons/go";
 import Image from "next/image";
 import { TicketPlan } from "../../../../public/Images/AllImages";
 import { Poppins } from "next/font/google";
-import { alpha, Button } from "@mui/material";
+import { alpha, Button, CircularProgress } from "@mui/material";
 import Link from "next/link";
 import CountdownTimer from "@/components/utils/CountdownTimer";
 import { PurchaseLockModal } from "@/components/Modals/PurchaseLockModal";
@@ -110,6 +110,14 @@ export default function PurchaseDetails() {
       router.back(); // go back after 2 seconds
     }, 2000);
   };
+
+  if (isLoading || !eventData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0d27] text-white px-4 sm:px-6 lg:px-8 py-5">
@@ -219,7 +227,7 @@ export default function PurchaseDetails() {
                 width={500}
                 height={500}
                 className="w-full h-auto object-contain"
-                priority
+                // priority
               />
             </motion.div>
           </div>

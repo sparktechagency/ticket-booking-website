@@ -7,6 +7,7 @@ import {
   InputAdornment,
   MenuItem,
   Select,
+  CircularProgress,
 } from "@mui/material";
 import { IoSearch, IoLocationOutline } from "react-icons/io5";
 import { FaMusic, FaSortAmountDown } from "react-icons/fa";
@@ -15,7 +16,7 @@ import { GoTrophy } from "react-icons/go";
 import { motion } from "framer-motion";
 import { Poppins } from "next/font/google";
 import EventCard from "@/components/utils/EventCard";
-import eventsData from "../../../public/Data/EventsData";
+import { useGetAllEventsQuery } from "@/Redux/slices/eventsApi";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -27,51 +28,49 @@ export default function Concerts() {
   const [selectedCity, setSelectedCity] = useState("All");
   const [sortBy, setSortBy] = useState("date-asc");
 
+  const { data: allEventsData, isLoading, isError } = useGetAllEventsQuery();
+  const eventsData = allEventsData?.data?.data;
+  console.log(eventsData);
+  const concertData = useMemo(
+    () => eventsData.filter((event) => event.category === "Concert"),
+    [eventsData]
+  );
+
   // Extract unique cities from events data
   const cities = useMemo(() => {
-    const sportsEvents = eventsData.filter(
-      (event) => event.category === "Concert"
-    );
     const uniqueCities = [
       ...new Set(
-        sportsEvents.map((event) => event.location || event.venue.city)
+        concertData
+          .map((event) => event?.location || event?.city)
+          .filter(Boolean)
       ),
-    ].filter(Boolean);
+    ];
+
     return ["All", ...uniqueCities.sort()];
-  }, []);
+  }, [concertData]);
 
   // Filter and sort events
   const filteredEvents = useMemo(() => {
-    let filtered = eventsData.filter((event) => {
-      const isConcert = event.category === "Concert";
+    return concertData
+      .filter((event) => {
+        const matchesSearch = event.title
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase());
 
-      const matchesSearch = event.title
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+        const matchesCity =
+          selectedCity === "All" ||
+          event.location === selectedCity ||
+          event?.city === selectedCity;
 
-      const matchesCity =
-        selectedCity === "All" ||
-        event.location === selectedCity ||
-        event.venue.city === selectedCity;
+        return matchesSearch && matchesCity;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
 
-      return isConcert && matchesSearch && matchesCity;
-    });
-
-    // Sort events
-    filtered.sort((a, b) => {
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
-
-      if (sortBy === "date-asc") {
-        return dateA - dateB; // Earliest first
-      } else if (sortBy === "date-desc") {
-        return dateB - dateA; // Latest first
-      }
-      return 0;
-    });
-
-    return filtered;
-  }, [searchQuery, selectedCity, sortBy]);
+        return sortBy === "date-asc" ? dateA - dateB : dateB - dateA;
+      });
+  }, [concertData, searchQuery, selectedCity, sortBy]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -95,6 +94,14 @@ export default function Concerts() {
     },
   };
 
+  if (isLoading || !concertData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-linear-to-br from-[#0a0e27] via-[#1a1338] to-[#0a0e27] py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -106,7 +113,7 @@ export default function Concerts() {
           transition={{ duration: 0.6 }}
         >
           <h1 className="text-lg sm:text-4xl lg:text-[40px] font-bold text-white mb-2">
-            Sports
+            Concerts
           </h1>
           <p
             className={`${poppins.className} text-[#99A1AF] text-xs sm:text-base`}
