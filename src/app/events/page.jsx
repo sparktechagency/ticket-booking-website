@@ -30,7 +30,7 @@ export default function BrowseEvents() {
   const [sortBy, setSortBy] = useState("date-asc");
 
   const { data: allEventsData, isLoading, isError } = useGetAllEventsQuery();
-  const eventsData = allEventsData?.data?.data;
+  const eventsData = allEventsData?.data?.data || [];
   console.log("eventsData", eventsData);
 
   const categories = ["All", "Sports", "Concert"];
