@@ -10,6 +10,7 @@ import { FaArrowRight, FaEnvelope, FaUser } from "react-icons/fa";
 import { useState } from "react";
 import { poppins } from "../utils/FontPoppins";
 import Image from "next/image";
+import { countryCodes } from "../../../public/Data/countryCodes";
 
 export default function InfoForm({
   formData,
@@ -19,29 +20,6 @@ export default function InfoForm({
   inputStyles,
 }) {
   const [countryCode, setCountryCode] = useState("+1");
-
-  const countryCodes = [
-    { code: "+1", country: "US/CA", flag: "https://flagcdn.com/us.svg" },
-    { code: "+44", country: "UK", flag: "https://flagcdn.com/gb.svg" },
-    { code: "+91", country: "IN", flag: "https://flagcdn.com/in.svg" },
-    { code: "+86", country: "CN", flag: "https://flagcdn.com/cn.svg" },
-    { code: "+81", country: "JP", flag: "https://flagcdn.com/jp.svg" },
-    { code: "+49", country: "DE", flag: "https://flagcdn.com/de.svg" },
-    { code: "+33", country: "FR", flag: "https://flagcdn.com/fr.svg" },
-    { code: "+39", country: "IT", flag: "https://flagcdn.com/it.svg" },
-    { code: "+61", country: "AU", flag: "https://flagcdn.com/au.svg" },
-    { code: "+55", country: "BR", flag: "https://flagcdn.com/br.svg" },
-    { code: "+52", country: "MX", flag: "https://flagcdn.com/mx.svg" },
-    { code: "+82", country: "KR", flag: "https://flagcdn.com/kr.svg" },
-    { code: "+7", country: "RU", flag: "https://flagcdn.com/ru.svg" },
-    { code: "+34", country: "ES", flag: "https://flagcdn.com/es.svg" },
-    { code: "+31", country: "NL", flag: "https://flagcdn.com/nl.svg" },
-    { code: "+46", country: "SE", flag: "https://flagcdn.com/se.svg" },
-    { code: "+41", country: "CH", flag: "https://flagcdn.com/ch.svg" },
-    { code: "+65", country: "SG", flag: "https://flagcdn.com/sg.svg" },
-    { code: "+971", country: "AE", flag: "https://flagcdn.com/ae.svg" },
-    { code: "+880", country: "BD", flag: "https://flagcdn.com/bd.svg" },
-  ];
 
   return (
     <motion.div

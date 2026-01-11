@@ -2,17 +2,23 @@
 
 import {
   Button,
-  Divider,
   IconButton,
   InputAdornment,
   TextField,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 import { IoIosEyeOff, IoMdEye } from "react-icons/io";
 import { toast } from "sonner";
+import { countryCodes } from "../../../../public/Data/countryCodes";
+import Image from "next/image";
+import { useSignUpMutation } from "@/Redux/slices/authApi";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -22,7 +28,12 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [countryCode, setCountryCode] = useState("+1");
+  const [agreed, setAgreed] = useState(false);
+
   const router = useRouter();
+
+  const [createUser, { isLoading, error }] = useSignUpMutation();
 
   const handleShowNewPassword = () => setShowPassword((prev) => !prev);
   const handleShowConfirmPassword = () =>
@@ -31,38 +42,50 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email) {
-      toast.error("Email is required");
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      toast.error("Please enter a valid email address");
-    }
-    if (!name) {
-      toast.error("Name is required");
-    }
-    if (!phone) {
-      toast.error("Phone Number is required");
-    }
+    if (!name) return toast.warning("Name is required");
+    if (!email) return toast.warning("Email is required");
+    if (!/\S+@\S+\.\S+/.test(email))
+      return toast.warning("Enter a valid email");
+    if (!phone) return toast.warning("Phone number is required");
+    if (!password) return toast.warning("Password is required");
+    if (password !== confirmPassword)
+      return toast.warning("Passwords do not match");
 
-    if (!password) {
-      toast.error("Password is required");
-    }
-    if (!confirmPassword) {
-      toast.error("Please confirm your password");
-    }
+    if (!agreed)
+      return toast.warning("You must agree to the terms and conditions");
+
+    const payload = {
+      name,
+      email,
+      countryCode,
+      phone,
+      password,
+      role: "USER",
+      agreedToTerms: agreed,
+    };
 
     try {
-      console.log(name, email, phone, password, confirmPassword);
-      toast.success("Please sign in to continue.");
-      toast.success("Registration Successfull.");
-      router.push("sign-in");
+      console.log(payload);
+      const response = await createUser(payload).unwrap();
+      console.log("Create User Response:", response);
+      if (response?.success) {
+        sessionStorage.setItem("userEmail", payload.email);
+        sessionStorage.setItem("createUserToken", response?.data?.token);
+        toast.success("OTP sent successfully!");
+        toast.success("Check Your Mail for OTP!");
+        router.push("/verify-otp");
+      }
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      console.log(error);
+      if (error.data.message === "Email already exist!") {
+        toast.error("User already exists!");
+      } else toast.error("Something went wrong. Please try again.");
     }
   };
 
   return (
     <div className="bg-linear-to-br from-[#0a0e27] via-[#16112e] to-[#0a0e27] min-h-[85vh] flex justify-center items-center p-4">
-      <div className="flex flex-col gap-2 sm:gap-4 bg-linear-to-br from-[#1a0b2e] to-[#0c0520] shadow-2xl rounded-lg w-full max-w-md px-3 sm:px-8 py-4 sm:py-12  border border-purple-500/20">
+      <div className="flex flex-col gap-2 sm:gap-4 bg-linear-to-br from-[#1a0b2e] to-[#0c0520] shadow-2xl rounded-lg w-full max-w-xl px-3 sm:px-8 py-4 sm:py-12  border border-purple-500/20">
         <p className="text-center text-lg sm:text-3xl font-bold text-white">
           Sign Up
         </p>
@@ -229,75 +252,139 @@ export default function SignUp() {
             }}
           />
 
-          <TextField
-            label="Phone Number"
-            variant="outlined"
-            fullWidth
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            InputProps={{
-              sx: {
-                height: {
-                  xs: "44px",
-                  sm: "48px",
-                  md: "52px",
-                  lg: "56px",
+          <div className="flex gap-2">
+            <FormControl sx={{ minWidth: 80 }}>
+              <Select
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                sx={{
+                  color: "white",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  "& .MuiSelect-icon": { color: "gray" },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  minWidth: "80px",
+                }}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      bgcolor: "#1a1a2e",
+                      color: "white",
+                      maxHeight: 300,
+                      "& .MuiMenuItem-root": {
+                        fontSize: "14px",
+                        "&:hover": {
+                          bgcolor: "rgba(168, 85, 247, 0.2)",
+                        },
+                        "&.Mui-selected": {
+                          bgcolor: "rgba(168, 85, 247, 0.3)",
+                          "&:hover": {
+                            bgcolor: "rgba(168, 85, 247, 0.4)",
+                          },
+                        },
+                      },
+                    },
+                  },
+                }}
+              >
+                {countryCodes.map((item) => (
+                  <MenuItem key={item.code} value={item.code}>
+                    {/* <span className="mr-2">{item.flag}</span> */}
+                    <div className="flex  items-center gap-1">
+                      <span className="text-xs lg:text-sm font-medium">
+                        {item.code}
+                      </span>
+                      <Image
+                        src={item.flag}
+                        alt={item.country}
+                        width={50}
+                        height={50}
+                        className="w-5 h-3 mr-2 object-cover"
+                      />
+                    </div>
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <TextField
+              label="Phone Number"
+              fullWidth
+              type="number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              InputProps={{
+                sx: {
+                  height: {
+                    xs: "44px",
+                    sm: "48px",
+                    md: "52px",
+                    lg: "56px",
+                  },
+                  color: "#ffffff",
+                  backgroundColor: "rgba(139, 92, 246, 0.05)",
                 },
-                color: "#ffffff",
-                backgroundColor: "rgba(139, 92, 246, 0.05)",
-              },
-            }}
-            InputLabelProps={{
-              sx: {
-                color: "#c4b5fd",
-                fontSize: {
-                  xs: "0.875rem",
-                  sm: "0.9375rem",
-                  md: "1rem",
+              }}
+              InputLabelProps={{
+                sx: {
+                  color: "#c4b5fd",
+                  fontSize: {
+                    xs: "0.875rem",
+                    sm: "0.9375rem",
+                    md: "1rem",
+                  },
+                  transform: {
+                    xs: "translate(14px, 12px) scale(1)",
+                    sm: "translate(14px, 14px) scale(1)",
+                    md: "translate(14px, 16px) scale(1)",
+                    lg: "translate(14px, 18px) scale(1)",
+                  },
+                  "&.MuiInputLabel-shrink": {
+                    transform: "translate(14px, -9px) scale(0.75)",
+                    color: "#a78bfa",
+                  },
                 },
-                transform: {
-                  xs: "translate(14px, 12px) scale(1)",
-                  sm: "translate(14px, 14px) scale(1)",
-                  md: "translate(14px, 16px) scale(1)",
-                  lg: "translate(14px, 18px) scale(1)",
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "rgba(168, 85, 247, 0.3)",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "rgba(168, 85, 247, 0.5)",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#a78bfa",
+                    borderWidth: "2px",
+                  },
                 },
-                "&.MuiInputLabel-shrink": {
-                  transform: "translate(14px, -9px) scale(0.75)",
+                "& .MuiInputLabel-root.Mui-focused": {
                   color: "#a78bfa",
                 },
-              },
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "rgba(168, 85, 247, 0.3)",
+                "& .MuiOutlinedInput-input": {
+                  color: "#ffffff",
+                  padding: {
+                    xs: "12px 14px",
+                    sm: "14px 14px",
+                    md: "16px 14px",
+                    lg: "18px 14px",
+                  },
                 },
-                "&:hover fieldset": {
-                  borderColor: "rgba(168, 85, 247, 0.5)",
+                "& input:-webkit-autofill": {
+                  WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
+                  WebkitTextFillColor: "inherit",
                 },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#a78bfa",
-                  borderWidth: "2px",
-                },
-              },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "#a78bfa",
-              },
-              "& .MuiOutlinedInput-input": {
-                color: "#ffffff",
-                padding: {
-                  xs: "12px 14px",
-                  sm: "14px 14px",
-                  md: "16px 14px",
-                  lg: "18px 14px",
-                },
-              },
-              "& input:-webkit-autofill": {
-                WebkitBoxShadow: "0 0 0 100px rgba(139, 92, 246, 0.5) inset",
-                WebkitTextFillColor: "inherit",
-              },
-            }}
-          />
+              }}
+            />
+          </div>
 
           <TextField
             label="Password"
@@ -487,6 +574,30 @@ export default function SignUp() {
                 ),
               },
             }}
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+                sx={{
+                  color: "#a78bfa",
+                  "&.Mui-checked": { color: "#a78bfa" },
+                }}
+              />
+            }
+            label={
+              <span className="text-[#c4b5fd] text-sm">
+                I agree to the{" "}
+                <Link
+                  href="/terms-and-conditions"
+                  className="underline text-[#a78bfa]"
+                >
+                  Terms & Conditions
+                </Link>
+              </span>
+            }
           />
 
           <Button
