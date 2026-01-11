@@ -48,6 +48,8 @@ export default function SignUp() {
       return toast.warning("Enter a valid email");
     if (!phone) return toast.warning("Phone number is required");
     if (!password) return toast.warning("Password is required");
+    if (password.length < 8)
+      return toast.warning("Password must be at least of 8 characters");
     if (password !== confirmPassword)
       return toast.warning("Passwords do not match");
 
@@ -71,6 +73,10 @@ export default function SignUp() {
       if (response?.success) {
         sessionStorage.setItem("userEmail", payload.email);
         sessionStorage.setItem("createUserToken", response?.data?.token);
+
+        const endTime = Date.now() + 180 * 1000; // 3 minutes from now
+        sessionStorage.setItem("otpExpiry", endTime);
+
         toast.success("OTP sent successfully!");
         toast.success("Check Your Mail for OTP!");
         router.push("/verify-otp");
