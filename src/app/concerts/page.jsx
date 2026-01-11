@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import React, { useState, useMemo } from "react";
@@ -29,7 +30,7 @@ export default function Concerts() {
   const [sortBy, setSortBy] = useState("date-asc");
 
   const { data: allEventsData, isLoading, isError } = useGetAllEventsQuery();
-  const eventsData = allEventsData?.data?.data;
+  const eventsData = allEventsData?.data?.data ?? [];
   console.log(eventsData);
   const concertData = useMemo(
     () => eventsData.filter((event) => event.category === "Concert"),
@@ -38,6 +39,7 @@ export default function Concerts() {
 
   // Extract unique cities from events data
   const cities = useMemo(() => {
+    if (!concertData.length) return ["All"];
     const uniqueCities = [
       ...new Set(
         concertData
@@ -94,7 +96,7 @@ export default function Concerts() {
     },
   };
 
-  if (isLoading || !concertData) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <CircularProgress color="success" size={80} />

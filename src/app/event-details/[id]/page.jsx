@@ -34,6 +34,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useGetSingleEventQuery } from "@/Redux/slices/eventsApi";
 import dayjs from "dayjs";
 import { getImageUrl } from "@/utils/baseUrl";
+import { getCookie, setCookie } from "cookies-next";
 
 export default function EventDetailsPage() {
   const params = useParams();
@@ -65,8 +66,8 @@ export default function EventDetailsPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedTickets = sessionStorage.getItem("selectedTickets");
-      const storedTicketType = sessionStorage.getItem("ticketType");
+      const storedTickets = getCookie("selectedTickets");
+      const storedTicketType = getCookie("ticketType");
 
       if (storedTickets) setTickets(Number(storedTickets));
       if (storedTicketType) setSelectedTicket(storedTicketType);
@@ -76,19 +77,19 @@ export default function EventDetailsPage() {
   const handleChange = (event) => {
     const value = Number(event.target.value);
     setTickets(value);
-    sessionStorage.setItem("selectedTickets", value);
+    setCookie("selectedTickets", value);
   };
 
   const handleQuantityConfirm = (selectedTickets) => {
     setTickets(selectedTickets);
-    sessionStorage.setItem("selectedTickets", selectedTickets);
+    setCookie("selectedTickets", selectedTickets);
     setShowQuantityModal(false);
   };
 
   const handleTicketClick = ({ ticketType, eventId }) => {
     setSelectedTicket(ticketType);
-    sessionStorage.setItem("ticketType", ticketType);
-    sessionStorage.setItem("eventId", eventId);
+    setCookie("ticketType", ticketType);
+    setCookie("eventId", eventId);
     router.push(`/purchase-details/${eventId}`);
     // setShowPurchaseModal(true);
   };

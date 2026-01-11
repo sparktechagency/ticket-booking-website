@@ -28,7 +28,7 @@ export default function Sports() {
   const [sortBy, setSortBy] = useState("date-asc");
 
   const { data: allEventsData, isLoading, isError } = useGetAllEventsQuery();
-  const eventsData = allEventsData?.data?.data;
+  const eventsData = allEventsData?.data?.data ?? [];
   const sportsData = useMemo(
     () => eventsData.filter((event) => event.category === "Sports"),
     [eventsData]
