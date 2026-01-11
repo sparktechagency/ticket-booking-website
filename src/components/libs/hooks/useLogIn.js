@@ -1,3 +1,4 @@
+import { getCookie, setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -8,9 +9,9 @@ export default function useLogIn() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  // Check if the user is already logged in from sessionStorage
+  // Check if the user is already logged in from cookies
   useEffect(() => {
-    const storedUser = sessionStorage.getItem("demo_user");
+    const storedUser = getCookie("demo_user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -24,7 +25,7 @@ export default function useLogIn() {
       if (email === "abc@gmail.com" && password === "123456") {
         const u = { id: "1", name: "Demo User", email };
         setUser(u);
-        sessionStorage.setItem("demo_user", JSON.stringify(u));
+        setCookie("demo_user", JSON.stringify(u));
         toast.success("Log In Succesfull");
         router.push("/");
       }
@@ -39,7 +40,7 @@ export default function useLogIn() {
 
   const logOut = () => {
     if (typeof window !== "undefined") {
-      sessionStorage.removeItem("demo_user");
+      deleteCookie("demo_user", { path: "/" });
       toast.success("Logged Out Successfully");
       router.push("/sign-in");
       setUser(null);

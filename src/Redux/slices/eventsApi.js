@@ -1,10 +1,12 @@
+import { getCookie } from "cookies-next";
+
 const { baseApi } = require("../baseApi");
 
 const eventsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllEvents: builder.query({
       query: () => {
-        const accessToken = sessionStorage.getItem("accessToken");
+        const accessToken = getCookie("accessToken");
         console.log({ accessToken });
 
         return {
@@ -20,7 +22,7 @@ const eventsApi = baseApi.injectEndpoints({
     }),
     getSingleEvent: builder.query({
       query: (eventID) => {
-        const accessToken = sessionStorage.getItem("accessToken");
+        const accessToken = getCookie("accessToken");
         console.log({ accessToken });
 
         return {

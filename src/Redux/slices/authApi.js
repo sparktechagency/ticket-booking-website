@@ -1,3 +1,5 @@
+import { getCookie } from "cookies-next";
+
 const { baseApi } = require("../baseApi");
 
 const authApi = baseApi.injectEndpoints({
@@ -26,7 +28,7 @@ const authApi = baseApi.injectEndpoints({
     UserOtpVerify: builder.mutation({
       query: (data) => {
         console.log(data);
-        const token = sessionStorage.getItem("createUserToken");
+        const token = getCookie("createUserToken");
         //  console.log("vetifyOtpToken", token);
         return {
           url: "/auth/verify-email",
@@ -44,7 +46,7 @@ const authApi = baseApi.injectEndpoints({
     // Resend Otp
     resendOtp: builder.mutation({
       query: (email) => {
-        const token = sessionStorage.getItem("createUserToken");
+        const token = getCookie("createUserToken");
         console.log("Resend OTP email", email);
         return {
           url: "/auth/resend-otp",

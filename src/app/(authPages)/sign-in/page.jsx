@@ -8,6 +8,7 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
+import { setCookie } from "cookies-next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -45,7 +46,12 @@ export default function SignIn() {
       console.log("res", response);
 
       if (response.success) {
-        sessionStorage.setItem("accessToken", response?.data?.token);
+        setCookie("accessToken", response?.data?.token, {
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          path: "/",
+          sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
+        });
         toast.success("Login Successful!");
         router.push("/");
       }

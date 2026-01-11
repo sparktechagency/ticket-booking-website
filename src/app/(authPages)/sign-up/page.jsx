@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { countryCodes } from "../../../../public/Data/countryCodes";
 import Image from "next/image";
 import { useSignUpMutation } from "@/Redux/slices/authApi";
+import { setCookie } from "cookies-next";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -71,11 +72,26 @@ export default function SignUp() {
       const response = await createUser(payload).unwrap();
       console.log("Create User Response:", response);
       if (response?.success) {
-        sessionStorage.setItem("userEmail", payload.email);
-        sessionStorage.setItem("createUserToken", response?.data?.token);
+        setCookie("userEmail", payload.email, {
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          path: "/",
+          sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
+        });
+        setCookie("createUserToken", response?.data?.token, {
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          path: "/",
+          sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
+        });
 
         const endTime = Date.now() + 180 * 1000; // 3 minutes from now
-        sessionStorage.setItem("otpExpiry", endTime);
+        setCookie("otpExpiry", endTime, {
+          maxAge: 60 * 60 * 24 * 7, // 7 days
+          path: "/",
+          sameSite: "strict",
+          secure: process.env.NODE_ENV === "production",
+        });
 
         toast.success("OTP sent successfully!");
         toast.success("Check Your Mail for OTP!");

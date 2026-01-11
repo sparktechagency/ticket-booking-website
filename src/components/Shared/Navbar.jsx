@@ -34,7 +34,7 @@ export default function Navbar() {
     isLoading,
     isError,
   } = useGetUserProfileQuery();
-  const profileData = userProfileData?.data;
+  const profileData = userProfileData?.data || [];
   console.log("profileData", profileData);
 
   const pathname = usePathname();

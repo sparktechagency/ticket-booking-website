@@ -1,10 +1,12 @@
+import { getCookie } from "cookies-next";
+
 const { baseApi } = require("../baseApi");
 
 const profileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getUserProfile: builder.query({
       query: () => {
-        const accessToken = sessionStorage.getItem("accessToken");
+        const accessToken = getCookie("accessToken");
         console.log({ accessToken });
 
         return {
@@ -20,7 +22,7 @@ const profileApi = baseApi.injectEndpoints({
     }),
     editProfile: builder.mutation({
       query: () => {
-        const accessToken = sessionStorage.getItem("accessToken");
+        const accessToken = getCookie("accessToken");
         console.log({ accessToken });
 
         return {
@@ -36,7 +38,7 @@ const profileApi = baseApi.injectEndpoints({
     }),
     getSingleEvent: builder.query({
       query: (eventID) => {
-        const accessToken = sessionStorage.getItem("accessToken");
+        const accessToken = getCookie("accessToken");
         console.log({ accessToken });
 
         return {

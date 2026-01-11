@@ -6,6 +6,7 @@ import {
   useUserOtpVerifyMutation,
 } from "@/Redux/slices/authApi";
 import { Button, TextField } from "@mui/material";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -13,10 +14,8 @@ import { toast } from "sonner";
 
 export default function OTPPage() {
   const [otp, setOtp] = useState("");
-  const [timeLeft, setTimeLeft] = useState(() => {
-    const expiry = sessionStorage.getItem("otpExpiry");
-    return expiry ? Math.max(Math.floor((expiry - Date.now()) / 1000), 0) : 180;
-  });
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isClient, setIsClient] = useState(false);
   const router = useRouter();
 
   const [userOtpVerify] = useUserOtpVerifyMutation();
@@ -24,17 +23,17 @@ export default function OTPPage() {
 
   // const token =
   //   typeof window !== "undefined"
-  //     ? sessionStorage.getItem("createUserToken")
+  //     ? getCookie("createUserToken")
   //     : null;
 
-  const email = sessionStorage.getItem("userEmail");
+  const email = getCookie("userEmail");
 
   // ⏱ Countdown timer
   useEffect(() => {
     if (timeLeft <= 0) return;
 
     const timer = setInterval(() => {
-      const expiry = sessionStorage.getItem("otpExpiry");
+      const expiry = getCookie("otpExpiry");
       if (!expiry) {
         clearInterval(timer);
         setTimeLeft(0);
@@ -71,7 +70,7 @@ export default function OTPPage() {
       console.log("OTP verification response:", response);
 
       if (response.success) {
-        sessionStorage.removeItem("createUserToken");
+        deleteCookie("createUserToken", { path: "/sign-up" });
         toast.success("Verification Succesfull. Please Log In");
         router.push("/sign-in");
       }
@@ -108,7 +107,7 @@ export default function OTPPage() {
 
         // Reset countdown
         const endTime = Date.now() + 180 * 1000; // 3 minutes from now
-        sessionStorage.setItem("otpExpiry", endTime);
+        setCookie("otpExpiry", endTime);
         setTimeLeft(180);
       }
     } catch (error) {

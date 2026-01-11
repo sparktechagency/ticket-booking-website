@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import React, { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext(null);
@@ -7,16 +8,16 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     if (typeof window === "undefined") return false;
-    return Boolean(sessionStorage.getItem("accessToken"));
+    return Boolean(getCookie("accessToken"));
   });
 
   const login = (token) => {
-    sessionStorage.setItem("accessToken", token);
+    setCookie("accessToken", token);
     setIsLoggedIn(true);
   };
 
   const logout = () => {
-    sessionStorage.removeItem("accessToken");
+    deleteCookie("accessToken", { path: "/" });
     setIsLoggedIn(false);
   };
 

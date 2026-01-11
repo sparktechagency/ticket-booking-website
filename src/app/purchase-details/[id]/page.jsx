@@ -28,6 +28,7 @@ import { useGetSingleEventQuery } from "@/Redux/slices/eventsApi";
 import dayjs from "dayjs";
 import { getImageUrl } from "@/utils/baseUrl";
 import { colorToHex } from "@/components/utils/ColorConverter";
+import { deleteCookie, getCookie } from "cookies-next";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -71,9 +72,8 @@ export default function PurchaseDetails() {
   useEffect(() => {
     if (!eventData?.ticketCategories) return;
 
-    const storedTicketType = sessionStorage.getItem("ticketType");
-    const storedQuantity =
-      Number(sessionStorage.getItem("selectedTickets")) || 0;
+    const storedTicketType = getCookie("ticketType");
+    const storedQuantity = Number(getCookie("selectedTickets")) || 0;
 
     if (!storedTicketType) return;
 
@@ -104,7 +104,7 @@ export default function PurchaseDetails() {
 
   const handleRemoveTicket = () => {
     setIsRemoving(true);
-    sessionStorage.removeItem("ticketType");
+    deleteCookie("ticketType", { path: "/purchase-details" });
 
     setTimeout(() => {
       router.back(); // go back after 2 seconds
