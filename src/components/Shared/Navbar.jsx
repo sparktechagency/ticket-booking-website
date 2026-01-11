@@ -12,9 +12,11 @@ import { FiLogOut } from "react-icons/fi";
 import { CgNotes } from "react-icons/cg";
 import { CiGlobe } from "react-icons/ci";
 import { usePathname } from "next/navigation";
-import { Button, Divider } from "@mui/material";
+import { Button, CircularProgress, Divider } from "@mui/material";
 import { ArtistData } from "../../../public/Data/ArtistData";
 import { useAuth } from "../libs/AuthProvider";
+import { useGetUserProfileQuery } from "@/Redux/slices/profileApi";
+import { getImageUrl } from "@/utils/baseUrl";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,6 +26,16 @@ export default function Navbar() {
   const [activeNavDropdown, setActiveNavDropdown] = useState(null);
   const [mobileArtistDropdown, setMobileArtistDropdown] = useState(null);
   const { isLoggedIn, logout } = useAuth();
+
+  const imageUrl = getImageUrl();
+
+  const {
+    data: userProfileData,
+    isLoading,
+    isError,
+  } = useGetUserProfileQuery();
+  const profileData = userProfileData?.data;
+  console.log("profileData", profileData);
 
   const pathname = usePathname();
 
@@ -86,6 +98,14 @@ export default function Navbar() {
     { code: "es", label: "Español", short: "Es" },
     { code: "fr", label: "Français", short: "Fr" },
   ];
+
+  if (isLoading || !profileData) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
 
   return (
     <div className="sticky top-0 bg-[#03071C] z-50 shadow-md h-14 sm:h-20">
@@ -215,12 +235,16 @@ export default function Navbar() {
                       }`}
                       onClick={handleDropdownClose}
                     >
-                      <Image
-                        src="/images/profile-image.png"
-                        alt="Profile Image"
-                        width={21}
-                        height={21}
-                      />
+                      {profileData?.image ? (
+                        <Image
+                          src={`${imageUrl}/${profileData?.image}`}
+                          alt="Profile Image"
+                          width={21}
+                          height={21}
+                        />
+                      ) : (
+                        <FaRegUserCircle />
+                      )}
                       <p>Profile</p>
                     </Link>
 

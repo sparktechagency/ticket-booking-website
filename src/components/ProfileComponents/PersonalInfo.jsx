@@ -1,33 +1,116 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdArrowBack, MdEdit, MdStar } from "react-icons/md";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
+import {
+  useEditProfileMutation,
+  useGetUserProfileQuery,
+} from "@/Redux/slices/profileApi";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  const [formData, setFormData] = useState({
-    fullName: "John Doe",
-    phone: "+1 (555) 012-3456",
-    email: "customer@example.com",
+  const {
+    data: userProfileData,
+    isLoading,
+    isError,
+  } = useGetUserProfileQuery();
+  const profileData = userProfileData?.data;
+  console.log("profileData", profileData);
+
+  const [editProfile, { isLoading: editingProfile }] = useEditProfileMutation();
+
+  // Form data for editing - only used when in edit mode
+  const [editFormData, setEditFormData] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
   });
 
-  const handleSave = () => {
-    // In real app: save to backend
-    setIsEditing(false);
+  // When entering edit mode, populate form with current profile data
+  const handleEditClick = () => {
+    setEditFormData({
+      fullName: profileData?.fullName || "",
+      phone: profileData?.phone || "",
+      email: profileData?.email || "",
+    });
+    setIsEditing(true);
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setProfileImage(null);
+    setImagePreview(profileData?.profileImage || null);
+  };
+
+  const handleSave = async () => {
+    try {
+      const updatedData = {
+        fullName: editFormData.fullName,
+        phone: editFormData.phone,
+        email: editFormData.email,
+      };
+      const formData = new FormData();
+      formData.append("data", updatedData);
+
+      // Only append image if user uploaded a new one
+      if (profileImage) {
+        formData.append("profileImage", profileImage);
+      }
+
+      const response = await editProfile(formData).unwrap();
+      console.log(response);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+    }
   };
 
   const handleCancel = () => {
-    // Reset form if needed
-    setFormData({
-      fullName: "John Doe",
-      phone: "+1 (555) 012-3456",
-      email: "customer@example.com",
+    // Reset everything
+    setEditFormData({
+      fullName: "",
+      phone: "",
+      email: "",
     });
+    setImagePreview(profileData?.profileImage || null);
+    setProfileImage(null);
     setIsEditing(false);
   };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress color="success" size={80} />
+      </div>
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <div className="min-h-screen text-white flex items-center justify-center">
+        <div className="text-xl text-red-400">Failed to load profile data</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen  text-white">
@@ -45,20 +128,40 @@ export default function ProfilePage() {
             >
               {/* Header with Back & Cancel */}
               <div className="flex items-center justify-between">
-                <button
+                <Button
                   onClick={handleCancel}
-                  className="flex items-center gap-1 lg:gap-3 text-purple-300 hover:text-white transition-colors"
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: { xs: "0.25rem", lg: "0.75rem" },
+                    color: "#d8b4fe",
+                    transition: "color 0.3s",
+                    textTransform: "none",
+                    "&:hover": {
+                      color: "#ffffff",
+                      backgroundColor: "transparent",
+                    },
+                  }}
                 >
                   <MdArrowBack className="sm:text-2xl" />
                   <span className="lg:text-lg font-medium">Back</span>
-                </button>
+                </Button>
 
-                <button
+                <Button
+                  sx={{
+                    textTransform: "none",
+                    color: "#d8b4fe",
+                    fontSize: { xs: "1rem", lg: "1.125rem" },
+                    fontWeight: 500,
+                    transition: "color 0.3s",
+                    "&:hover": {
+                      color: "#ffffff",
+                    },
+                  }}
                   onClick={handleCancel}
-                  className="text-purple-300 hover:text-white lg:text-lg font-medium transition-colors"
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
 
               {/* Edit Form Card */}
@@ -67,6 +170,50 @@ export default function ProfilePage() {
                   Personal Information
                 </h1>
 
+                {/* Profile Image Upload */}
+                <div className="mb-8 flex flex-col items-center">
+                  <div className="relative">
+                    <div className="w-32 h-32 rounded-full bg-white/10 border-2 border-white/20 overflow-hidden flex items-center justify-center">
+                      {imagePreview ? (
+                        <img
+                          src={imagePreview}
+                          alt="Profile"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-4xl text-white/50">
+                          {editFormData.fullName.charAt(0) ||
+                            profileData?.fullName?.charAt(0) ||
+                            "U"}
+                        </span>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      id="profile-upload"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </div>
+                  <div className="mt-4 flex gap-3">
+                    <label
+                      htmlFor="profile-upload"
+                      className="px-6 py-2 bg-purple-600/50 hover:bg-purple-600/70 rounded-xl text-sm text-white cursor-pointer transition-all"
+                    >
+                      Upload Photo
+                    </label>
+                    {imagePreview && (
+                      <button
+                        onClick={handleRemoveImage}
+                        className="px-6 py-2 bg-red-600/50 hover:bg-red-600/70 rounded-xl text-sm text-white transition-all"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                </div>
+
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -74,9 +221,12 @@ export default function ProfilePage() {
                     </label>
                     <input
                       type="text"
-                      value={formData.fullName}
+                      value={editFormData.fullName}
                       onChange={(e) =>
-                        setFormData({ ...formData, fullName: e.target.value })
+                        setEditFormData({
+                          ...editFormData,
+                          fullName: e.target.value,
+                        })
                       }
                       className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
                     />
@@ -88,9 +238,12 @@ export default function ProfilePage() {
                     </label>
                     <input
                       type="tel"
-                      value={formData.phone}
+                      value={editFormData.phone}
                       onChange={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
+                        setEditFormData({
+                          ...editFormData,
+                          phone: e.target.value,
+                        })
                       }
                       className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
                     />
@@ -102,9 +255,12 @@ export default function ProfilePage() {
                     </label>
                     <input
                       type="email"
-                      value={formData.email}
+                      value={editFormData.email}
                       onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
+                        setEditFormData({
+                          ...editFormData,
+                          email: e.target.value,
+                        })
                       }
                       className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-500/30 transition-all"
                     />
@@ -142,13 +298,42 @@ export default function ProfilePage() {
                       <h1 className="text-base sm:text-lg lg:text-2xl text-white">
                         Personal Information
                       </h1>
-                      <button
-                        onClick={() => setIsEditing(true)}
-                        className="mt-4 sm:mt-0 flex items-center gap-2 text-purple-300 hover:text-purple-100 transition-colors"
+                      <Button
+                        onClick={handleEditClick}
+                        sx={{
+                          marginTop: { xs: "1rem", sm: 0 },
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                          color: "#d8b4fe",
+                          transition: "color 0.3s",
+                          textTransform: "none",
+                          "&:hover": {
+                            color: "#e9d5ff",
+                            backgroundColor: "transparent",
+                          },
+                        }}
                       >
-                        <MdEdit className="lg:text-xl" />
-                        <span className="text-xs sm:text-base">Edit Info</span>
-                      </button>
+                        <MdEdit style={{ fontSize: "1.25rem" }} />
+                        <span className="">Edit Info</span>
+                      </Button>
+                    </div>
+
+                    {/* Profile Image Display */}
+                    <div className="mb-8 flex justify-center">
+                      <div className="w-32 h-32 rounded-full bg-white/10 border-2 border-white/20 overflow-hidden flex items-center justify-center">
+                        {imagePreview || profileData?.profileImage ? (
+                          <img
+                            src={imagePreview || profileData?.profileImage}
+                            alt="Profile"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-4xl text-white/50">
+                            {profileData?.fullName?.charAt(0) || "U"}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <div className="space-y-6">
@@ -159,7 +344,7 @@ export default function ProfilePage() {
                         <input
                           type="text"
                           readOnly
-                          value={formData.fullName}
+                          value={profileData?.fullName || "N/A"}
                           className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
                         />
                       </div>
@@ -171,7 +356,13 @@ export default function ProfilePage() {
                         <input
                           type="tel"
                           readOnly
-                          value={formData.phone}
+                          value={
+                            profileData?.phone || profileData?.countryCode
+                              ? `${profileData.countryCode || ""} ${
+                                  profileData.phone
+                                }`
+                              : "N/A"
+                          }
                           className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
                         />
                       </div>
@@ -183,7 +374,7 @@ export default function ProfilePage() {
                         <input
                           type="email"
                           readOnly
-                          value={formData.email}
+                          value={profileData?.email || "N/A"}
                           className="w-full px-5 py-2 sm:py-4 bg-white/10 border border-white/20 rounded-2xl text-white cursor-not-allowed"
                         />
                       </div>
@@ -209,10 +400,16 @@ export default function ProfilePage() {
                         <MdStar className="sm:text-3xl text-white" />
                       </div>
                       <div>
-                        <h3 className="text-xs sm:text-base">Premium Member</h3>
-                        <p className="text-[10px] sm:text-xs text-[#E9D5FF] mt-1">
-                          Valid until 2026-01-15
-                        </p>
+                        <h3 className="text-xs sm:text-base">
+                          {profileData?.membershipType || "N/A"}
+                        </h3>
+                        {profileData?.premiumExpiresAt ? (
+                          <p className="text-[10px] sm:text-xs text-[#E9D5FF] mt-1">
+                            Valid until ${profileData?.premiumExpiresAt}
+                          </p>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
 

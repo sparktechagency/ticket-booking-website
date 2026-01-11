@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Drawer, IconButton } from "@mui/material";
+import { Button, Drawer, IconButton } from "@mui/material";
 import { FaBars } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import ProfileSidebar from "@/components/ProfileComponents/ProfileSidebar";
@@ -41,13 +41,29 @@ export default function Profile() {
     <div className="bg-[#04092C]">
       <div className="flex min-h-screen max-w-7xl mx-auto py-10">
         {/* Mobile Menu Button */}
-        <button
+        <Button
           onClick={() => setMobileMenuOpen(true)}
-          className="fixed top-14 sm:top-20 left-2 z-50 lg:hidden bg-[#6D1DB999] text-white p-2 sm:p-3 rounded shadow-lg"
           aria-label="Open menu"
+          sx={{
+            position: "fixed",
+            top: { xs: "3.5rem", sm: "5rem" },
+            left: "0.5rem",
+            zIndex: 50,
+            display: { xs: "flex", md: "none" },
+            backgroundColor: "#6D1DB999",
+            color: "white",
+            padding: { xs: "0.5rem", sm: "0.75rem" },
+            borderRadius: "0.375rem",
+            boxShadow:
+              "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+            minWidth: "auto",
+            "&:hover": {
+              backgroundColor: "#6D1DB9CC",
+            },
+          }}
         >
           <FaBars className="text-sm" />
-        </button>
+        </Button>
 
         {/* Mobile Drawer */}
         <Drawer
@@ -85,7 +101,7 @@ export default function Profile() {
         </Drawer>
 
         {/* Desktop Sidebar */}
-        <div className="hidden lg:block w-[320px] lg:w-[300px] xl:w-[280px] py-5 px-3 lg:px-4 overflow-y-auto">
+        <div className="hidden lg:block w-[320px] lg:w-75 xl:w-70 py-5 px-3 lg:px-4 overflow-y-auto">
           <ProfileSidebar
             profileTabValue={profileTabValue}
             menuTabValue={menuTabValue}
